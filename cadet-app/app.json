@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cga-cadet-app",
-    "slug": "cga-cadet-app",
+    "name": "cadet-app",
+    "slug": "cadet-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",

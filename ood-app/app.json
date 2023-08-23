@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cga-ood-app",
-    "slug": "cga-ood-app",
+    "name": "ood-app",
+    "slug": "ood-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

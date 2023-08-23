@@ -5,7 +5,7 @@ import "firebase/compat/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-import { firebaseConfig } from '../secret-config';
+import { firebaseConfig } from './secret-config';
 
 // Initialize Firebase
 let app;
