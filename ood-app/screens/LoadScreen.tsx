@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
-  KeyboardAvoidingView,
   View,
   TouchableOpacity,
   Dimensions,
@@ -10,14 +9,15 @@ import {
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import MyStorage from "../storage";
-import { auth, firebase, firebaseConfig } from "../firebase";
-//import firebase from "firebase/compat/app";
+import { firebase, firebaseConfig } from "../firebase";
 import "firebase/compat/firestore";
 import MyFirebaseFunctions from "../firebaseFunctions";
+import { colors } from "../colors";
 
 let dim = Dimensions.get("window");
+const logo = require("../assets/logo.png");
 
-const StartupScreen = ({ navigation }) => {
+const LoadScreen = ({ navigation }) => {
   useEffect(() => {
     firebase.initializeApp(firebaseConfig);
   }, []);
@@ -98,33 +98,44 @@ const StartupScreen = ({ navigation }) => {
     await setTemp4c(DumbArray4);
   };
 
-  const handleContinuePress = async () => {
-    saveCompany(selected);
-    let data = await fetchAccountabilityOfCompany(selected);
+  const handleButtonPress = async (company) => {
+    saveCompany(company);
+    let data = await fetchAccountabilityOfCompany(company);
     await parseCadetList(data);
     navigation.navigate("OOD Bear Essentials");
   };
 
+  const companies1 = ["Alfa", "Bravo", "Charlie", "Delta"];
+  const companies2 = ["Echo", "Foxtrot", "Golf", "Hotel"];
+
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text>Select Company</Text>
-        <SelectList
-          setSelected={(val) => setSelected(val)}
-          data={data}
-          save="value"
-        />
+    <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={logo} style={styles.logo} />
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleContinuePress}
-          style={styles.button}
-          disabled={disabled}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+      <View style={styles.gridContainer}>
+        {companies1.map((company) => (
+          <TouchableOpacity
+            key={company}
+            onPress={() => handleButtonPress(company)}
+            style={styles.button}
+          >
+            <Text style={styles.buttonLabel}>{company}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
-    </KeyboardAvoidingView>
+      <View style={styles.gridContainer}>
+        {companies2.map((company) => (
+          <TouchableOpacity
+            key={company}
+            //onPress={() => }
+            style={styles.button}
+          >
+            <Text style={styles.buttonLabel}>{company}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
   );
 };
 
@@ -133,60 +144,53 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+    //justifyContent: "flex-end",
   },
-  inputContainer: {
-    width: "80%",
+  logoContainer: {
+    flex: 4,
+    paddingVertical: "2%",
   },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-    borderColor: "black",
+  logo: {
+    width: dim.height * 0.7,
+    height: dim.height * 0.4,
+    resizeMode: "contain",
   },
-  buttonContainer: {
-    width: "60%",
-    justifyContent: "center",
+  gridContainer: {
+    //alignContent: "center",
+    flexDirection: "row",
+    //flexWrap: "wrap",
+    flex: 3,
     alignItems: "center",
-    marginTop: 40,
+    //alignSelf: "center",
+    //justifySelf: "center",
+    justifyContent: "space-around",
   },
   button: {
-    backgroundColor: "#015289",
-    width: "100%",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
+    //paddingHorizontal: "50%",
+    //paddingVertical: "1%",
+    borderRadius: 15,
+    backgroundColor: colors.blue0,
+    justifyContent: "center", // moves text to vertical center of button
+    //alignSelf: "center",
+    marginHorizontal: "20%",
+    marginBottom: 6,
+    //minWidth: "5%",
+    //textAlign: "center",
+    //flexDirection: "row",
+    //alignSelf: "center",
+    //alignItems: "center",
+    width: dim.width * 0.08,
+    height: dim.height * 0.08,
   },
-  buttonOutline: {
-    marginTop: 15,
-    borderColor: "lightblue",
-    borderWidth: 2,
-    backgroundColor: "white",
-  },
-  buttonText: {
+  buttonLabel: {
+    textAlign: "center", // moves text to horizontal center of button
     color: "white",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-  buttonOutlineText: {
-    color: "lightblue",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-  forgotPassText: {
-    padding: 20,
-    color: "#00E",
-  },
-  registerText: {
-    color: "#FFA500",
-  },
-  image: {
-    width: dim.height * 0.8,
-    height: dim.height * 0.5,
-    resizeMode: "contain",
+    //marginBottom: 10,
+    fontSize: 24,
+    //paddingHorizontal: "2%",
+    //flexDirection: "row",
+    //alignSelf: "center",
   },
 });
 
-export default StartupScreen;
+export default LoadScreen;

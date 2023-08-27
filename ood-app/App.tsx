@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import StartupScreen from "./screens/StartupScreen";
+import LoadScreen from "./screens/LoadScreen";
 import MainScreen from "./screens/MainScreen";
 import AcctScreen from "./screens/AcctScreen";
 
@@ -14,7 +15,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen
           name="Select Company"
-          component={StartupScreen}
+          component={LoadScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
