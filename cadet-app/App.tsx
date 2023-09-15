@@ -83,7 +83,7 @@ function HomeTabs() {
           },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Messageboard"
         component={MessageboardScreen}
         options={{
@@ -99,7 +99,7 @@ function HomeTabs() {
             );
           },
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Settings"
         component={SettingsStack}

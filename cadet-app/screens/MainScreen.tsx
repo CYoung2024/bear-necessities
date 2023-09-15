@@ -45,7 +45,7 @@ const MainScreen = ({ navigation }) => {
   0740: Morning Formation
   0800-1205: Morning Classes 
   1220: Afternoon Formation 
-  1225: Family Style Lunch 
+  1225: Family Style Lunch
   1300-1540: Afternoon Classes 
   1600-1815: Sports Period 
   1715-1915: Buffet Dinner 
@@ -102,7 +102,7 @@ const MainScreen = ({ navigation }) => {
               <Text style={styles.boxText}>{PlanOfTheDay}</Text>
             </View>
           </View>
-          <View style={styles.box2}>
+          <View style={styles.box3}>
             <View style={styles.innerTextTop}>
               <Text style={styles.boxBoldText}>Common Numbers</Text>
               <Text style={styles.boxText}>{commonNumbers}</Text>
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   box1: {
     width: "100%",
-    height: "40%",
+    height: "20%",
     padding: 5,
     backgroundColor: coastGuardYellow,
     alignItems: "center",
@@ -194,7 +194,17 @@ const styles = StyleSheet.create({
   },
   box2: {
     width: "100%",
-    height: "20%",
+    height: "5%",
+    padding: 5,
+    backgroundColor: coastGuardYellow,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    gap: 5,
+  },
+  box3: {
+    width: "100%",
+    height: "10%",
     padding: 5,
     backgroundColor: coastGuardYellow,
     alignItems: "center",

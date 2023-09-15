@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker }, { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 
 import { doc, setDoc } from "firebase/firestore";
@@ -56,19 +56,19 @@ const IFNScreen = ({ navigation }) => {
     let location = await Location.getCurrentPositionAsync({});
     let { latitude, longitude, altitude } = location.coords;
     setDeviceLLA({ latitude, longitude, altitude });
-    // setMarkerLocation({ latitude, longitude, altitude });
-    // mapRef.current.animateCamera(
-    //   {
-    //     center: {
-    //       latitude: location.coords.latitude,
-    //       longitude: location.coords.longitude,
-    //     },
-    //     heading: 0,
-    //     pitch: 60,
-    //     zoom: 18.5,
-    //   },
-    //   { duration: 2000 }
-    // );
+    setMarkerLocation({ latitude, longitude});
+    mapRef.current.animateCamera(
+      {
+        center: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        heading: 0,
+        pitch: 60,
+        zoom: 18.5,
+      },
+      { duration: 2000 }
+    );
   };
   const handleWhereAmI = () => {
     if (deviceLLA === null) {
@@ -123,8 +123,9 @@ const IFNScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mapBin}>
-        {/* <MapView
+        <MapView
           ref={mapRef}
+          provider={PROVIDER_GOOGLE}
           pitchEnabled={true}
           showsBuildings={true}
           style={{
@@ -139,29 +140,30 @@ const IFNScreen = ({ navigation }) => {
           }}
         >
           <Marker title="My Location" coordinate={markerLocation} />
-        </MapView> */}
+        </MapView>
       </View>
       <View style={styles.buttonBin}>
         <View style={styles.insideButtonBin}>
           <View style={styles.leftSideButtons}>
-            <Button title="Get Location" onPress={handleGetLocation} />
-            {deviceLLA && (
-              <Text>
-                {deviceLLA.latitude}, {deviceLLA.longitude}
-              </Text>
-            )}
+            
           </View>
           <View style={styles.leftSideButtons}>
-            <Button title="Where Am I?" onPress={handleWhereAmI} />
-            {userLocation && <Text>{userLocation}</Text>}
+            
           </View>
           <View style={styles.leftSideButtons}></View>
         </View>
         <View style={styles.insideButtonBin}>
           <View style={styles.rightSideButtonBin}>
+          <Button title="Get Location" onPress={handleGetLocation} />
+            {deviceLLA && (
+              <Text>
+                {deviceLLA.latitude}, {deviceLLA.longitude}
+              </Text>
+            )}
+            <Button title="Where Am I?" onPress={handleWhereAmI} />
+            {userLocation && <Text>{userLocation}</Text>}
             <Button
               title="SIGN ACCOUNTABILITY"
-              style={styles.rightSideButton}
               // https://docs.expo.dev/ui-programming/react-native-styling-buttons/
               onPress={handleSignAccountability}
             />
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 10,
     backgroundColor: "#f0ac1b",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     fontSize: 30,
     padding: 10,
