@@ -9,9 +9,6 @@ import {
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import MyStorage from "../storage";
-import { firebase, firebaseConfig } from "../firebase";
-import "firebase/compat/firestore";
-import MyFirebaseFunctions from "../firebaseFunctions";
 import { colors } from "../colors";
 
 let dim = Dimensions.get("window");
@@ -19,10 +16,9 @@ const logo = require("../assets/logo.png");
 
 const LoadScreen = ({ navigation }) => {
   useEffect(() => {
-    firebase.initializeApp(firebaseConfig);
+    // init firebase
   }, []);
 
-  const db = firebase.firestore();
   const [disabled, setDisabled] = useState(false);
   const [selected, setSelected] = useState("");
   const [temp1c, setTemp1c] = useState([]);
@@ -47,7 +43,6 @@ const LoadScreen = ({ navigation }) => {
     initialCadetList3c: "",
     initialCadetList4c: "",
   });
-  const { fetchAccountabilityOfCompany } = MyFirebaseFunctions();
 
   const data = [
     { key: "1", value: "Alfa" },
@@ -100,7 +95,7 @@ const LoadScreen = ({ navigation }) => {
 
   const handleButtonPress = async (company) => {
     saveCompany(company);
-    let data = await fetchAccountabilityOfCompany(company);
+    //let data = await fetchAccountabilityOfCompany(company);
     await parseCadetList(data);
     navigation.navigate("OOD Bear Essentials");
   };

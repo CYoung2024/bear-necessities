@@ -3,24 +3,14 @@ import {
   StyleSheet,
   Text,
   Button,
-  KeyboardAvoidingView,
   View,
-  TextInput,
-  TouchableOpacity,
   Dimensions,
-  Image,
   SafeAreaView,
-  Alert,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
-import { auth } from "../firebase";
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
-
-const db = firebase.firestore();
 
 let dim = Dimensions.get("window");
 
@@ -104,7 +94,7 @@ const MainScreen = ({ navigation }) => {
           <Button
             title={"More Info"}
             onPress={handleMoreInfoPress}
-            style={styles.button}
+            //style={styles.button}
           />
         </View>
       </View>

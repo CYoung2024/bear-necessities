@@ -17,11 +17,6 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
-import { auth } from "../firebase";
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
-
-const db = firebase.firestore();
 
 let dim = Dimensions.get("window");
 

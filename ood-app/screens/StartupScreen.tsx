@@ -6,123 +6,91 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Image,
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import MyStorage from "../storage";
-import { auth, firebase, firebaseConfig } from "../firebase";
-//import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
-import MyFirebaseFunctions from "../firebaseFunctions";
+import { ADConfig } from "../secret-config";
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
 
+WebBrowser.maybeCompleteAuthSession();
 let dim = Dimensions.get("window");
 
 const StartupScreen = ({ navigation }) => {
-  useEffect(() => {
-    firebase.initializeApp(firebaseConfig);
-  }, []);
-
-  const db = firebase.firestore();
-  const [disabled, setDisabled] = useState(false);
-  const [selected, setSelected] = useState("");
-  const [temp1c, setTemp1c] = useState([]);
-  const [temp2c, setTemp2c] = useState([]);
-  const [temp3c, setTemp3c] = useState([]);
-  const [temp4c, setTemp4c] = useState([]);
-
-  const {
-    saveCompany,
-    cadetList1c,
-    saveCadetList1c,
-    cadetList2c,
-    saveCadetList2c,
-    cadetList3c,
-    saveCadetList3c,
-    cadetList4c,
-    saveCadetList4c,
-  } = MyStorage({
-    initialCompany: "",
-    initialCadetList1c: "",
-    initialCadetList2c: "",
-    initialCadetList3c: "",
-    initialCadetList4c: "",
-  });
-  const { fetchAccountabilityOfCompany } = MyFirebaseFunctions();
-
-  const data = [
-    { key: "1", value: "Alfa" },
-    { key: "2", value: "Bravo" },
-    { key: "3", value: "Charlie" },
-    { key: "4", value: "Delta" },
-    { key: "5", value: "Echo" },
-    { key: "6", value: "Foxtrot" },
-    { key: "7", value: "Golf" },
-    { key: "8", value: "Hotel" },
-  ];
+  const [discovery, $discovery]: any = useState({});
+  const [authRequest, $authRequest]: any = useState({});
+  const [authorizeResult, $authorizeResult]: any = useState({});
+  const scopes = ["openid", "profile", "email", "offline_access"]; //Default scope, we are authenticated to grab this data from GraphQL with our access token
+  const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
+  const redirectUrl = AuthSession.makeRedirectUri(
+    __DEV__ ? { scheme: "myapp" } : {}
+  );
 
   useEffect(() => {
-    saveCadetList1c(JSON.stringify(temp1c));
-  }, [temp1c]);
-  useEffect(() => {
-    saveCadetList2c(JSON.stringify(temp2c));
-  }, [temp2c]);
-  useEffect(() => {
-    saveCadetList3c(JSON.stringify(temp3c));
-  }, [temp3c]);
-  useEffect(() => {
-    saveCadetList4c(JSON.stringify(temp4c));
-  }, [temp4c]);
+    const getSession = async () => {
+      const d = await AuthSession.fetchDiscoveryAsync(domain);
 
-  const parseCadetList = async (fullList) => {
-    let DumbArray1 = [];
-    let DumbArray2 = [];
-    let DumbArray3 = [];
-    let DumbArray4 = [];
-    await fullList.forEach(async (cadet) => {
-      const [status, year] = cadet[1].split("/");
-      const email_ = cadet[0];
-      const email = email_.replace(/_/g, ".");
-      if (year === "2024") {
-        await DumbArray1.push({ email: email, status: status });
-      } else if (year === "2025") {
-        await setTemp2c([...temp2c, [email, status]]);
-      } else if (year === "2026") {
-        await setTemp3c([...temp3c, [email, status]]);
-      } else if (year === "2027") {
-        await setTemp4c([...temp4c, [email, status]]);
-      }
-    });
-    await setTemp1c(DumbArray1);
-    await setTemp2c(DumbArray2);
-    await setTemp3c(DumbArray3);
-    await setTemp4c(DumbArray4);
-  };
+      const authRequestOptions: AuthSession.AuthRequestConfig = {
+        prompt: AuthSession.Prompt.Login,
+        responseType: AuthSession.ResponseType.Code,
+        scopes: scopes,
+        usePKCE: true,
+        clientId: ADConfig.applicationClientID,
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      };
+      const authRequest = new AuthSession.AuthRequest(authRequestOptions);
+      $authRequest(authRequest);
+      $discovery(d);
+    };
+    const getCodeExchange = async () => {
+      const tokenResult = await AuthSession.exchangeCodeAsync(
+        {
+          code: authorizeResult.params.code,
+          clientId: ADConfig.applicationClientID,
+          redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+          extraParams: {
+            code_verifier: authRequest.codeVerifier || "",
+          },
+        },
+        discovery
+      );
+      const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
 
-  const handleContinuePress = async () => {
-    saveCompany(selected);
-    let data = await fetchAccountabilityOfCompany(selected);
-    await parseCadetList(data);
-    navigation.navigate("OOD Bear Essentials");
-  };
+      console.log(accessToken, refreshToken, issuedAt, expiresIn);
+    };
+
+    getSession();
+    if (authorizeResult && authorizeResult.type == "error") {
+      // this triggers infinitely on error. idk why
+    }
+    if (
+      authorizeResult &&
+      authorizeResult.type == "success" &&
+      authRequest &&
+      authRequest.codeVerifier
+    ) {
+      console.log("yay");
+      getCodeExchange();
+    }
+  }, [authorizeResult, authRequest]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text>Select Company</Text>
-        <SelectList
-          setSelected={(val) => setSelected(val)}
-          data={data}
-          save="value"
-        />
-      </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleContinuePress}
-          style={styles.button}
-          disabled={disabled}
-        >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+        {authRequest && discovery ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              const authorizeResult = await authRequest.promptAsync(discovery);
+              $authorizeResult(authorizeResult);
+              console.log(authorizeResult);
+            }}
+          >
+            <Text style={styles.buttonText}>Sign In With Microsoft</Text>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
       </View>
     </KeyboardAvoidingView>
   );
