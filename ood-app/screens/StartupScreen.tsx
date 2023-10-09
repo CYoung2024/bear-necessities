@@ -12,6 +12,7 @@ import MyStorage from "../storage";
 import { ADConfig } from "../secret-config";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
+import axios from "axios";
 
 WebBrowser.maybeCompleteAuthSession();
 let dim = Dimensions.get("window");
@@ -20,59 +21,111 @@ const StartupScreen = ({ navigation }) => {
   const [discovery, $discovery]: any = useState({});
   const [authRequest, $authRequest]: any = useState({});
   const [authorizeResult, $authorizeResult]: any = useState({});
-  const scopes = ["openid", "profile", "email", "offline_access"]; //Default scope, we are authenticated to grab this data from GraphQL with our access token
+  const scopes = ["openid", "profile", "email", "offline_access"];
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri(
     __DEV__ ? { scheme: "myapp" } : {}
   );
 
-  useEffect(() => {
-    const getSession = async () => {
-      const d = await AuthSession.fetchDiscoveryAsync(domain);
+  const getSession = async () => {
+    const d = await AuthSession.fetchDiscoveryAsync(domain);
 
-      const authRequestOptions: AuthSession.AuthRequestConfig = {
-        prompt: AuthSession.Prompt.Login,
-        responseType: AuthSession.ResponseType.Code,
-        scopes: scopes,
-        usePKCE: true,
+    const authRequestOptions: AuthSession.AuthRequestConfig = {
+      prompt: AuthSession.Prompt.Login,
+      responseType: AuthSession.ResponseType.Code,
+      scopes: scopes,
+      usePKCE: true,
+      clientId: ADConfig.applicationClientID,
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      state: ADConfig.state,
+    };
+    const authRequest = new AuthSession.AuthRequest(authRequestOptions);
+    $authRequest(authRequest);
+    $discovery(d);
+  };
+
+  const getCodeExchange = async () => {
+    const tokenResult = await AuthSession.exchangeCodeAsync(
+      {
+        code: authorizeResult.params.code,
         clientId: ADConfig.applicationClientID,
         redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
-      };
-      const authRequest = new AuthSession.AuthRequest(authRequestOptions);
-      $authRequest(authRequest);
-      $discovery(d);
-    };
-    const getCodeExchange = async () => {
-      const tokenResult = await AuthSession.exchangeCodeAsync(
-        {
-          code: authorizeResult.params.code,
-          clientId: ADConfig.applicationClientID,
-          redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
-          extraParams: {
-            code_verifier: authRequest.codeVerifier || "",
-          },
+
+        extraParams: {
+          code_verifier: authRequest.codeVerifier || "",
+          grant_type: "authorization_code",
+          //client_secret: ADConfig.secretValue,
         },
-        discovery
-      );
-      const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
+      },
+      discovery
+    );
+    const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
 
-      console.log(accessToken, refreshToken, issuedAt, expiresIn);
-    };
+    console.log(accessToken, refreshToken, issuedAt, expiresIn);
+  };
 
+  // const exchangeCodeForAccessToken = async () => {
+  //   try {
+  //     const tokenEndpoint = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/oauth2/v2.0/token`;
+  //     const tokenRequestBody = {
+  //       grant_type: "authorization_code",
+  //       code: authorizeResult.params.code,
+  //       client_id: ADConfig.applicationClientID,
+  //       redirect_uri: __DEV__ ? redirectUrl : redirectUrl + "example",
+  //       client_secret: ADConfig.secretValue,
+  //       // Add other necessary parameters here
+  //     };
+
+  //     const response = await axios.post(
+  //       tokenEndpoint,
+  //       new URLSearchParams(tokenRequestBody),
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/x-www-form-urlencoded",
+  //         },
+  //       }
+  //     );
+
+  //     const accessToken = response.data.access_token;
+  //     console.log("Access Token:", accessToken);
+
+  // // Use the access token to access Azure SQL Database or other APIs
+  // const databaseEndpoint = 'https://your-database-endpoint.database.windows.net'; // Replace with your Azure SQL Database endpoint
+  // const databaseHeaders = {
+  //   Authorization: `Bearer ${accessToken}`,
+  //   'Content-Type': 'application/json',
+  // };
+
+  // // Make requests to your Azure SQL Database using axios or another HTTP library
+
+  // // Example: Fetch data from the database
+  // const fetchDataResponse = await axios.get(`${databaseEndpoint}/api/data`, {
+  //   headers: databaseHeaders,
+  // });
+
+  // // Handle the response and perform read/write operations as needed
+
+  // console.log("Fetched Data:", fetchDataResponse.data);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
+  useEffect(() => {
     getSession();
     if (authorizeResult && authorizeResult.type == "error") {
-      // this triggers infinitely on error. idk why
     }
     if (
       authorizeResult &&
-      authorizeResult.type == "success" &&
-      authRequest &&
-      authRequest.codeVerifier
+      authorizeResult.type == "success" //&&
+      //authRequest &&
+      //authRequest.codeVerifier
     ) {
       console.log("yay");
+      console.log(discovery);
       getCodeExchange();
     }
-  }, [authorizeResult, authRequest]);
+  }, [authorizeResult]); //, authRequest]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -82,8 +135,10 @@ const StartupScreen = ({ navigation }) => {
             style={styles.button}
             onPress={async () => {
               const authorizeResult = await authRequest.promptAsync(discovery);
-              $authorizeResult(authorizeResult);
+              await $authorizeResult(authorizeResult);
               console.log(authorizeResult);
+              console.log(authRequest);
+              console.log(authorizeResult.params.code);
             }}
           >
             <Text style={styles.buttonText}>Sign In With Microsoft</Text>
