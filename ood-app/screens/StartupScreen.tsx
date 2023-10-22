@@ -13,22 +13,35 @@ import { ADConfig } from "../secret-config";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import axios from "axios";
+import * as Crypto from "expo-crypto";
 
 WebBrowser.maybeCompleteAuthSession();
 let dim = Dimensions.get("window");
+
+function base64URLEncode(str) {
+  return str
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
+}
 
 const StartupScreen = ({ navigation }) => {
   const [discovery, $discovery]: any = useState({});
   const [authRequest, $authRequest]: any = useState({});
   const [authorizeResult, $authorizeResult]: any = useState({});
+  const [codeChallenge, $codeChallenge]: any = useState({});
   const scopes = ["openid", "profile", "email", "offline_access"];
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
-  const redirectUrl = AuthSession.makeRedirectUri(
-    __DEV__ ? { scheme: "myapp" } : {}
-  );
+  const redirectUrl = AuthSession.makeRedirectUri();
 
   const getSession = async () => {
+    const cv = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      Math.random().toString(36).substr(2) + Date.now().toString(36)
+    );
     const d = await AuthSession.fetchDiscoveryAsync(domain);
+    const cc = await base64URLEncode(cv);
 
     const authRequestOptions: AuthSession.AuthRequestConfig = {
       prompt: AuthSession.Prompt.Login,
@@ -36,12 +49,16 @@ const StartupScreen = ({ navigation }) => {
       scopes: scopes,
       usePKCE: true,
       clientId: ADConfig.applicationClientID,
+      //clientSecret: ADConfig.secretValue,
       redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
       state: ADConfig.state,
+      codeChallenge,
+      codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
     const authRequest = new AuthSession.AuthRequest(authRequestOptions);
     $authRequest(authRequest);
     $discovery(d);
+    $codeChallenge(cc);
   };
 
   const getCodeExchange = async () => {
@@ -52,7 +69,7 @@ const StartupScreen = ({ navigation }) => {
         redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
 
         extraParams: {
-          code_verifier: authRequest.codeVerifier || "",
+          code_verifier: authRequest.codeVerifier,
           grant_type: "authorization_code",
           //client_secret: ADConfig.secretValue,
         },
@@ -61,7 +78,10 @@ const StartupScreen = ({ navigation }) => {
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
 
-    console.log(accessToken, refreshToken, issuedAt, expiresIn);
+    console.log(accessToken);
+    console.log(refreshToken);
+    console.log(issuedAt);
+    console.log(expiresIn);
   };
 
   // const exchangeCodeForAccessToken = async () => {
@@ -114,10 +134,11 @@ const StartupScreen = ({ navigation }) => {
   useEffect(() => {
     getSession();
     if (authorizeResult && authorizeResult.type == "error") {
+      // Mr. Gold may have broken this
     }
     if (
       authorizeResult &&
-      authorizeResult.type == "success" //&&
+      authorizeResult.type == "success" //&& // here too
       //authRequest &&
       //authRequest.codeVerifier
     ) {
@@ -139,6 +160,7 @@ const StartupScreen = ({ navigation }) => {
               console.log(authorizeResult);
               console.log(authRequest);
               console.log(authorizeResult.params.code);
+              console.log(redirectUrl);
             }}
           >
             <Text style={styles.buttonText}>Sign In With Microsoft</Text>
