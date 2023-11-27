@@ -12,7 +12,6 @@ import MyStorage from "../storage";
 import { ADConfig } from "../secret-config";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
-import axios from "axios";
 import * as Crypto from "expo-crypto";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -31,7 +30,15 @@ const StartupScreen = ({ navigation }) => {
   const [authRequest, $authRequest]: any = useState({});
   const [authorizeResult, $authorizeResult]: any = useState({});
   const [codeChallenge, $codeChallenge]: any = useState({});
-  const scopes = ["openid", "profile", "email", "offline_access"];
+  const [token, $token]: any = useState({});
+  const [testResponse1, $testResponse1]: any = useState("");
+  const scopes = [
+    "openid",
+    "profile",
+    "email",
+    "offline_access",
+    "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
+  ];
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
 
@@ -49,7 +56,6 @@ const StartupScreen = ({ navigation }) => {
       scopes: scopes,
       usePKCE: true,
       clientId: ADConfig.applicationClientID,
-      //clientSecret: ADConfig.secretValue,
       redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
       state: ADConfig.state,
       codeChallenge,
@@ -71,65 +77,74 @@ const StartupScreen = ({ navigation }) => {
         extraParams: {
           code_verifier: authRequest.codeVerifier,
           grant_type: "authorization_code",
-          //client_secret: ADConfig.secretValue,
         },
       },
       discovery
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
-
+    $token(tokenResult);
     console.log(accessToken);
     console.log(refreshToken);
     console.log(issuedAt);
     console.log(expiresIn);
   };
 
-  // const exchangeCodeForAccessToken = async () => {
-  //   try {
-  //     const tokenEndpoint = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/oauth2/v2.0/token`;
-  //     const tokenRequestBody = {
-  //       grant_type: "authorization_code",
-  //       code: authorizeResult.params.code,
-  //       client_id: ADConfig.applicationClientID,
-  //       redirect_uri: __DEV__ ? redirectUrl : redirectUrl + "example",
-  //       client_secret: ADConfig.secretValue,
-  //       // Add other necessary parameters here
-  //     };
+  const callAzureFunction1 = async () => {
+    const functionUrl =
+      "https://bearnecessititesfunctionapp.azurewebsites.net/api/HelloWorld?code=0vBFa7gasepknwj5ZxfqcRF6PbfhEdbqilKFg7JSfyReAzFuFkV35A==";
+    try {
+      const response = await fetch(functionUrl, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token.accessToken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "Test",
+        }),
+      });
 
-  //     const response = await axios.post(
-  //       tokenEndpoint,
-  //       new URLSearchParams(tokenRequestBody),
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/x-www-form-urlencoded",
-  //         },
-  //       }
-  //     );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response from Azure Function:", data);
+        $testResponse1(data);
+        // Process the data received from the Azure Function
+      } else {
+        console.error("Error calling Azure Function:", response.status);
+        // Handle error responses
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle any network errors or exceptions
+    }
+  };
 
-  //     const accessToken = response.data.access_token;
-  //     console.log("Access Token:", accessToken);
+  const callAzureFunction2 = async () => {
+    const functionUrl =
+      "https://bearnecessititesfunctionapp.azurewebsites.net/api/getCadetInfo?code=vBTg1TJl5BurRdwZl47VLAUPPhAryNrcG1dWicfXk2jvAzFuYuZmRA==";
 
-  // // Use the access token to access Azure SQL Database or other APIs
-  // const databaseEndpoint = 'https://your-database-endpoint.database.windows.net'; // Replace with your Azure SQL Database endpoint
-  // const databaseHeaders = {
-  //   Authorization: `Bearer ${accessToken}`,
-  //   'Content-Type': 'application/json',
-  // };
+    try {
+      const response = await fetch(functionUrl, {
+        method: "GET", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+        headers: {
+          Authorization: `Bearer ${token.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-  // // Make requests to your Azure SQL Database using axios or another HTTP library
-
-  // // Example: Fetch data from the database
-  // const fetchDataResponse = await axios.get(`${databaseEndpoint}/api/data`, {
-  //   headers: databaseHeaders,
-  // });
-
-  // // Handle the response and perform read/write operations as needed
-
-  // console.log("Fetched Data:", fetchDataResponse.data);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response from Azure Function:", data);
+        // Process the data received from the Azure Function
+      } else {
+        console.error("Error calling Azure Function:", response.status);
+        // Handle error responses
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle any network errors or exceptions
+    }
+  };
 
   useEffect(() => {
     getSession();
@@ -142,8 +157,6 @@ const StartupScreen = ({ navigation }) => {
       //authRequest &&
       //authRequest.codeVerifier
     ) {
-      console.log("yay");
-      console.log(discovery);
       getCodeExchange();
     }
   }, [authorizeResult]); //, authRequest]);
@@ -157,10 +170,6 @@ const StartupScreen = ({ navigation }) => {
             onPress={async () => {
               const authorizeResult = await authRequest.promptAsync(discovery);
               await $authorizeResult(authorizeResult);
-              console.log(authorizeResult);
-              console.log(authRequest);
-              console.log(authorizeResult.params.code);
-              console.log(redirectUrl);
             }}
           >
             <Text style={styles.buttonText}>Sign In With Microsoft</Text>
@@ -168,6 +177,23 @@ const StartupScreen = ({ navigation }) => {
         ) : (
           <></>
         )}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            await callAzureFunction1();
+          }}
+        >
+          <Text style={styles.buttonText}>call api</Text>
+        </TouchableOpacity>
+        <Text>{testResponse1}</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            await callAzureFunction2();
+          }}
+        >
+          <Text style={styles.buttonText}>call api 2</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
