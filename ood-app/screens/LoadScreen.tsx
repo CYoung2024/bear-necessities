@@ -1,3 +1,6 @@
+// dont think we need this anymore
+// keeping it around for async issues with Azure
+
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -97,7 +100,7 @@ const LoadScreen = ({ navigation }) => {
     saveCompany(company);
     //let data = await fetchAccountabilityOfCompany(company);
     await parseCadetList(data);
-    navigation.navigate("OOD Bear Essentials");
+    navigation.navigate("Bear Necessities - OOD");
   };
 
   const companies1 = ["Alfa", "Bravo", "Charlie", "Delta"];

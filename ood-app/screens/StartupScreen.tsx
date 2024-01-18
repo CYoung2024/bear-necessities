@@ -10,9 +10,11 @@ import {
 import { SelectList } from "react-native-dropdown-select-list";
 import MyStorage from "../storage";
 import { ADConfig } from "../secret-config";
+import * as MyAzureFunctions from "../azureFunctions";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
+import DropDownPicker from "react-native-dropdown-picker";
 
 WebBrowser.maybeCompleteAuthSession();
 let dim = Dimensions.get("window");
@@ -26,12 +28,13 @@ function base64URLEncode(str) {
 }
 
 const StartupScreen = ({ navigation }) => {
+  //for auth
   const [discovery, $discovery]: any = useState({});
   const [authRequest, $authRequest]: any = useState({});
   const [authorizeResult, $authorizeResult]: any = useState({});
   const [codeChallenge, $codeChallenge]: any = useState({});
   const [token, $token]: any = useState({});
-  const [testResponse1, $testResponse1]: any = useState("");
+  const [access, $access]: any = useState(false);
   const scopes = [
     "openid",
     "profile",
@@ -41,6 +44,26 @@ const StartupScreen = ({ navigation }) => {
   ];
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
+  // for dropdown company picker
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "Alfa", value: "a" },
+    { label: "Bravo", value: "b" },
+    { label: "Charlie", value: "c" },
+    { label: "Delta", value: "d" },
+    { label: "Echo", value: "e" },
+    { label: "Foxtrot", value: "f" },
+    { label: "Golf", value: "g" },
+    { label: "Hotel", value: "h" },
+  ]);
+  const { company, saveCompany } = MyStorage({
+    initialCompany: "",
+    initialCadetList1c: "",
+    initialCadetList2c: "",
+    initialCadetList3c: "",
+    initialCadetList4c: "",
+  });
 
   const getSession = async () => {
     const cv = await Crypto.digestStringAsync(
@@ -84,87 +107,33 @@ const StartupScreen = ({ navigation }) => {
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
     $token(tokenResult);
     console.log(accessToken);
-    console.log(refreshToken);
-    console.log(issuedAt);
-    console.log(expiresIn);
-  };
-
-  const callAzureFunction1 = async () => {
-    const functionUrl =
-      "https://bearnecessititesfunctionapp.azurewebsites.net/api/HelloWorld?code=0vBFa7gasepknwj5ZxfqcRF6PbfhEdbqilKFg7JSfyReAzFuFkV35A==";
-    try {
-      const response = await fetch(functionUrl, {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + token.accessToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Test",
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Response from Azure Function:", data);
-        $testResponse1(data);
-        // Process the data received from the Azure Function
-      } else {
-        console.error("Error calling Azure Function:", response.status);
-        // Handle error responses
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      // Handle any network errors or exceptions
-    }
-  };
-
-  const callAzureFunction2 = async () => {
-    const functionUrl =
-      "https://bearnecessititesfunctionapp.azurewebsites.net/api/getCadetInfo?code=vBTg1TJl5BurRdwZl47VLAUPPhAryNrcG1dWicfXk2jvAzFuYuZmRA==";
-
-    try {
-      const response = await fetch(functionUrl, {
-        method: "GET", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Response from Azure Function:", data);
-        // Process the data received from the Azure Function
-      } else {
-        console.error("Error calling Azure Function:", response.status);
-        // Handle error responses
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      // Handle any network errors or exceptions
-    }
   };
 
   useEffect(() => {
     getSession();
     if (authorizeResult && authorizeResult.type == "error") {
-      // Mr. Gold may have broken this
+      console.log("some kinda auth error");
     }
-    if (
-      authorizeResult &&
-      authorizeResult.type == "success" //&& // here too
-      //authRequest &&
-      //authRequest.codeVerifier
-    ) {
+    if (authorizeResult && authorizeResult.type == "success") {
+      // auth session to good to continue
       getCodeExchange();
     }
-  }, [authorizeResult]); //, authRequest]);
+  }, [authorizeResult]);
+
+  useEffect(() => {
+    getSession();
+    if (token.accessToken === undefined) {
+      $access(false);
+    } else {
+      // When the access token is received, move on and let the user into the app
+      $access(true);
+    }
+  }, [token]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.buttonContainer}>
-        {authRequest && discovery ? (
+        {!access ? ( //authRequest && discovery ? (
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
@@ -175,25 +144,30 @@ const StartupScreen = ({ navigation }) => {
             <Text style={styles.buttonText}>Sign In With Microsoft</Text>
           </TouchableOpacity>
         ) : (
-          <></>
+          <View>
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              placeholder="Select a Company to View"
+              onSelectItem={(item) => {
+                saveCompany(item.label);
+              }}
+            />
+            <TouchableOpacity
+              onPress={async () => {
+                //navigation.navigate("Bear Necessities - OOD");
+                MyAzureFunctions.call_getCadetInfo(token, "Noah McMahon");
+              }}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Go</Text>
+            </TouchableOpacity>
+          </View>
         )}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            await callAzureFunction1();
-          }}
-        >
-          <Text style={styles.buttonText}>call api</Text>
-        </TouchableOpacity>
-        <Text>{testResponse1}</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            await callAzureFunction2();
-          }}
-        >
-          <Text style={styles.buttonText}>call api 2</Text>
-        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
@@ -257,6 +231,9 @@ const styles = StyleSheet.create({
     width: dim.height * 0.8,
     height: dim.height * 0.5,
     resizeMode: "contain",
+  },
+  temp: {
+    fontSize: 20,
   },
 });
 

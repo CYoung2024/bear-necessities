@@ -14,17 +14,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Auth"
+          name="Bear Necessities - Startup"
           component={StartupScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Select Company"
-          component={LoadScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="OOD Bear Essentials"
+          name="Bear Necessities - OOD"
           component={MainScreen}
           options={{ headerShown: false }}
         />
