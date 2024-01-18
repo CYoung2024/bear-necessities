@@ -57,7 +57,18 @@ const StartupScreen = ({ navigation }) => {
     { label: "Golf", value: "g" },
     { label: "Hotel", value: "h" },
   ]);
-  const { company, saveCompany } = MyStorage({
+  const {
+    company,
+    saveCompany,
+    cadetList1c,
+    saveCadetList1c,
+    cadetList2c,
+    saveCadetList2c,
+    cadetList3c,
+    saveCadetList3c,
+    cadetList4c,
+    saveCadetList4c,
+  } = MyStorage({
     initialCompany: "",
     initialCadetList1c: "",
     initialCadetList2c: "",
@@ -65,6 +76,7 @@ const StartupScreen = ({ navigation }) => {
     initialCadetList4c: "",
   });
 
+  // first half of auth
   const getSession = async () => {
     const cv = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
@@ -90,6 +102,7 @@ const StartupScreen = ({ navigation }) => {
     $codeChallenge(cc);
   };
 
+  // second half of auth
   const getCodeExchange = async () => {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {
@@ -115,7 +128,7 @@ const StartupScreen = ({ navigation }) => {
       console.log("some kinda auth error");
     }
     if (authorizeResult && authorizeResult.type == "success") {
-      // auth session to good to continue
+      // auth session is to good to continue to the second half
       getCodeExchange();
     }
   }, [authorizeResult]);
@@ -159,8 +172,16 @@ const StartupScreen = ({ navigation }) => {
             />
             <TouchableOpacity
               onPress={async () => {
-                //navigation.navigate("Bear Necessities - OOD");
-                MyAzureFunctions.call_getCadetInfo(token, "Noah McMahon");
+                // TODO: don't continue if no company is selected
+                // TODO: loading animation
+                const [temp1c, temp2c, temp3c, temp4c] =
+                  await MyAzureFunctions.call_readCompanyStatus(token, company);
+                // maybe move stringify and parse to storage.ts
+                await saveCadetList1c(JSON.stringify(temp1c));
+                await saveCadetList2c(JSON.stringify(temp2c));
+                await saveCadetList3c(JSON.stringify(temp3c));
+                await saveCadetList4c(JSON.stringify(temp4c));
+                await navigation.navigate("Bear Necessities - OOD");
               }}
               style={styles.button}
             >

@@ -228,11 +228,7 @@ const AcctScreen = ({ navigation }) => {
             ) : (
               cadetList1c.map((item, index) => (
                 <Text key={index} style={styles.acctDispText}>
-                  {item.email.slice(
-                    item.email.indexOf(".") + 3,
-                    item.email.lastIndexOf("@")
-                  )}{" "}
-                  : {item.status}
+                  {item.FullName} : {item.Status}
                 </Text>
               ))
             )}
@@ -241,19 +237,43 @@ const AcctScreen = ({ navigation }) => {
         <View style={styles.acctBox2c}>
           <View style={styles.percDisp}></View>
           <ScrollView style={styles.acctDisp}>
-            <Text style={styles.acctDispText}>Other cadets here</Text>
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              cadetList2c.map((item, index) => (
+                <Text key={index} style={styles.acctDispText}>
+                  {item.FullName} : {item.Status}
+                </Text>
+              ))
+            )}
           </ScrollView>
         </View>
         <View style={styles.acctBox3c}>
           <View style={styles.percDisp}></View>
           <ScrollView style={styles.acctDisp}>
-            <Text style={styles.acctDispText}>Other cadets here</Text>
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              cadetList3c.map((item, index) => (
+                <Text key={index} style={styles.acctDispText}>
+                  {item.FullName} : {item.Status}
+                </Text>
+              ))
+            )}
           </ScrollView>
         </View>
         <View style={styles.acctBox4c}>
           <View style={styles.percDisp}></View>
           <ScrollView style={styles.acctDisp}>
-            <Text style={styles.acctDispText}>Other cadets here</Text>
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              cadetList4c.map((item, index) => (
+                <Text key={index} style={styles.acctDispText}>
+                  {item.FullName} : {item.Status}
+                </Text>
+              ))
+            )}
           </ScrollView>
         </View>
       </View>

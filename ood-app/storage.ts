@@ -44,13 +44,19 @@ const MyStorage = ({
           : initialCadetList1c
       );
       setCadetList2c(
-        storedCadetList2c !== null ? storedCadetList2c : initialCadetList2c
+        storedCadetList2c !== null
+          ? JSON.parse(storedCadetList2c)
+          : initialCadetList2c
       );
       setCadetList3c(
-        storedCadetList3c !== null ? storedCadetList3c : initialCadetList3c
+        storedCadetList3c !== null
+          ? JSON.parse(storedCadetList3c)
+          : initialCadetList3c
       );
       setCadetList4c(
-        storedCadetList4c !== null ? storedCadetList4c : initialCadetList4c
+        storedCadetList4c !== null
+          ? JSON.parse(storedCadetList4c)
+          : initialCadetList4c
       );
     } catch (e) {
       console.error("Failed to load values from AsyncStorage", e);
