@@ -128,3 +128,32 @@ export const call_readCadetStatus = async (token, cadetCode) => {
     // Handle any network errors or exceptions
   }
 };
+
+export const call_writeCadetStatus = async (token, cadetCode, status) => {
+  const functionUrl =
+    "https://bearnecessititesfunctionapp.azurewebsites.net/api/writeCadetStatus?code=NKXcBBE7ghzMnLXuUi-wooHfgtf_FNDIopRu8TPbxUA7AzFuOPIaxA==&cadetCode=" +
+    cadetCode +
+    "&status=" +
+    status;
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+    } else {
+      console.error("Error calling Azure Function:", response.status);
+      // Handle error responses
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle any network errors or exceptions
+  }
+};

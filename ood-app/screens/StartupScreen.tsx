@@ -182,6 +182,12 @@ const StartupScreen = ({ navigation }) => {
                 await saveCadetList3c(JSON.stringify(temp3c));
                 await saveCadetList4c(JSON.stringify(temp4c));
                 await navigation.navigate("Bear Necessities - OOD");
+                // await MyAzureFunctions.call_writeCadetStatus(
+                //   token,
+                //   24813,
+                //   "bruh"
+                // );
+                // console.log("done");
               }}
               style={styles.button}
             >
