@@ -78,7 +78,10 @@ const MyStorage = ({
 
   const saveCadetList1c = async (newValue) => {
     try {
-      await AsyncStorage.setItem(CADETLIST1C_STORAGE_KEY, newValue);
+      await AsyncStorage.setItem(
+        CADETLIST1C_STORAGE_KEY,
+        JSON.stringify(newValue)
+      );
       setCadetList1c(newValue);
     } catch (e) {
       console.error("Failed to save string value to AsyncStorage", e);
@@ -87,7 +90,10 @@ const MyStorage = ({
 
   const saveCadetList2c = async (newValue) => {
     try {
-      await AsyncStorage.setItem(CADETLIST2C_STORAGE_KEY, newValue);
+      await AsyncStorage.setItem(
+        CADETLIST2C_STORAGE_KEY,
+        JSON.stringify(newValue)
+      );
       setCadetList2c(newValue);
     } catch (e) {
       console.error("Failed to save string value to AsyncStorage", e);
@@ -96,7 +102,10 @@ const MyStorage = ({
 
   const saveCadetList3c = async (newValue) => {
     try {
-      await AsyncStorage.setItem(CADETLIST3C_STORAGE_KEY, newValue);
+      await AsyncStorage.setItem(
+        CADETLIST3C_STORAGE_KEY,
+        JSON.stringify(newValue)
+      );
       setCadetList3c(newValue);
     } catch (e) {
       console.error("Failed to save string value to AsyncStorage", e);
@@ -105,7 +114,10 @@ const MyStorage = ({
 
   const saveCadetList4c = async (newValue) => {
     try {
-      await AsyncStorage.setItem(CADETLIST4C_STORAGE_KEY, newValue);
+      await AsyncStorage.setItem(
+        CADETLIST4C_STORAGE_KEY,
+        JSON.stringify(newValue)
+      );
       setCadetList4c(newValue);
     } catch (e) {
       console.error("Failed to save string value to AsyncStorage", e);

@@ -119,7 +119,6 @@ const StartupScreen = ({ navigation }) => {
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
     $token(tokenResult);
-    console.log(accessToken);
   };
 
   useEffect(() => {
@@ -173,15 +172,14 @@ const StartupScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={async () => {
                 // TODO: don't continue if no company is selected
-                // TODO: loading animation
+                // TODO: loading animation and don't let them spam click while awaiting
                 const [temp1c, temp2c, temp3c, temp4c] =
                   await MyAzureFunctions.call_readCompanyStatus(token, company);
-                // maybe move stringify and parse to storage.ts
-                await saveCadetList1c(JSON.stringify(temp1c));
-                await saveCadetList2c(JSON.stringify(temp2c));
-                await saveCadetList3c(JSON.stringify(temp3c));
-                await saveCadetList4c(JSON.stringify(temp4c));
-                await navigation.navigate("Bear Necessities - OOD");
+                await saveCadetList1c(temp1c);
+                await saveCadetList2c(temp2c);
+                await saveCadetList3c(temp3c);
+                await saveCadetList4c(temp4c);
+                await navigation.navigate("Bear Necessities - OOD", token);
                 // await MyAzureFunctions.call_writeCadetStatus(
                 //   token,
                 //   24813,

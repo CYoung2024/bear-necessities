@@ -14,9 +14,11 @@ import {
   Alert,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { useRoute } from "@react-navigation/native";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
+import * as MyAzureFunctions from "../azureFunctions";
 
 let dim = Dimensions.get("window");
 
@@ -24,159 +26,11 @@ const coastGuardBlue = "#015289";
 const coastGuardLBlue = "#B3E0FF";
 const coastGuardYellow = "#f0ac1b";
 
-// const Header = () => {
-//   const { company } = MyStorage({ initialCompany: "" });
-//   return (
-//     <View style={styles.containerHeader}>
-//       <View style={styles.headerBox}>
-//         <Text style={styles.headerText}>{company} Accountability</Text>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const Content = () => {
-//   const { cadetList1c } = MyStorage({ initialCadetList1c: "" });
-
-//   return (
-//     <View style={styles.containerContent}>
-//       <View style={styles.acctBox1c}>
-//         <View style={styles.percDisp}>
-//           <Text style={styles.percDispText}>0 - 0%</Text>
-//         </View>
-//         <ScrollView style={styles.acctDisp}>
-//           <Text style={styles.acctDispText}>
-//             Arnold:       IFN
-//             DeCoste:      IFN
-//             Duffin:       Mac
-//             Fulton:         Lib
-//             Kim:          IFN
-//             McMahon:      Mac
-//             Norman:       IFN
-//             Rehauser:       IFN
-//             Taha:           Lib
-//             Tran:         IFN
-//             Young:        Exc
-//           </Text>
-//         </ScrollView>
-//       </View>
-//       <View style={styles.acctBox2c}>
-//         <View style={styles.percDisp}></View>
-//         <ScrollView style={styles.acctDisp}>
-//           <Text style={styles.acctDispText}>
-//             Cadet 1        .
-//             Cadet 2        .
-//             Cadet 3        .
-//             Cadet 4        .
-//             Cadet 5        .
-//             Cadet 6        .
-//             Cadet 7        .
-//             Cadet 8        .
-//             Cadet 9        .
-//             Cadet 10        .
-//             Cadet 11        .
-//             Cadet 12        .
-//             Cadet 13        .
-//             Cadet 14        .
-//             Cadet 15        .
-//             Cadet 16        .
-//             Cadet 17        .
-//             Cadet 18        .
-//             Cadet 19        .
-//             Cadet 20        .
-//             Cadet 21        .
-//             Cadet 22        .
-//             Cadet 23        .
-//             Cadet 24        .
-//             Cadet 25        .
-//             Cadet 26        .
-//             Cadet 27        .
-//             Cadet 28        .
-//             Cadet 29        .
-//             Cadet 30        .
-//           </Text>
-//         </ScrollView>
-//       </View>
-//       <View style={styles.acctBox3c}>
-//         <View style={styles.percDisp}></View>
-//         <ScrollView style={styles.acctDisp}>
-//           <Text style={styles.acctDispText}>
-//             Cadet 1        .
-//             Cadet 2        .
-//             Cadet 3        .
-//             Cadet 4        .
-//             Cadet 5        .
-//             Cadet 6        .
-//             Cadet 7        .
-//             Cadet 8        .
-//             Cadet 9        .
-//             Cadet 10        .
-//             Cadet 11        .
-//             Cadet 12        .
-//             Cadet 13        .
-//             Cadet 14        .
-//             Cadet 15        .
-//             Cadet 16        .
-//             Cadet 17        .
-//             Cadet 18        .
-//             Cadet 19        .
-//             Cadet 20        .
-//             Cadet 21        .
-//             Cadet 22        .
-//             Cadet 23        .
-//             Cadet 24        .
-//             Cadet 25        .
-//             Cadet 26        .
-//             Cadet 27        .
-//             Cadet 28        .
-//             Cadet 29        .
-//             Cadet 30        .
-//           </Text>
-//         </ScrollView>
-//       </View>
-//       <View style={styles.acctBox4c}>
-//         <View style={styles.percDisp}></View>
-//         <ScrollView style={styles.acctDisp}>
-//           <Text style={styles.acctDispText}>
-//             Cadet 1        .
-//             Cadet 2        .
-//             Cadet 3        .
-//             Cadet 4        .
-//             Cadet 5        .
-//             Cadet 6        .
-//             Cadet 7        .
-//             Cadet 8        .
-//             Cadet 9        .
-//             Cadet 10        .
-//             Cadet 11        .
-//             Cadet 12        .
-//             Cadet 13        .
-//             Cadet 14        .
-//             Cadet 15        .
-//             Cadet 16        .
-//             Cadet 17        .
-//             Cadet 18        .
-//             Cadet 19        .
-//             Cadet 20        .
-//             Cadet 21        .
-//             Cadet 22        .
-//             Cadet 23        .
-//             Cadet 24        .
-//             Cadet 25        .
-//             Cadet 26        .
-//             Cadet 27        .
-//             Cadet 28        .
-//             Cadet 29        .
-//             Cadet 30        .
-//           </Text>
-//         </ScrollView>
-//       </View>
-//     </View>
-//   );
-// };
-
 const AcctScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
+
+  const route = useRoute();
+  const token = route.params;
 
   const {
     company,
@@ -196,6 +50,9 @@ const AcctScreen = ({ navigation }) => {
     initialCadetList4c: "",
   });
 
+  // TODO: test if this is still usefull after backend swap
+  // hella scuffed even before the swap
+  // could probably init variables above with {"loading"} or something
   useEffect(() => {
     const stopLoading = async () => {
       try {
@@ -210,12 +67,28 @@ const AcctScreen = ({ navigation }) => {
     stopLoading();
   }, [cadetList1c]);
 
+  const handleRefresh = async () => {
+    setLoading(true);
+    const [temp1c, temp2c, temp3c, temp4c] =
+      await MyAzureFunctions.call_readCompanyStatus(token, company);
+    await saveCadetList1c(temp1c);
+    await saveCadetList2c(temp2c);
+    await saveCadetList3c(temp3c);
+    await saveCadetList4c(temp4c);
+  };
+
   return (
     <SafeAreaView style={styles.containerWebpage}>
       <View style={styles.containerHeader}>
         <View style={styles.headerBox}>
           <Text style={styles.headerText}>{company} Accountability</Text>
         </View>
+        <TouchableOpacity onPress={() => handleRefresh()}>
+          <Image
+            source={require("../assets/refresh.svg")}
+            style={styles.refreshBox}
+          ></Image>
+        </TouchableOpacity>
       </View>
       <View style={styles.containerContent}>
         <View style={styles.acctBox1c}>
@@ -228,7 +101,7 @@ const AcctScreen = ({ navigation }) => {
             ) : (
               cadetList1c.map((item, index) => (
                 <Text key={index} style={styles.acctDispText}>
-                  {item.FullName} : {item.Status}
+                  {item.FullName}: {item.Status}
                 </Text>
               ))
             )}
@@ -242,7 +115,7 @@ const AcctScreen = ({ navigation }) => {
             ) : (
               cadetList2c.map((item, index) => (
                 <Text key={index} style={styles.acctDispText}>
-                  {item.FullName} : {item.Status}
+                  {item.FullName}: {item.Status}
                 </Text>
               ))
             )}
@@ -256,7 +129,7 @@ const AcctScreen = ({ navigation }) => {
             ) : (
               cadetList3c.map((item, index) => (
                 <Text key={index} style={styles.acctDispText}>
-                  {item.FullName} : {item.Status}
+                  {item.FullName}: {item.Status}
                 </Text>
               ))
             )}
@@ -270,7 +143,7 @@ const AcctScreen = ({ navigation }) => {
             ) : (
               cadetList4c.map((item, index) => (
                 <Text key={index} style={styles.acctDispText}>
-                  {item.FullName} : {item.Status}
+                  {item.FullName}: {item.Status}
                 </Text>
               ))
             )}
@@ -297,6 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
   },
   headerBox: {
     width: "70%",
@@ -310,6 +184,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: RFPercentage(5),
   },
+  refreshBox: {},
 
   // CONTENT FORMAT
   containerContent: {

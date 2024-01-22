@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { useRoute } from "@react-navigation/native";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
@@ -37,6 +38,9 @@ const MainScreen = ({ navigation }) => {
     initialCadetList3c: "",
     initialCadetList4c: "",
   });
+
+  const route = useRoute();
+  const token = route.params;
 
   const Header = () => {
     const [timePhrase, setTimePhrase] = useState("TimePhrase");
@@ -68,8 +72,7 @@ const MainScreen = ({ navigation }) => {
 
   const AccountabilityBox = () => {
     const handleMoreInfoPress = () => {
-      navigation.navigate("Company Accountability");
-      console.log(cadetList1c);
+      navigation.navigate("Company Accountability", token);
     };
 
     return (
