@@ -174,14 +174,13 @@ const StartupScreen = ({ navigation }) => {
               onPress={async () => {
                 // TODO: don't continue if no company is selected
                 // TODO: loading animation and don't let them spam click while awaiting
-                await MyAzureFunctions.call_initCadetApp(token, 24813);
-                // const [temp1c, temp2c, temp3c, temp4c] =
-                //   await MyAzureFunctions.call_readCompanyStatus(token, company);
-                // await saveCadetList1c(temp1c);
-                // await saveCadetList2c(temp2c);
-                // await saveCadetList3c(temp3c);
-                // await saveCadetList4c(temp4c);
-                // await navigation.navigate("Bear Necessities - OOD", token);
+                const [temp1c, temp2c, temp3c, temp4c] =
+                  await MyAzureFunctions.call_readCompanyStatus(token, company);
+                await saveCadetList1c(temp1c);
+                await saveCadetList2c(temp2c);
+                await saveCadetList3c(temp3c);
+                await saveCadetList4c(temp4c);
+                await navigation.navigate("Bear Necessities - OOD", token);
                 // write example for cadet app
                 // await MyAzureFunctions.call_writeCadetStatus(
                 //   token,
