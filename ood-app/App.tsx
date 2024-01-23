@@ -23,7 +23,11 @@ export default function App() {
           component={MainScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Company Accountability" component={AcctScreen} />
+        <Stack.Screen
+          name="Company Accountability"
+          component={AcctScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

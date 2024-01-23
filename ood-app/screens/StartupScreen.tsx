@@ -180,10 +180,11 @@ const StartupScreen = ({ navigation }) => {
                 await saveCadetList3c(temp3c);
                 await saveCadetList4c(temp4c);
                 await navigation.navigate("Bear Necessities - OOD", token);
+                // write example for cadet app
                 // await MyAzureFunctions.call_writeCadetStatus(
                 //   token,
                 //   24813,
-                //   "bruh"
+                //   "status here"
                 // );
                 // console.log("done");
               }}

@@ -80,6 +80,14 @@ const AcctScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.containerWebpage}>
       <View style={styles.containerHeader}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Bear Necessities - OOD", token)}
+        >
+          <Image
+            source={require("../assets/arrow-back.svg")}
+            style={styles.refreshBox}
+          ></Image>
+        </TouchableOpacity>
         <View style={styles.headerBox}>
           <Text style={styles.headerText}>{company} Accountability</Text>
         </View>
