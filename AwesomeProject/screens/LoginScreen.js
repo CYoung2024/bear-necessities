@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import * as AuthSession from "expo-auth-session";
+import * as Crypto from "expo-crypto";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
@@ -39,6 +41,96 @@ const MicrosoftLogin = () => {
 // First part creates picture, can also bypass login screen
 // Second part creates login button
 function LoginScreen({ navigation }) {
+  
+   //for auth
+   const [discovery, $discovery]: any = useState({});
+   const [authRequest, $authRequest]: any = useState({});
+   const [authorizeResult, $authorizeResult]: any = useState({});
+   const [codeChallenge, $codeChallenge]: any = useState({});
+   const [token, $token]: any = useState({});
+   const [access, $access]: any = useState(false);
+   const scopes = [
+     "openid",
+     "profile",
+     "email",
+     "offline_access",
+     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
+   ];
+   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
+   const redirectUrl = AuthSession.makeRedirectUri();
+  
+  
+  // first half of auth
+  const getSession = async () => {
+    const cv = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      Math.random().toString(36).substr(2) + Date.now().toString(36)
+    );
+    const d = await AuthSession.fetchDiscoveryAsync(domain);
+    const cc = await base64URLEncode(cv);
+
+    const authRequestOptions: AuthSession.AuthRequestConfig = {
+      prompt: AuthSession.Prompt.Login,
+      responseType: AuthSession.ResponseType.Code,
+      scopes: scopes,
+      usePKCE: true,
+      clientId: ADConfig.applicationClientID,
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      state: ADConfig.state,
+      codeChallenge,
+      codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
+    };
+    const authRequest = new AuthSession.AuthRequest(authRequestOptions);
+    $authRequest(authRequest);
+    $discovery(d);
+    $codeChallenge(cc);
+  };
+
+  // second half of auth
+  const getCodeExchange = async () => {
+    const tokenResult = await AuthSession.exchangeCodeAsync(
+      {
+        code: authorizeResult.params.code,
+        clientId: ADConfig.applicationClientID,
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+
+        extraParams: {
+          code_verifier: authRequest.codeVerifier,
+          grant_type: "authorization_code",
+        },
+      },
+      discovery
+    );
+    const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
+    $token(tokenResult);
+  };
+
+  useEffect(() => {
+    getSession();
+    if (authorizeResult && authorizeResult.type == "error") {
+      console.log("some kinda auth error");
+    }
+    if (authorizeResult && authorizeResult.type == "success") {
+      // auth session is to good to continue to the second half
+      getCodeExchange();
+    }
+  }, [authorizeResult]);
+
+  // useEffect(() => {
+  //   getSession();
+  //   if (token.accessToken === undefined) {
+  //     $access(false);
+  //   } else {
+  //     // When the access token is received, move on and let the user into the app
+  //     $access(true);
+  //   }
+  // }, [token]);
+  
+  
+  
+  
+  
+  
   return (
     <SafeAreaView style={styles.container}>
 
@@ -56,7 +148,10 @@ function LoginScreen({ navigation }) {
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
         style={styles.button}
-        onPress={MicrosoftLogin}>
+        onPress={async () => {
+          const authorizeResult = await authRequest.promptAsync(discovery);
+          await $authorizeResult(authorizeResult);
+        }}>
           <Text style={styles.buttonText}>Sign in with Microsoft</Text>
         </TouchableOpacity>
       </View>
