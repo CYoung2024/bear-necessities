@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import DropDownPicker from 'react-native-dropdown-picker';
-import MyStorage from "../assets/storage";
+import MyStorage from "../storage";
 
 
 
@@ -26,12 +26,14 @@ const DropDownPopup = (props) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('Not Signed In');
     const [items, setItems] = useState([
-        { label: 'Leamy Hall',      value: 'Leamy Hall' },
-        { label: 'Library',         value: 'Library' },
-        { label: 'Mac Hall',        value: 'Mac Hall' },
-        { label: 'Satterlee Hall',  value: 'Satterlee Hall' },
-        { label: 'Smith Hall',      value: 'Smith Hall' }
-    ]);
+        { label: 'Liberty', value: 'Liberty' },
+        { label: 'Short',   value: 'Short'   },
+        { label: 'Long',    value: 'Long'    },
+        { label: 'Leave',   value: 'Leave'   },
+        { label: 'C-Leave', value: 'C-Leave' },
+        { label: 'E-Leave', value: 'E-Leave' },
+        { label: 'R-Leave', value: 'R-Leave' }
+      ]);
 
 
 

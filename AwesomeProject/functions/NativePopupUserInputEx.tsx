@@ -12,13 +12,12 @@ import {
 } from 'react-native';
 
 import DropDownPicker from 'react-native-dropdown-picker';
-import MyStorage from "../assets/storage";
+import MyStorage from "../storage";
 
 
 
 const UserInputPopup = (props) => {
-
-    const [text, onChangeText] = useState('IEEE Morale Party');
+    const [text, onChangeText] = React.useState('');
 
     const { cadetStatus, saveCadetStatus } = MyStorage(
         {
@@ -35,6 +34,7 @@ const UserInputPopup = (props) => {
                     style={styles.input}
                     onChangeText={onChangeText}
                     value={text}
+                    placeholder='IEEE Lunch Excusal'
                 />
             </View>
         )
@@ -252,7 +252,7 @@ const UserInputPopup = (props) => {
                                     props.setModalVisible(false);
                                     if (item.func && typeof item.func === 'function') item.func();
                                     if (item.text === 'OK' || defaultButtonText === 'OK') {
-                                        saveCadetStatus(value), console.log("cadetStatus=" + value)
+                                        saveCadetStatus(number), console.log("cadetStatus=" + number)
                                     }
                                 }}>
                                 <View

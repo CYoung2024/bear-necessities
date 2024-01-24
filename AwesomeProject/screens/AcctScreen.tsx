@@ -5,7 +5,7 @@ import DialogInput from 'react-native-dialog-input';
 import DropDownPopupAB from "../functions/NativePopupDropdownAB";
 import DropDownPopupOB from "../functions/NativePopupDropdownOB";
 import UserInputPopup from "../functions/NativePopupUserInputEx";
-import MyStorage from "../assets/storage";
+import MyStorage from "../storage";
 
 //import AccBuildSelectDialog from '../functions/isAcademicBuildingOptionSelectBox.js'
 
