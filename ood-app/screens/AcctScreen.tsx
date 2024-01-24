@@ -12,9 +12,12 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Modal,
+  Pressable,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useRoute } from "@react-navigation/native";
+import DropDownPicker from "react-native-dropdown-picker";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
@@ -28,6 +31,20 @@ const coastGuardYellow = "#f0ac1b";
 
 const AcctScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cadet, setCadet] = useState("");
+  const [what2update, setWhat2update] = useState("");
+  const [updateContent, setUpdateContent] = useState("");
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "IFN", value: "1" },
+    { label: "In academic building", value: "2" },
+    { label: "Excusal", value: "3" },
+    { label: "Liberty", value: "4" },
+    { label: "Liberty - Short", value: "5" },
+    { label: "Liberty - Long", value: "6" },
+  ]);
 
   const route = useRoute();
   const token = route.params;
@@ -77,6 +94,12 @@ const AcctScreen = ({ navigation }) => {
     await saveCadetList4c(temp4c);
   };
 
+  const updateSingleCadet = async (fullName: string, status: string) => {
+    await setCadet(fullName);
+    setModalVisible(true);
+    console.log(cadet);
+  };
+
   return (
     <SafeAreaView style={styles.containerWebpage}>
       <View style={styles.containerHeader}>
@@ -99,6 +122,34 @@ const AcctScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.containerContent}>
+        <Modal transparent={true} visible={modalVisible}>
+          <View style={styles.modalViewOuter}>
+            <View style={styles.modalViewInner}>
+              <Text style={styles.modalText}>
+                Select a new status for {cadet}
+              </Text>
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                placeholder="Select status here"
+                onSelectItem={(item) => {
+                  setWhat2update(item.label);
+                }}
+              />
+              <Pressable
+                style={styles.updateButton}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.updateButtonText}>Update</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+        {/* TODO: there has to be a better way to write all this 4 times */}
         <View style={styles.acctBox1c}>
           <View style={styles.percDisp}>
             <Text style={styles.percDispText}>0 - 0%</Text>
@@ -108,51 +159,81 @@ const AcctScreen = ({ navigation }) => {
               <Text>Loading...</Text>
             ) : (
               cadetList1c.map((item, index) => (
-                <Text key={index} style={styles.acctDispText}>
-                  {item.FullName}: {item.Status}
-                </Text>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.touchName}
+                  onPress={() => updateSingleCadet(item.FullName, item.Status)}
+                >
+                  <Text key={index} style={styles.acctDispText}>
+                    {item.FullName}: {item.Status}
+                  </Text>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>
         </View>
         <View style={styles.acctBox2c}>
-          <View style={styles.percDisp}></View>
+          <View style={styles.percDisp}>
+            <Text style={styles.percDispText}>0 - 0%</Text>
+          </View>
           <ScrollView style={styles.acctDisp}>
             {loading ? (
               <Text>Loading...</Text>
             ) : (
               cadetList2c.map((item, index) => (
-                <Text key={index} style={styles.acctDispText}>
-                  {item.FullName}: {item.Status}
-                </Text>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.touchName}
+                  onPress={() => updateSingleCadet(item.FullName, item.Status)}
+                >
+                  <Text key={index} style={styles.acctDispText}>
+                    {item.FullName}: {item.Status}
+                  </Text>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>
         </View>
         <View style={styles.acctBox3c}>
-          <View style={styles.percDisp}></View>
+          <View style={styles.percDisp}>
+            <Text style={styles.percDispText}>0 - 0%</Text>
+          </View>
           <ScrollView style={styles.acctDisp}>
             {loading ? (
               <Text>Loading...</Text>
             ) : (
               cadetList3c.map((item, index) => (
-                <Text key={index} style={styles.acctDispText}>
-                  {item.FullName}: {item.Status}
-                </Text>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.touchName}
+                  onPress={() => updateSingleCadet(item.FullName, item.Status)}
+                >
+                  <Text key={index} style={styles.acctDispText}>
+                    {item.FullName}: {item.Status}
+                  </Text>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>
         </View>
         <View style={styles.acctBox4c}>
-          <View style={styles.percDisp}></View>
+          <View style={styles.percDisp}>
+            <Text style={styles.percDispText}>0 - 0%</Text>
+          </View>
           <ScrollView style={styles.acctDisp}>
             {loading ? (
               <Text>Loading...</Text>
             ) : (
               cadetList4c.map((item, index) => (
-                <Text key={index} style={styles.acctDispText}>
-                  {item.FullName}: {item.Status}
-                </Text>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.touchName}
+                  onPress={() => updateSingleCadet(item.FullName, item.Status)}
+                >
+                  <Text key={index} style={styles.acctDispText}>
+                    {item.FullName}: {item.Status}
+                  </Text>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>
@@ -207,43 +288,85 @@ const styles = StyleSheet.create({
     width: "20%",
     height: "92%",
     borderColor: "blue",
-    borderWidth: 10,
+    backgroundColor: "#aab5c5",
+    borderWidth: 2,
+    borderRadius: 10,
   },
   acctBox2c: {
     width: "20%",
     height: "92%",
     borderColor: "black",
-    borderWidth: 10,
+    backgroundColor: "#eae9ea",
+    borderWidth: 2,
+    borderRadius: 10,
   },
   acctBox3c: {
     width: "20%",
     height: "92%",
     borderColor: "red",
-    borderWidth: 10,
+    backgroundColor: "#ffd4d4",
+    borderWidth: 2,
+    borderRadius: 10,
   },
   acctBox4c: {
     width: "20%",
     height: "92%",
     borderColor: "green",
-    borderWidth: 10,
+    backgroundColor: "#bbccb4",
+    borderWidth: 2,
+    borderRadius: 10,
   },
   percDisp: {
-    height: 100,
-    backgroundColor: "lightgrey",
+    height: "8%",
+    //borderBottomColor: "grey",
+    //borderBottomWidth: 2,
   },
   percDispText: {
     textAlign: "center",
     textAlignVertical: "center",
-    fontSize: RFPercentage(3),
+    fontSize: RFPercentage(2),
   },
   acctDisp: {
-    backgroundColor: "#ddd",
+    //backgroundColor: "#ddd",
   },
   acctDispText: {
     width: "95%",
     alignItems: "center",
     textAlign: "justify",
+    fontSize: RFPercentage(1.5),
+    paddingLeft: "1.5%",
+  },
+  touchName: {
+    borderTopColor: "grey",
+    borderTopWidth: 2,
+  },
+  updateButton: {
+    backgroundColor: "#015289",
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  updateButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+
+  // modal
+  modalViewOuter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    backgroundColor: "#00000080",
+  },
+  modalViewInner: {
+    backgroundColor: "#fff",
+    padding: 20,
+  },
+  modalText: {
     fontSize: RFPercentage(2),
+    paddingBottom: 10,
   },
 });
 

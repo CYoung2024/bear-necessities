@@ -15,8 +15,9 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import DropDownPicker from "react-native-dropdown-picker";
+import { auth } from "../firebase";
 
-WebBrowser.maybeCompleteAuthSession();
+WebBrowser.maybeCompleteAuthSession(); // I have no clue how this actually works
 let dim = Dimensions.get("window");
 
 function base64URLEncode(str) {
