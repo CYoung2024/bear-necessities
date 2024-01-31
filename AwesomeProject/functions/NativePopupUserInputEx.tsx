@@ -16,9 +16,9 @@ import MyStorage from "../storage";
 
 
 
+
 const UserInputPopup = (props) => {
     const [text, onChangeText] = React.useState('');
-
     const { cadetStatus, saveCadetStatus } = MyStorage(
         {
             initialCadetStatus: "",
@@ -27,18 +27,10 @@ const UserInputPopup = (props) => {
 
 
 
-    function UserInput() {
-        return (
-            <View style={styles.dropDownContainer}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeText}
-                    value={text}
-                    placeholder='IEEE Lunch Excusal'
-                />
-            </View>
-        )
-    }
+    // function UserInput() {
+    //     return (
+    //     )
+    // }
 
     const [androidDefaults, setAndroidDefaults] = useState({
         container: {
@@ -320,7 +312,14 @@ const UserInputPopup = (props) => {
                         </Text>
 
 
-                        <UserInput />
+                        <View style={styles.dropDownContainer}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={onChangeText}
+                    value={text}
+                    placeholder='IEEE Lunch Excusal'
+                />
+            </View>
 
 
                         <IOSButtonBox />
@@ -334,7 +333,14 @@ const UserInputPopup = (props) => {
                             {props.message || ''}
                         </Text>
 
-                        <UserInput />
+                        <View style={styles.dropDownContainer}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={onChangeText}
+                    value={text}
+                    placeholder='IEEE Lunch Excusal'
+                />
+            </View>
 
 
                         <AndroidButtonBox />

@@ -122,7 +122,7 @@ function LoginScreen({ navigation }) {
     } else {
       // When the access token is received, move on and let the user into the app
       console.log("Navigate to tabApp");
-      navigation.navigate("TabApp");
+      navigation.navigate("SetValues");
     }
   }, [token]);
 
@@ -132,7 +132,7 @@ function LoginScreen({ navigation }) {
       
         <TouchableOpacity
           style={styles.imageBackground}
-          onPress={() => navigation.navigate("TabApp")}
+          onPress={() => navigation.navigate("SetValues")}
         >
           <Image style={styles.image} source={USCGALogo} />
         </TouchableOpacity>

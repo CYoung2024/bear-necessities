@@ -5,6 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // App Screen function references 
 import LoginScreen from "./screens/LoginScreen";
+import OneTimeSetStuffScreen from "./screens/OneTimeSetStuffScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import AcctScreen from "./screens/AcctScreen";
 import MessagesScreen from "./screens/NotifsScreen";
@@ -50,39 +51,38 @@ const config = {
 
   return (
     <Stack.Navigator>
-
-
       <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{ headerShown: false }}
       />
 
-  
+      <Stack.Screen
+        name="SetValues"
+        component={OneTimeSetStuffScreen}
+        options={{ headerShown: false }}
+      />
+
       <Stack.Screen
         name="TabApp"
         component={DrawerApp}
         options={{ headerShown: false }}
       />
 
-
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ 
-          headerShown: true ,
-          headerStatusBarHeight: 0,
-          transitionSpec: {
-            open: config,
-            close: config,
-          },
-         }}
+        options={{
+          headerShown: true
+          //headerStatusBarHeight: 0,
+          // transitionSpec: {
+          //   open: config,
+          //   close: config,
+          }
+        }
       />
-
-
     </Stack.Navigator>
-
-  )
+  );
 }
 
 
@@ -164,7 +164,7 @@ function TabApp() {
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          headerShown: false,
+          //headerShown: false,
           tabBarIcon: (tabInfo) => (
             <Ionicons
               name='md-home'
@@ -179,8 +179,8 @@ function TabApp() {
         name="IFN"
         component={AcctScreen}
         options={{
-          headerShown: false,
-          showLabel: false,
+          //headerShown: false,
+          //showLabel: false,
           tabBarIcon: (tabInfo) => (
             <Ionicons
               name="location-sharp"
@@ -195,8 +195,8 @@ function TabApp() {
         name="Messages"
         component={MessagesScreen}
         options={{
-          headerShown: false,
-          tabBarLabelPosition: "below-icon",
+          //headerShown: false,
+          //tabBarLabelPosition: "below-icon",
           tabBarIcon: (tabInfo) => (
             <Ionicons
               name="mail"
@@ -211,8 +211,8 @@ function TabApp() {
         name="Routing"
         component={RouteScreen}
         options={{
-          headerShown: false,
-          tabBarLabelPosition: "below-icon",
+          //headerShown: false,
+          //tabBarLabelPosition: "below-icon",
           tabBarIcon: (tabInfo) => (
             <Ionicons
               name="md-newspaper"

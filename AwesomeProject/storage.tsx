@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
+const CADETCODE_STORAGE_KEY = "@MyApp:CadetCode";
 const CADETSTATUS_STORAGE_KEY = "@MyApp:CadetStatusKey";
-const COMPANY_STORAGE_KEY = "@MyApp:CompanyKey";
-const YEAR_STORAGE_KEY = "@MyApp:YearKey";
+
+// const COMPANY_STORAGE_KEY = "@MyApp:CompanyKey";
+// const YEAR_STORAGE_KEY = "@MyApp:YearKey";
 
 
 
-const MyStorage = ({ initialCompany, initialYear, initialCadetStatus }) => {
+const MyStorage = ({ initialCadetCode, initialCadetStatus }) => {       //, initialCompany, initialYear
 
-
-
+    const [cadetCode, setCadetCode] = useState(initialCadetCode);
     const [cadetStatus, setCadetStatus] = useState(initialCadetStatus);
-    const [company, setCompany] = useState(initialCompany);
-    const [year, setYear] = useState(initialYear);
+
+    // const [company, setCompany] = useState(initialCompany);
+    // const [year, setYear] = useState(initialYear);
 
 
 
@@ -23,13 +23,17 @@ const MyStorage = ({ initialCompany, initialYear, initialCadetStatus }) => {
 
         try {
 
-            const cadetStatus = await AsyncStorage.getItem(CADETSTATUS_STORAGE_KEY);
-            const company = await AsyncStorage.getItem(COMPANY_STORAGE_KEY);
-            const year = await AsyncStorage.getItem(YEAR_STORAGE_KEY);
+            const cadetCode = await AsyncStorage.getItem(CADETCODE_STORAGE_KEY)
+            setCadetCode(cadetCode !== null ? cadetCode : initialCadetCode);
 
-            setCadetStatus(cadetStatus !== null ? cadetStatus : initialCadetStatus);
-            setCompany(company !== null ? company : initialCompany);
-            setYear(year !== null ? year : initialYear);
+
+            const cadetStatus = await AsyncStorage.getItem(CADETSTATUS_STORAGE_KEY);
+            setCadetStatus(cadetStatus  !== null ? cadetStatus  : initialCadetStatus);
+
+            // const company = await AsyncStorage.getItem(COMPANY_STORAGE_KEY);
+            // const year = await AsyncStorage.getItem(YEAR_STORAGE_KEY);
+            // setCompany(company          !== null ? company      : initialCompany);
+            // setYear(year                !== null ? year         : initialYear);
 
         } catch (e) {
 
@@ -44,6 +48,16 @@ const MyStorage = ({ initialCompany, initialYear, initialCadetStatus }) => {
     }, []);
 
 
+    const saveCadetCode = async (newValue) => {
+        try {
+            await AsyncStorage.setItem(CADETCODE_STORAGE_KEY, newValue);
+            setCadetCode(newValue);
+        } catch (e) {
+            console.error("Failed to save string value to AsyncStorage", e);
+        }
+    };
+
+
     const saveCadetStatus = async (newValue) => {
         try {
             await AsyncStorage.setItem(CADETSTATUS_STORAGE_KEY, newValue);
@@ -54,30 +68,32 @@ const MyStorage = ({ initialCompany, initialYear, initialCadetStatus }) => {
     };
 
 
-    const saveCompany = async (newValue) => {
-        try {
-            await AsyncStorage.setItem(COMPANY_STORAGE_KEY, newValue);
-            setCompany(newValue);
-        } catch (e) {
-            console.error("Failed to save string value to AsyncStorage", e);
-        }
-    };
+    // const saveCompany = async (newValue) => {
+    //     try {
+    //         await AsyncStorage.setItem(COMPANY_STORAGE_KEY, newValue);
+    //         setCompany(newValue);
+    //     } catch (e) {
+    //         console.error("Failed to save string value to AsyncStorage", e);
+    //     }
+    // };
 
 
-    const saveYear = async (newValue) => {
-        try {
-            await AsyncStorage.setItem(YEAR_STORAGE_KEY, newValue);
-            setYear(newValue);
-        } catch (e) {
-            console.error("Failed to save string value to AsyncStorage", e);
-        }
-    };
+    // const saveYear = async (newValue) => {
+    //     try {
+    //         await AsyncStorage.setItem(YEAR_STORAGE_KEY, newValue);
+    //         setYear(newValue);
+    //     } catch (e) {
+    //         console.error("Failed to save string value to AsyncStorage", e);
+    //     }
+    // };
 
     return {
-        company,
-        saveCompany,
-        year,
-        saveYear,
+        cadetCode,
+        saveCadetCode,
+        // company,
+        // saveCompany,
+        // year,
+        // saveYear,
         cadetStatus,
         saveCadetStatus,
         loadValues,

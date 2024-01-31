@@ -118,6 +118,7 @@ function ButtonArea() {
           title={"Which Excusal?"}
           message={"Only type in the name of the club or event"}
           buttons={['OK', 'Cancel']}
+          setCadetStatus={saveCadetStatus}
         />
       </View>
 
