@@ -24,13 +24,29 @@ export const call_readCompanyStatus = async (token, company) => {
       await data.forEach(async (cadet) => {
         if (cadet.Year === 2024) {
           // TODO: How to make this not break next year?
-          await temp1c.push({ FullName: cadet.FullName, Status: cadet.Status });
+          await temp1c.push({
+            FullName: cadet.FullName,
+            Status: cadet.Status,
+            Code: cadet.CadetCode,
+          });
         } else if (cadet.Year === 2025) {
-          await temp2c.push({ FullName: cadet.FullName, Status: cadet.Status });
+          await temp2c.push({
+            FullName: cadet.FullName,
+            Status: cadet.Status,
+            Code: cadet.CadetCode,
+          });
         } else if (cadet.Year === 2026) {
-          await temp3c.push({ FullName: cadet.FullName, Status: cadet.Status });
+          await temp3c.push({
+            FullName: cadet.FullName,
+            Status: cadet.Status,
+            Code: cadet.CadetCode,
+          });
         } else if (cadet.Year === 2027) {
-          await temp4c.push({ FullName: cadet.FullName, Status: cadet.Status });
+          await temp4c.push({
+            FullName: cadet.FullName,
+            Status: cadet.Status,
+            Code: cadet.CadetCode,
+          });
         }
       });
       return [temp1c, temp2c, temp3c, temp4c];
