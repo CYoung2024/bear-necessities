@@ -142,3 +142,29 @@ export const call_initCadetApp = async (token, cadetCode) => {
     // Handle any network errors or exceptions
   }
 };
+
+export const call_fireAlarm = async (token) => {
+  const functionUrl =
+    "https://bearnecessititesfunctionapp.azurewebsites.net/api/FireAlarm?code=5B6_BUatDs694Kaw1a_HoEPzXlbPpBW9UKhOovbBpVF1AzFum1xLhQ==";
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+    } else {
+      console.error("Error calling Azure Function:", response.status);
+      // Handle error responses
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle any network errors or exceptions
+  }
+};

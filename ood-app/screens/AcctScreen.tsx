@@ -32,7 +32,8 @@ const coastGuardYellow = "#f0ac1b";
 
 const AcctScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible1, setModalVisible1] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [cadet, setCadet] = useState("");
   const [code, setCode] = useState("");
   const [category, setCategory] = useState("");
@@ -94,9 +95,9 @@ const AcctScreen = ({ navigation }) => {
     } else if (category === "Liberty") {
       setUpdateContent("Liberty");
     } else if (category === "Liberty - Short") {
-      setUpdateContent("Liberty - Short");
+      setUpdateContent("Short");
     } else if (category === "Liberty - Long") {
-      setUpdateContent("Liberty - Long");
+      setUpdateContent("Long");
     }
   }, [category]);
 
@@ -110,6 +111,12 @@ const AcctScreen = ({ navigation }) => {
     await saveCadetList4c(temp4c);
   };
 
+  const handleAlarm = async () => {
+    await MyAzureFunctions.call_fireAlarm(token);
+    await handleRefresh();
+    setModalVisible2(false);
+  };
+
   const startCadetUpdate = async (
     fullName: string,
     status: string,
@@ -117,20 +124,20 @@ const AcctScreen = ({ navigation }) => {
   ) => {
     await setCadet(fullName);
     await setCode(code);
-    setModalVisible(true);
+    setModalVisible1(true);
   };
 
   const handleCategoryChange = async (item: string) => {
     await setCategory(item);
   };
 
-  const dismissModal = async () => {
+  const dismissModal1 = async () => {
     await setUpdateContent("");
     await setCategory("");
     await setCadet("");
     await setCode("");
     await setValue(null);
-    setModalVisible(false);
+    setModalVisible1(false);
   };
 
   const handleUpdateButton = async () => {
@@ -174,7 +181,7 @@ const AcctScreen = ({ navigation }) => {
       await setCategory("");
       await setCadet("");
       await setCode("");
-      setModalVisible(false);
+      setModalVisible1(false);
     } else {
       console.log("it didn't update or something");
     }
@@ -201,16 +208,55 @@ const AcctScreen = ({ navigation }) => {
             style={styles.refreshBox}
           ></Image>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setModalVisible2(true)}>
+          <Image
+            source={require("../assets/alarm.svg")}
+            style={styles.refreshBox}
+          ></Image>
+        </TouchableOpacity>
       </View>
       {/* major fuckshit begins here */}
       <View style={styles.containerContent}>
         <Modal
           transparent={true}
-          visible={modalVisible}
-          //onDismiss={() => dismissModal()}
-          onRequestClose={() => dismissModal()}
+          visible={modalVisible2}
+          onRequestClose={() => setModalVisible2(false)}
         >
-          <TouchableWithoutFeedback onPress={() => dismissModal()}>
+          <TouchableWithoutFeedback onPress={() => setModalVisible2(false)}>
+            <View style={styles.modalViewOuter}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalViewInner}>
+                  <Text style={styles.modalText}>
+                    Are you sure you want to reset the accountability of all
+                    cadets not on liberty?
+                  </Text>
+                  <View style={styles.buttonHolder}>
+                    <Pressable
+                      style={styles.blueButton}
+                      onPress={() => setModalVisible2(false)}
+                    >
+                      <Text style={styles.updateButtonText}>No</Text>
+                    </Pressable>
+                    <Pressable
+                      style={styles.redButton}
+                      onPress={() => handleAlarm()}
+                    >
+                      <Text style={styles.updateButtonText}>
+                        Yes, I am sure
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+        <Modal
+          transparent={true}
+          visible={modalVisible1}
+          onRequestClose={() => dismissModal1()}
+        >
+          <TouchableWithoutFeedback onPress={() => dismissModal1()}>
             <View style={styles.modalViewOuter}>
               <TouchableWithoutFeedback>
                 <View style={styles.modalViewInner}>
@@ -250,8 +296,8 @@ const AcctScreen = ({ navigation }) => {
                   {updateContent ||
                   category === "IFN" ||
                   category === "Liberty" ||
-                  category === "Liberty - Short" ||
-                  category === "Liberty - Long" ? (
+                  category === "Short" ||
+                  category === "Long" ? (
                     <Pressable
                       style={styles.updateButton}
                       onPress={() => handleUpdateButton()}
@@ -469,11 +515,28 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     backgroundColor: "#015289",
-    width: "100%",
+    width: "40%",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
   },
+  blueButton: {
+    backgroundColor: "#015289",
+    width: "70%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    alignSelf: "flex-start",
+  },
+  redButton: {
+    backgroundColor: "#ff0000",
+    width: "30%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    alignSelf: "flex-end",
+  },
+  buttonHolder: { flexDirection: "row" },
   updateButtonText: {
     color: "white",
     fontSize: 16,
