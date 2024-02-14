@@ -27,7 +27,7 @@ class GreetUserArea extends Component {
       extrapolate: 'clamp',
     });
     return (
-      <View //style={styles.container}
+      <View style={styles.container}
       >
 
         <ScrollView
@@ -157,9 +157,10 @@ export default MessagesScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#DDE4EA',
+    //flex: 1,
+    //alignItems: 'center',
+    //backgroundColor: '#DDE4EA',
+    flexDirection: 'column',
   },
   WelcomeGreetingContainer: {
     backgroundColor: '#F4D79A',
@@ -240,5 +241,6 @@ const styles = StyleSheet.create({
   },
   behindMessageCountArea: {
     height: HEADER_MAX_HEIGHT,
+    alignContent: 'center'
   },
 });

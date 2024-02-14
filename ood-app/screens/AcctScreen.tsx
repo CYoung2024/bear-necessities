@@ -31,14 +31,18 @@ const coastGuardLBlue = "#B3E0FF";
 const coastGuardYellow = "#f0ac1b";
 
 const AcctScreen = ({ navigation }) => {
+  const [code, setCode] = useState("");
+  const [cadet, setCadet] = useState("");
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState("");
+  const [whichList, setWhichList] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible1, setModalVisible1] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [cadet, setCadet] = useState("");
   const [code, setCode] = useState("");
   const [category, setCategory] = useState("");
   const [updateContent, setUpdateContent] = useState("");
-  const [whichList, setWhichList] = useState(null);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -215,6 +219,12 @@ const AcctScreen = ({ navigation }) => {
           ></Image>
         </TouchableOpacity>
       </View>
+
+
+
+
+
+
       {/* major fuckshit begins here */}
       <View style={styles.containerContent}>
         <Modal
