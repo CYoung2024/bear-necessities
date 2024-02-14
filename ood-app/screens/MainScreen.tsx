@@ -6,6 +6,7 @@ import {
   View,
   Dimensions,
   SafeAreaView,
+  TextInput,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useRoute } from "@react-navigation/native";
@@ -39,107 +40,109 @@ const MainScreen = ({ navigation }) => {
     initialCadetList4c: "",
   });
 
+  const [input, setInput] = useState("");
   const route = useRoute();
   const token = route.params;
 
-  const Header = () => {
-    const [timePhrase, setTimePhrase] = useState("TimePhrase");
-    const { company } = MyStorage({
-      initialCompany: "",
-      initialCadetList1c: "",
-      initialCadetList2c: "",
-      initialCadetList3c: "",
-      initialCadetList4c: "",
-    });
+  const [timePhrase, setTimePhrase] = useState("TimePhrase");
+  let today = new Date();
+  let curHr = today.getHours();
 
-    let today = new Date();
-    let curHr = today.getHours();
+  // if (curHr < 12) {
+  //   setTimePhrase("Good Morning ");
+  // } else if (curHr < 18) {
+  //   setTimePhrase("Good Afternoon ");
+  // } else {
+  //   setTimePhrase("Good Evening ");
+  // }
 
-    // if (curHr < 12) {
-    //   setTimePhrase("Good Morning ");
-    // } else if (curHr < 18) {
-    //   setTimePhrase("Good Afternoon ");
-    // } else {
-    //   setTimePhrase("Good Evening ");
-    // }
-
-    return (
-      <View style={styles.headerBox}>
-        <Text style={styles.headerText}>Good Morning {company} OOD</Text>
-      </View>
-    );
+  const handleMoreInfoPress = () => {
+    navigation.navigate("Company Accountability", token);
   };
 
-  const AccountabilityBox = () => {
-    const handleMoreInfoPress = () => {
-      navigation.navigate("Company Accountability", token);
+  async function sendMessage(expoPushToken) {
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: "New OOD Message",
+      body: input,
+      data: { someData: "goes here" },
     };
 
-    return (
-      <View style={styles.infoBox}>
-        <Text style={styles.infoBoxText}>Accountability</Text>
-        <View style={styles.AcctContentContainer}>
-          <Text style={styles.NotifText}>Next Notif @ 2000</Text>
-          <View style={styles.percentageBox1c}>
-            <Text>1/c</Text>
-          </View>
-          <View style={styles.percentageBox2c}>
-            <Text>2/c</Text>
-          </View>
-          <View style={styles.percentageBox3c}>
-            <Text>3/c</Text>
-          </View>
-          <View style={styles.percentageBox4c}>
-            <Text>4/c</Text>
-          </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            title={"More Info"}
-            onPress={handleMoreInfoPress}
-            //style={styles.button}
-          />
-        </View>
-      </View>
-    );
-  };
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      mode: "no-cors",
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  }
 
-  const CompMessagesBox = () => {
-    return (
-      <View style={styles.infoBox}>
-        <Text style={styles.infoBoxText}>Company Messages</Text>
-        <View style={styles.AcctContentContainer}>
-          <Text style={styles.NotifText}>Next Notif @ 2000</Text>
-        </View>
-      </View>
-    );
-  };
-
-  const SettingsBox = () => {
-    return (
-      <View style={styles.infoBox}>
-        <Text style={styles.infoBoxText}>Settings</Text>
-        <View style={styles.AcctContentContainer}>
-          <Text style={styles.NotifText}>Settings Go Here</Text>
-        </View>
-      </View>
-    );
-  };
-
-  const Body = () => {
-    return (
-      <View style={styles.containerBoxes}>
-        <AccountabilityBox />
-        <CompMessagesBox />
-        <SettingsBox />
-      </View>
-    );
+  const handleSendMessage = async () => {
+    await sendMessage("ExponentPushToken[vtJsi0Cjo2hsMGwpVH4gTn]");
+    console.log("sending");
+    setInput("");
   };
 
   return (
     <SafeAreaView style={styles.containerWebpage}>
-      <Header />
-      <Body />
+      <View style={styles.headerBox}>
+        <Text style={styles.headerText}>Good Morning {company} OOD</Text>
+      </View>
+      <View style={styles.containerBoxes}>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoBoxText}>Accountability</Text>
+          <View style={styles.AcctContentContainer}>
+            <Text style={styles.NotifText}>Next Notif @ 2000</Text>
+            <View style={styles.percentageBox1c}>
+              <Text>1/c</Text>
+            </View>
+            <View style={styles.percentageBox2c}>
+              <Text>2/c</Text>
+            </View>
+            <View style={styles.percentageBox3c}>
+              <Text>3/c</Text>
+            </View>
+            <View style={styles.percentageBox4c}>
+              <Text>4/c</Text>
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title={"More Info"}
+              onPress={handleMoreInfoPress}
+              //style={styles.button}
+            />
+          </View>
+        </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoBoxText}>Company Messages</Text>
+          <View style={styles.AcctContentContainer}>
+            <Text style={styles.NotifText}>Next Notif @ 2000</Text>
+          </View>
+          <TextInput
+            //style={styles.input}
+            onChangeText={setInput}
+            value={input}
+            placeholder="Type a message to send the company"
+            keyboardType="default"
+          />
+          <Button
+            title={"Send Message"}
+            onPress={handleSendMessage}
+            //style={styles.button}
+          />
+        </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoBoxText}>Settings</Text>
+          <View style={styles.AcctContentContainer}>
+            <Text style={styles.NotifText}>Settings Go Here</Text>
+          </View>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
