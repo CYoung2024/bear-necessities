@@ -13,6 +13,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import { ADConfig } from "../secret-config";
+import MyStorage from "../storage";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -28,11 +29,6 @@ function base64URLEncode(str) {
     .replace(/\//g, "_")
     .replace(/=/g, "");
 }
-
-// Microsoft Login Function
-const MicrosoftLogin = () => {
-  alert("Logging in with Microsoft");
-};
 
 // Creates login screen display
 // First part creates picture, can also bypass login screen
@@ -54,6 +50,13 @@ function LoginScreen({ navigation }) {
   ];
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
+
+  
+const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
+  initialCadetCode: "",
+  initialCadetStatus: "",
+});
+
 
   // first half of auth
   const getSession = async () => {
@@ -122,7 +125,18 @@ function LoginScreen({ navigation }) {
     } else {
       // When the access token is received, move on and let the user into the app
       console.log("Navigate to tabApp");
-      navigation.navigate("SetValues");
+
+        if (
+          cadetCode === undefined ||
+          cadetCode === null ||
+          cadetCode === "" ||
+          cadetCode === "undefined"
+        ) {
+          navigation.navigate("SetValues");
+        } else {
+          navigation.navigate("TabApp");
+        }
+
     }
   }, [token]);
 
