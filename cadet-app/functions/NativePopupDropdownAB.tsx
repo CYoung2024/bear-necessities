@@ -4,7 +4,6 @@ import {
     Modal,
     StyleSheet,
     Text,
-    TextInput,
     Pressable,
     View,
     TouchableOpacity,
@@ -16,21 +15,44 @@ import MyStorage from "../storage";
 
 
 
+const DropDownPopup = (props) => {
 
-const UserInputPopup = (props) => {
-    const [text, onChangeText] = React.useState('');
     const { cadetStatus, saveCadetStatus } = MyStorage(
         {
             initialCadetStatus: "",
         }
     );
 
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('Not Signed In');
+    const [items, setItems] = useState([
+        { label: 'Leamy Hall',      value: 'Leamy Hall' },
+        { label: 'Library',         value: 'Library' },
+        { label: 'Mac Hall',        value: 'Mac Hall' },
+        { label: 'Satterlee Hall',  value: 'Satterlee Hall' },
+        { label: 'Smith Hall',      value: 'Smith Hall' }
+    ]);
 
 
-    // function UserInput() {
-    //     return (
-    //     )
-    // }
+
+
+    function DropDown() {
+        return (
+            <View style={styles.dropDownContainer}>
+                <DropDownPicker
+                    itemKey="value"
+                    style={styles.dropDown}
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    setItems={setItems}
+                    dropDownDirection={"TOP"}
+                />
+            </View>
+        )
+    }
 
     const [androidDefaults, setAndroidDefaults] = useState({
         container: {
@@ -153,12 +175,10 @@ const UserInputPopup = (props) => {
                                 index === 0 && buttonLayoutHorizontal === 1 ? { flex: 1 } : {},
                             ]}>
                             <TouchableOpacity
-                                onPress={() => {
-                                    props.setModalVisible(false), saveCadetStatus("TestAB")
+                                onPress={() => {props.setModalVisible(false), saveCadetStatus("TestAB")
                                     if (item.func && typeof item.func === 'function') item.func();
-                                    if (item.text === 'OK' || defaultButtonText === 'OK') {
-                                        saveCadetStatus(text), console.log("cadetStatus=" + text)
-                                    }
+                                    if (item.text === 'OK' || defaultButtonText === 'OK' ) {
+                                        props.saveCadetStatus(value), console.log("cadetStatus=" + value)}
                                 }}
                                 style={[{ alignSelf: alignSelfProperty }]}>
                                 <View
@@ -243,9 +263,8 @@ const UserInputPopup = (props) => {
                                 onPress={() => {
                                     props.setModalVisible(false);
                                     if (item.func && typeof item.func === 'function') item.func();
-                                    if (item.text === 'OK' || defaultButtonText === 'OK') {
-                                        saveCadetStatus(number), console.log("cadetStatus=" + number)
-                                    }
+                                    if (item.text === 'OK' || defaultButtonText === 'OK' ) {
+                                        saveCadetStatus(value), console.log("cadetStatus=" + value)}
                                 }}>
                                 <View
                                     style={[
@@ -299,7 +318,7 @@ const UserInputPopup = (props) => {
                     Platform.OS === 'ios' ? styles.iOSBackdrop : styles.androidBackdrop,
                     styles.backdrop,
                 ]}
-                onPress={() => { props.setModalVisible(false) }}
+                onPress={() => {props.setModalVisible(false)}}
             />
             <View style={styles.alertBox}>
                 {Platform.OS === 'ios' ? (
@@ -312,14 +331,7 @@ const UserInputPopup = (props) => {
                         </Text>
 
 
-                        <View style={styles.dropDownContainer}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeText}
-                    value={text}
-                    placeholder='IEEE Lunch Excusal'
-                />
-            </View>
+                        <DropDown />
 
 
                         <IOSButtonBox />
@@ -333,14 +345,7 @@ const UserInputPopup = (props) => {
                             {props.message || ''}
                         </Text>
 
-                        <View style={styles.dropDownContainer}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeText}
-                    value={text}
-                    placeholder='IEEE Lunch Excusal'
-                />
-            </View>
+                        <DropDown />
 
 
                         <AndroidButtonBox />
@@ -457,14 +462,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dropDownContainer: {
-    },
-    input: {
-      height: 50,
-      margin: 12,
-      borderWidth: 1,
-      borderRadius: 10,
-      padding: 15,
-    },
+        marginLeft: 24,
+        marginRight: 24,
+        justifycontent: 'center',
+    }
 });
-
-export default UserInputPopup;
+export default DropDownPopup;

@@ -26,12 +26,14 @@ const DropDownPopup = (props) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('Not Signed In');
     const [items, setItems] = useState([
-        { label: 'Leamy Hall',      value: 'Leamy Hall' },
-        { label: 'Library',         value: 'Library' },
-        { label: 'Mac Hall',        value: 'Mac Hall' },
-        { label: 'Satterlee Hall',  value: 'Satterlee Hall' },
-        { label: 'Smith Hall',      value: 'Smith Hall' }
-    ]);
+        { label: 'Liberty', value: 'Liberty' },
+        { label: 'Short',   value: 'Short'   },
+        { label: 'Long',    value: 'Long'    },
+        { label: 'Leave',   value: 'Leave'   },
+        { label: 'C-Leave', value: 'C-Leave' },
+        { label: 'E-Leave', value: 'E-Leave' },
+        { label: 'R-Leave', value: 'R-Leave' }
+      ]);
 
 
 
@@ -175,10 +177,10 @@ const DropDownPopup = (props) => {
                                 index === 0 && buttonLayoutHorizontal === 1 ? { flex: 1 } : {},
                             ]}>
                             <TouchableOpacity
-                                onPress={() => {props.setModalVisible(false), saveCadetStatus("TestAB")
+                                onPress={() => {props.setModalVisible(false)
                                     if (item.func && typeof item.func === 'function') item.func();
                                     if (item.text === 'OK' || defaultButtonText === 'OK' ) {
-                                        saveCadetStatus(value), console.log("cadetStatus=" + value)}
+                                        props.saveCadetStatus(value), console.log("cadetStatus=" + value)}
                                 }}
                                 style={[{ alignSelf: alignSelfProperty }]}>
                                 <View
