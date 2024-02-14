@@ -12,7 +12,7 @@ import MyStorage from "../storage";
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
-
+function AcctScreen() {
 
 function MapArea() {
   return (
@@ -24,11 +24,29 @@ function MapArea() {
 
 function ButtonArea() {
 
-  const { cadetStatus, saveCadetStatus } = MyStorage(
-    {
-      initialCadetStatus: "Not Signed In",
-    }
-  );
+  
+  const [loading, setLoading] = useState(false);
+
+  const [ cadetStatus, saveCadetStatus ] = useState("");
+  
+  // MyStorage(
+  //   {
+  //     initialCadetStatus: "Not Signed In",
+  //   }
+  // );
+
+
+  useEffect(() => {
+
+
+    const stopLoading = async () => {
+        await setLoading(false);
+        console.log("setloading =" + loading);
+    };
+
+
+    stopLoading();
+  }, [cadetStatus]);
 
 
   
@@ -47,7 +65,7 @@ function ButtonArea() {
           adjustsFontSizeToFit
           style={styles.largeText}
         >
-          Status: {cadetStatus}
+          Status: {loading ? ("loading...") : (cadetStatus)}
         </Text>
       </View>
 
@@ -57,7 +75,8 @@ function ButtonArea() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => { setOffBaseSelectDialogVisible(true) }}
+            onPress={() => { setOffBaseSelectDialogVisible(true)
+              setLoading(true) }}
           >
             <Text style={styles.smallText}>Liberty/Leave</Text>
           </TouchableOpacity>
@@ -65,7 +84,8 @@ function ButtonArea() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => { setExcusalInputVisible(true) }}
+            onPress={() => { setExcusalInputVisible(true)
+              setLoading(true) }}
           >
             <Text style={styles.smallText}>Excusal</Text>
           </TouchableOpacity>
@@ -73,7 +93,10 @@ function ButtonArea() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => { setAcBuildSelectDialogVisible(true) }}
+            onPress={() => { 
+              setAcBuildSelectDialogVisible(true)
+              setLoading(true) 
+            }}
           >
             <Text style={styles.smallText}>Academic Building</Text>
           </TouchableOpacity>
@@ -84,7 +107,7 @@ function ButtonArea() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              alert("Signing In For the Night"),
+              alert("Signing In For the Night")
                 saveCadetStatus("IFN")
                 console.log("cadetStatus=IFN")
             }}
@@ -152,10 +175,11 @@ function ButtonArea() {
 
 
 
-function AcctScreen() {
 
-  const { cadetStatus } = MyStorage({initialCadetStatus: "Not Signed In"});
-  useEffect(() => {console.log("Acct " + cadetStatus);}, [cadetStatus]);
+
+  //const { cadetStatus } = MyStorage({initialCadetStatus: "Not Signed In"});
+
+ // useEffect(() => {console.log("Acct " + cadetStatus);}, [cadetStatus]);
 
   return (
     <View style={styles.container}>
