@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEF0BB",
     alignItems: "center",
     borderColor: "blue",
+    borderWidth: 5,
     margin: "1%",
   },
   messagesBox: {
