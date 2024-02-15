@@ -8,6 +8,7 @@ const CADETLIST1C_STORAGE_KEY = "@MyApp:cadetList1cKey";
 const CADETLIST2C_STORAGE_KEY = "@MyApp:cadetList2cKey";
 const CADETLIST3C_STORAGE_KEY = "@MyApp:cadetList3cKey";
 const CADETLIST4C_STORAGE_KEY = "@MyApp:cadetList4cKey";
+const MESSAGELIST_STORAGE_KEY = "@MyApp:messageListKey";
 
 const MyStorage = ({
   initialCompany,
@@ -15,12 +16,14 @@ const MyStorage = ({
   initialCadetList2c,
   initialCadetList3c,
   initialCadetList4c,
+  initialMessageList,
 }) => {
   const [company, setCompany] = useState(initialCompany);
   const [cadetList1c, setCadetList1c] = useState(initialCadetList1c);
   const [cadetList2c, setCadetList2c] = useState(initialCadetList2c);
   const [cadetList3c, setCadetList3c] = useState(initialCadetList3c);
   const [cadetList4c, setCadetList4c] = useState(initialCadetList4c);
+  const [messageList, setMessageList] = useState(initialMessageList);
 
   const loadValues = async () => {
     try {
@@ -36,6 +39,9 @@ const MyStorage = ({
       );
       const storedCadetList4c = await AsyncStorage.getItem(
         CADETLIST4C_STORAGE_KEY
+      );
+      const storedMessageList = await AsyncStorage.getItem(
+        MESSAGELIST_STORAGE_KEY
       );
       setCompany(storedCompany !== null ? storedCompany : initialCompany);
       setCadetList1c(
@@ -57,6 +63,11 @@ const MyStorage = ({
         storedCadetList4c !== null
           ? JSON.parse(storedCadetList4c)
           : initialCadetList4c
+      );
+      setMessageList(
+        storedMessageList !== null
+          ? JSON.parse(storedMessageList)
+          : initialMessageList
       );
     } catch (e) {
       console.error("Failed to load values from AsyncStorage", e);
@@ -124,6 +135,18 @@ const MyStorage = ({
     }
   };
 
+  const saveMessageList = async (newValue) => {
+    try {
+      await AsyncStorage.setItem(
+        MESSAGELIST_STORAGE_KEY,
+        JSON.stringify(newValue)
+      );
+      setMessageList(newValue);
+    } catch (e) {
+      console.error("Failed to save string value to AsyncStorage", e);
+    }
+  };
+
   return {
     company,
     saveCompany,
@@ -135,6 +158,8 @@ const MyStorage = ({
     saveCadetList3c,
     cadetList4c,
     saveCadetList4c,
+    messageList,
+    saveMessageList,
   };
 };
 

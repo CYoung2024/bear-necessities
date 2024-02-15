@@ -7,12 +7,14 @@ import {
   Dimensions,
   SafeAreaView,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useRoute } from "@react-navigation/native";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
+import * as MyAzureFunctions from "../azureFunctions";
 
 let dim = Dimensions.get("window");
 
@@ -32,17 +34,21 @@ const MainScreen = ({ navigation }) => {
     saveCadetList3c,
     cadetList4c,
     saveCadetList4c,
+    messageList,
+    saveMessageList,
   } = MyStorage({
     initialCompany: "",
     initialCadetList1c: "",
     initialCadetList2c: "",
     initialCadetList3c: "",
     initialCadetList4c: "",
+    initialMessageList: "",
   });
 
   const [input, setInput] = useState("");
   const route = useRoute();
   const token = route.params;
+  const [loading, setLoading] = useState(true);
 
   const [timePhrase, setTimePhrase] = useState("TimePhrase");
   let today = new Date();
@@ -55,6 +61,15 @@ const MainScreen = ({ navigation }) => {
   // } else {
   //   setTimePhrase("Good Evening ");
   // }
+
+  useEffect(() => {
+    const stopLoading = async () => {
+      if (messageList.length > 0) {
+        setLoading(false);
+      }
+    };
+    stopLoading();
+  }, [messageList]);
 
   const handleMoreInfoPress = () => {
     navigation.navigate("Company Accountability", token);
@@ -83,7 +98,13 @@ const MainScreen = ({ navigation }) => {
 
   const handleSendMessage = async () => {
     await sendMessage("ExponentPushToken[vtJsi0Cjo2hsMGwpVH4gTn]");
-    console.log("sending");
+    const message = await MyAzureFunctions.call_writeMessage(
+      token,
+      company,
+      input
+    );
+    await saveMessageList([...messageList, message]);
+    console.log(messageList);
     setInput("");
   };
 
@@ -93,10 +114,9 @@ const MainScreen = ({ navigation }) => {
         <Text style={styles.headerText}>Good Morning {company} OOD</Text>
       </View>
       <View style={styles.containerBoxes}>
-        <View style={styles.infoBox}>
+        <View style={styles.accountabilityBox}>
           <Text style={styles.infoBoxText}>Accountability</Text>
           <View style={styles.AcctContentContainer}>
-            <Text style={styles.NotifText}>Next Notif @ 2000</Text>
             <View style={styles.percentageBox1c}>
               <Text>1/c</Text>
             </View>
@@ -118,29 +138,29 @@ const MainScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View style={styles.infoBox}>
+        <View style={styles.messagesBox}>
           <Text style={styles.infoBoxText}>Company Messages</Text>
-          <View style={styles.AcctContentContainer}>
-            <Text style={styles.NotifText}>Next Notif @ 2000</Text>
-          </View>
+          <ScrollView style={styles.scrollView}>
+            {loading ? (
+              <Text>No current messages :/</Text>
+            ) : (
+              messageList.map((item, index) => (
+                <View key={index} style={styles.touchName}>
+                  <Text key={index} style={styles.acctDispText}>
+                    {item.MessageContent} {item.TimeSent}
+                  </Text>
+                </View>
+              ))
+            )}
+          </ScrollView>
           <TextInput
-            //style={styles.input}
+            style={styles.input}
             onChangeText={setInput}
             value={input}
             placeholder="Type a message to send the company"
             keyboardType="default"
           />
-          <Button
-            title={"Send Message"}
-            onPress={handleSendMessage}
-            //style={styles.button}
-          />
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.infoBoxText}>Settings</Text>
-          <View style={styles.AcctContentContainer}>
-            <Text style={styles.NotifText}>Settings Go Here</Text>
-          </View>
+          <Button title={"Send Message"} onPress={handleSendMessage} />
         </View>
       </View>
     </SafeAreaView>
@@ -185,14 +205,24 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flexWrap: "wrap",
     flexDirection: "row",
+    padding: "2%",
   },
-  infoBox: {
-    width: "30%",
+  accountabilityBox: {
+    flex: 1,
+    height: "100%",
+    backgroundColor: "#EEF0BB",
+    alignItems: "center",
+    borderColor: "blue",
+    margin: "1%",
+  },
+  messagesBox: {
+    flex: 2,
     height: "100%",
     backgroundColor: "#EEF0BB",
     alignItems: "center",
     borderColor: "blue",
     borderWidth: 5,
+    margin: "1%",
   },
   infoBoxText: {
     fontSize: RFPercentage(4),
@@ -254,6 +284,14 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     alignItems: "center",
     elevation: 3,
+  },
+  input: {
+    height: "4%",
+    width: "70%",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: "#fff",
   },
 });
 
