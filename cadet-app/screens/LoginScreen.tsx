@@ -51,12 +51,10 @@ function LoginScreen({ navigation }) {
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
 
-  
-const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
-  initialCadetCode: "",
-  initialCadetStatus: "",
-});
-
+  const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
+  });
 
   // first half of auth
   const getSession = async () => {
@@ -126,30 +124,23 @@ const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
       // When the access token is received, move on and let the user into the app
       console.log("Navigate to tabApp");
 
-        if (
-          cadetCode === undefined ||
-          cadetCode === null ||
-          cadetCode === "" ||
-          cadetCode === "undefined"
-        ) {
-          navigation.navigate("SetValues");
-        } else {
-          navigation.navigate("TabApp");
-        }
-
+      if (
+        cadetCode === undefined ||
+        cadetCode === null ||
+        cadetCode === "" ||
+        cadetCode === "undefined"
+      ) {
+        navigation.navigate("SetValues");
+      } else {
+        navigation.navigate("TabApp");
+      }
     }
   }, [token]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.bypassContainer}>
-      
-        <TouchableOpacity
-          style={styles.imageBackground}
-          onPress={() => navigation.navigate("SetValues")}
-        >
-          <Image style={styles.image} source={USCGALogo} />
-        </TouchableOpacity>
+        <Image style={styles.image} source={USCGALogo} />
       </View>
 
       <View style={styles.buttonContainer}>
