@@ -69,12 +69,15 @@ const StartupScreen = ({ navigation }) => {
     saveCadetList3c,
     cadetList4c,
     saveCadetList4c,
+    messageList,
+    saveMessageList,
   } = MyStorage({
     initialCompany: "",
     initialCadetList1c: "",
     initialCadetList2c: "",
     initialCadetList3c: "",
     initialCadetList4c: "",
+    initialMessageList: "",
   });
 
   // first half of auth
@@ -176,6 +179,12 @@ const StartupScreen = ({ navigation }) => {
                 // TODO: loading animation and don't let them spam click while awaiting
                 const [temp1c, temp2c, temp3c, temp4c] =
                   await MyAzureFunctions.call_readCompanyStatus(token, company);
+                const messages =
+                  await MyAzureFunctions.call_readCompanyMessages(
+                    token,
+                    company
+                  );
+                await saveMessageList(messages);
                 await saveCadetList1c(temp1c);
                 await saveCadetList2c(temp2c);
                 await saveCadetList3c(temp3c);

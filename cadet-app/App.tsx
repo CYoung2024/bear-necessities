@@ -1,9 +1,15 @@
-import 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import "react-native-gesture-handler";
+import React, { useState, useEffect, useRef } from "react";
+import { Platform } from "react-native";
 
-// App Screen function references 
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import Constants from "expo-constants";
+import { useRoute } from "@react-navigation/native";
+
+// App Screen function references
 import LoginScreen from "./screens/LoginScreen";
 import OneTimeSetStuffScreen from "./screens/OneTimeSetStuffScreen";
 import DashboardScreen from "./screens/DashboardScreen";
@@ -13,41 +19,73 @@ import RouteScreen from "./screens/RoutingScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
 // Libraries used to Navigate through the app
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import {
   createDrawerNavigator,
   DrawerItem,
   DrawerItemList,
   DrawerContentScrollView,
-} from '@react-navigation/drawer';
+} from "@react-navigation/drawer";
+import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
+import NotifsScreen from "./screens/NotifsScreen";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId,
+    });
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+  return token.data;
+}
 
 // Creates instances of the different navigation tools used in the app
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const BottomTab = createMaterialTopTabNavigator();
 
-
-
 // Defines first app navigation layer
 // Once the Login screen is bypassed, it should not be returned to,
 // nor should the user see it again unless they leave base or log out
 function StackApp() {
-
-
-  
-// Configure settings transition animation
-const config = {
-  animation: 'spring',
-  config: {
-    stiffness: 10,
-  },
-};
-
-
+  // Configure settings transition animation
+  const config = {
+    animation: "spring",
+    config: {
+      stiffness: 10,
+    },
+  };
 
   return (
     <Stack.Navigator>
@@ -56,110 +94,100 @@ const config = {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="SetValues"
         component={OneTimeSetStuffScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="TabApp"
         component={DrawerApp}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-          headerShown: true
+          headerShown: true,
           //headerStatusBarHeight: 0,
           // transitionSpec: {
           //   open: config,
           //   close: config,
-          }
-        }
+        }}
       />
     </Stack.Navigator>
   );
 }
 
-
-
-// Creates the action buttons in the side panel
-// These are added after the screen navigation buttons
-// "Report a Bug" : Opens app link to submit bugs found
-function SidePanelButtons(props) {
-  return (
-    <DrawerContentScrollView>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="Settings"
-        onPress={() => { 
-          props.navigation.closeDrawer(),
-          props.navigation.navigate('Settings')
-        }}
-      />
-      <DrawerItem
-        label="Report a Bug"
-        onPress={() => alert('Bug Report Link')}
-      />
-      <DrawerItem
-        label="Logout"
-        onPress={() => props.navigation.navigate('Login')}
-      />
-    </DrawerContentScrollView>
-  );
-}
-
-
-
 // Defines second app navigation layer
 // The side drawer allows users to navigate between the tab screen
 // and the settings screen
 function DrawerApp() {
+  const route = useRoute();
+  const token = route.params;
+
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <SidePanelButtons {...props} />}
-      screenOptions={{ 
+      drawerContent={(props) => (
+        <DrawerContentScrollView>
+          <DrawerItemList {...props} />
+          <DrawerItem
+            label="Settings"
+            onPress={() => {
+              props.navigation.closeDrawer(),
+                props.navigation.navigate("Settings", token);
+            }}
+          />
+          <DrawerItem
+            label="Report a Bug"
+            onPress={() => alert("Bug Report Link")}
+          />
+          <DrawerItem
+            label="Logout"
+            onPress={() => props.navigation.navigate("Login")}
+          />
+        </DrawerContentScrollView>
+      )}
+      screenOptions={{
         drawerStyle: { width: "60%" },
       }}
     >
-
-
       <Drawer.Screen
         name="Home"
         component={TabApp}
         options={{
-          title: 'Home',
+          title: "Home",
           headerStatusBarHeight: 0,
           drawerIcon: ({ focused }) => (
             <Ionicons
               name="md-home"
-              size={focused ? 40 : 30 }
-              color={focused ? '#015289' : '#ccc'}
+              size={focused ? 40 : 30}
+              color={focused ? "#015289" : "#ccc"}
             />
-          )
+          ),
         }}
       />
-      
     </Drawer.Navigator>
-  )
+  );
 }
-
-
 
 // Creates the tab-bar on the bottom and set order of app screens
 // Uses the functions defined in the ./screens folder
-function TabApp() {
-  return (
-    <BottomTab.Navigator 
-    tabBarPosition='bottom' 
-    initialRouteName="Dashboard"
-    screenOptions={{'tabBarShowLabel': false}}
-    >
+const TabApp = ({ navigation }) => {
+  const route = useRoute();
+  const token = route.params;
 
+  useEffect(() => {
+    console.log("token from tab app");
+    console.log(token);
+    navigation.navigate("Messages", token);
+  }, [token]);
+  return (
+    <BottomTab.Navigator
+      tabBarPosition="bottom"
+      initialRouteName="Dashboard"
+      screenOptions={{ tabBarShowLabel: false }}
+    >
       <BottomTab.Screen
         name="Dashboard"
         component={DashboardScreen}
@@ -167,13 +195,13 @@ function TabApp() {
           //headerShown: false,
           tabBarIcon: (tabInfo) => (
             <Ionicons
-              name='md-home'
+              name="md-home"
               size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? '#015289' : '#ccc'}
+              color={tabInfo.focused ? "#015289" : "#ccc"}
             />
-          )
-        }} />
-
+          ),
+        }}
+      />
 
       <BottomTab.Screen
         name="IFN"
@@ -185,15 +213,15 @@ function TabApp() {
             <Ionicons
               name="location-sharp"
               size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? '#015289' : '#ccc'}
+              color={tabInfo.focused ? "#015289" : "#ccc"}
             />
-          )
-        }}  />
-
+          ),
+        }}
+      />
 
       <BottomTab.Screen
         name="Messages"
-        component={MessagesScreen}
+        component={NotifsScreen}
         options={{
           //headerShown: false,
           //tabBarLabelPosition: "below-icon",
@@ -201,11 +229,11 @@ function TabApp() {
             <Ionicons
               name="mail"
               size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? '#015289' : '#ccc'}
+              color={tabInfo.focused ? "#015289" : "#ccc"}
             />
-          )
-        }}  />
-
+          ),
+        }}
+      />
 
       <BottomTab.Screen
         name="Routing"
@@ -217,19 +245,43 @@ function TabApp() {
             <Ionicons
               name="md-newspaper"
               size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? '#015289' : '#ccc'}
+              color={tabInfo.focused ? "#015289" : "#ccc"}
             />
-          )
-        }}  
-
+          ),
+        }}
       />
     </BottomTab.Navigator>
-  )
-}
-
-
+  );
+};
 
 export default function App() {
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(
+      (token) => setExpoPushToken(token)
+      // send token to db?
+    );
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {});
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>

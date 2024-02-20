@@ -51,12 +51,10 @@ function LoginScreen({ navigation }) {
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
 
-  
-const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
-  initialCadetCode: "",
-  initialCadetStatus: "",
-});
-
+  const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
+  });
 
   // first half of auth
   const getSession = async () => {
@@ -79,7 +77,6 @@ const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
     const authRequest = new AuthSession.AuthRequest(authRequestOptions);
-    console.log(authRequest);
     $authRequest(authRequest);
     $discovery(d);
     $codeChallenge(cc);
@@ -101,7 +98,6 @@ const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
       discovery
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
-    console.log("TokenUpdating");
     $token(tokenResult);
   };
 
@@ -112,7 +108,6 @@ const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
     }
     if (authorizeResult && authorizeResult.type == "success") {
       // auth session is to good to continue to the second half
-      console.log("getCodeExchange");
       getCodeExchange();
     }
   }, [authorizeResult]);
@@ -121,35 +116,29 @@ const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
     getSession();
     if (token.accessToken === undefined) {
       $access(false);
-      console.log("Shebroke");
+      console.log("No access token");
     } else {
       // When the access token is received, move on and let the user into the app
-      console.log("Navigate to tabApp");
-
-        if (
-          cadetCode === undefined ||
-          cadetCode === null ||
-          cadetCode === "" ||
-          cadetCode === "undefined"
-        ) {
-          navigation.navigate("SetValues");
-        } else {
-          navigation.navigate("TabApp");
-        }
-
+      if (
+        cadetCode === undefined ||
+        cadetCode === null ||
+        cadetCode === "" ||
+        cadetCode === "undefined"
+      ) {
+        navigation.navigate("SetValues", token);
+      } else {
+        navigation.navigate("TabApp", {
+          screen: "Home",
+          params: token,
+        });
+      }
     }
   }, [token]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.bypassContainer}>
-      
-        <TouchableOpacity
-          style={styles.imageBackground}
-          onPress={() => navigation.navigate("SetValues")}
-        >
-          <Image style={styles.image} source={USCGALogo} />
-        </TouchableOpacity>
+        <Image style={styles.image} source={USCGALogo} />
       </View>
 
       <View style={styles.buttonContainer}>

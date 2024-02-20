@@ -168,3 +168,59 @@ export const call_fireAlarm = async (token) => {
     // Handle any network errors or exceptions
   }
 };
+
+export const call_writeMessage = async (token, company, messageContent) => {
+  const functionUrl =
+    "https://bearnecessititesfunctionapp.azurewebsites.net/api/writeMessage?code=msjv5OqAGN8RIrntYXr9Y4Gzl6qJTnpQ03wCpmHZ0rJeAzFuk5aEdw==&company=" +
+    company.charAt(0) +
+    "&messageContent=" +
+    messageContent;
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Error calling Azure Function:", response.status);
+      // Handle error responses
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle any network errors or exceptions
+  }
+};
+
+export const call_readCompanyMessages = async (token, company) => {
+  const functionUrl =
+    "https://bearnecessititesfunctionapp.azurewebsites.net/api/readCompanyMessages?code=POOHTOzIwlSCvJVh66GpWWojzJWnKn_dO4HSv5AcP1-QAzFuToZzaw==&company=" +
+    company.charAt(0);
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Error calling Azure Function:", response.status);
+      // Handle error responses
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle any network errors or exceptions
+  }
+};
