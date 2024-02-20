@@ -77,7 +77,6 @@ function LoginScreen({ navigation }) {
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
     const authRequest = new AuthSession.AuthRequest(authRequestOptions);
-    console.log(authRequest);
     $authRequest(authRequest);
     $discovery(d);
     $codeChallenge(cc);
@@ -99,7 +98,6 @@ function LoginScreen({ navigation }) {
       discovery
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
-    console.log("TokenUpdating");
     $token(tokenResult);
   };
 
@@ -110,7 +108,6 @@ function LoginScreen({ navigation }) {
     }
     if (authorizeResult && authorizeResult.type == "success") {
       // auth session is to good to continue to the second half
-      console.log("getCodeExchange");
       getCodeExchange();
     }
   }, [authorizeResult]);
@@ -119,20 +116,21 @@ function LoginScreen({ navigation }) {
     getSession();
     if (token.accessToken === undefined) {
       $access(false);
-      console.log("Shebroke");
+      console.log("No access token");
     } else {
       // When the access token is received, move on and let the user into the app
-      console.log("Navigate to tabApp");
-
       if (
         cadetCode === undefined ||
         cadetCode === null ||
         cadetCode === "" ||
         cadetCode === "undefined"
       ) {
-        navigation.navigate("SetValues");
+        navigation.navigate("SetValues", token);
       } else {
-        navigation.navigate("TabApp");
+        navigation.navigate("TabApp", {
+          screen: "Home",
+          params: token,
+        });
       }
     }
   }, [token]);

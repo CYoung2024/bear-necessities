@@ -7,6 +7,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
+import { useRoute } from "@react-navigation/native";
 
 // App Screen function references
 import LoginScreen from "./screens/LoginScreen";
@@ -27,6 +28,8 @@ import {
   DrawerItemList,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
+import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
+import NotifsScreen from "./screens/NotifsScreen";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -37,9 +40,7 @@ Notifications.setNotificationHandler({
 });
 
 async function registerForPushNotificationsAsync() {
-  console.log("registering");
   let token;
-
   if (Platform.OS === "android") {
     Notifications.setNotificationChannelAsync("default", {
       name: "default",
@@ -48,7 +49,6 @@ async function registerForPushNotificationsAsync() {
       lightColor: "#FF231F7C",
     });
   }
-
   if (Device.isDevice) {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
@@ -64,11 +64,9 @@ async function registerForPushNotificationsAsync() {
     token = await Notifications.getExpoPushTokenAsync({
       projectId: Constants.expoConfig.extra.eas.projectId,
     });
-    console.log(token);
   } else {
     alert("Must use physical device for Push Notifications");
   }
-  console.log(token.data);
   return token.data;
 }
 
@@ -96,19 +94,16 @@ function StackApp() {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="SetValues"
         component={OneTimeSetStuffScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="TabApp"
         component={DrawerApp}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
@@ -124,38 +119,35 @@ function StackApp() {
   );
 }
 
-// Creates the action buttons in the side panel
-// These are added after the screen navigation buttons
-// "Report a Bug" : Opens app link to submit bugs found
-function SidePanelButtons(props) {
-  return (
-    <DrawerContentScrollView>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="Settings"
-        onPress={() => {
-          props.navigation.closeDrawer(), props.navigation.navigate("Settings");
-        }}
-      />
-      <DrawerItem
-        label="Report a Bug"
-        onPress={() => alert("Bug Report Link")}
-      />
-      <DrawerItem
-        label="Logout"
-        onPress={() => props.navigation.navigate("Login")}
-      />
-    </DrawerContentScrollView>
-  );
-}
-
 // Defines second app navigation layer
 // The side drawer allows users to navigate between the tab screen
 // and the settings screen
 function DrawerApp() {
+  const route = useRoute();
+  const token = route.params;
+
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <SidePanelButtons {...props} />}
+      drawerContent={(props) => (
+        <DrawerContentScrollView>
+          <DrawerItemList {...props} />
+          <DrawerItem
+            label="Settings"
+            onPress={() => {
+              props.navigation.closeDrawer(),
+                props.navigation.navigate("Settings", token);
+            }}
+          />
+          <DrawerItem
+            label="Report a Bug"
+            onPress={() => alert("Bug Report Link")}
+          />
+          <DrawerItem
+            label="Logout"
+            onPress={() => props.navigation.navigate("Login")}
+          />
+        </DrawerContentScrollView>
+      )}
       screenOptions={{
         drawerStyle: { width: "60%" },
       }}
@@ -181,7 +173,15 @@ function DrawerApp() {
 
 // Creates the tab-bar on the bottom and set order of app screens
 // Uses the functions defined in the ./screens folder
-function TabApp() {
+const TabApp = ({ navigation }) => {
+  const route = useRoute();
+  const token = route.params;
+
+  useEffect(() => {
+    console.log("token from tab app");
+    console.log(token);
+    navigation.navigate("Messages", token);
+  }, [token]);
   return (
     <BottomTab.Navigator
       tabBarPosition="bottom"
@@ -221,7 +221,7 @@ function TabApp() {
 
       <BottomTab.Screen
         name="Messages"
-        component={MessagesScreen}
+        component={NotifsScreen}
         options={{
           //headerShown: false,
           //tabBarLabelPosition: "below-icon",
@@ -252,7 +252,7 @@ function TabApp() {
       />
     </BottomTab.Navigator>
   );
-}
+};
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState("");
@@ -272,9 +272,7 @@ export default function App() {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       Notifications.removeNotificationSubscription(
@@ -283,10 +281,6 @@ export default function App() {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-
-  useEffect(() => {
-    console.log(expoPushToken);
-  }, [expoPushToken]);
 
   return (
     <SafeAreaProvider>

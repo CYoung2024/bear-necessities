@@ -8,102 +8,88 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 import MyStorage from "../storage";
-
-
+import { useRoute } from "@react-navigation/native";
 
 const OneTimeSetStuffScreen = ({ navigation }) => {
-    const [selected, setSelected] = useState("");
-    const [show, setShow] = useState(false);
-    const [number, onChangeNumber] = React.useState('');
-  
-    const {  cadetCode, saveCadetCode, cadetStatus } = MyStorage({
-      initialCadetCode: "",
-      initialCadetStatus: "",
-    });
+  const route = useRoute();
+  const token = route.params;
+  const [selected, setSelected] = useState("");
+  const [show, setShow] = useState(false);
+  const [number, onChangeNumber] = React.useState("");
 
-
-    useEffect(() => {
-      if (
-        cadetCode === undefined ||
-        cadetCode === null ||
-        cadetCode === "" ||
-        cadetCode === "undefined"
-      ) {
-      } else {
-        navigation.navigate("TabApp");
-      }
-    }, [cadetCode]);
-  
-
-
-    const handleCadetCodeInput = async () => {
-      await saveCadetCode(number);
-      console.log(cadetCode)
-    };
-  
-
-
-
-    const handleContinue = () => {
-        navigation.navigate("TabApp");
-    };
-  
-
-
-
-
-    return (
-      <KeyboardAvoidingView style={styles.container}>
-        
-        <Text style={styles.mainText}>Please input your 5-digit cadet code</Text>
-       
-        <View style={styles.selectContainer}>
-          
-          
-        <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="2XXXX"
-            keyboardType="numeric"
-        />
-        </View>
-        <Button 
-            title="Continue" 
-            onPress={() => {
-                handleContinue()
-                handleCadetCodeInput()
-            }}
-        />
-      </KeyboardAvoidingView>
-    );
-};
-  
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    mainText: {
-      fontSize: 14,
-    },
-    selectContainer: {
-      padding: 10,
-    },
-    separator: {
-      padding: 10,
-    },
-    input: {
-      height: 40,
-      margin: 12,
-      borderWidth: 1,
-      padding: 10,
-    },
+  const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
   });
-  
-  export default OneTimeSetStuffScreen;
+
+  useEffect(() => {
+    if (
+      cadetCode === undefined ||
+      cadetCode === null ||
+      cadetCode === "" ||
+      cadetCode === "undefined"
+    ) {
+    } else {
+      navigation.navigate("TabApp", token);
+    }
+  }, [cadetCode]);
+
+  const handleCadetCodeInput = async () => {
+    await saveCadetCode(number);
+  };
+
+  const handleContinue = () => {
+    navigation.navigate("TabApp", token);
+  };
+
+  return (
+    <KeyboardAvoidingView style={styles.container}>
+      <Text style={styles.mainText}>Please input your 5-digit cadet code</Text>
+
+      <View style={styles.selectContainer}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeNumber}
+          value={number}
+          placeholder="2XXXX"
+          keyboardType="numeric"
+        />
+      </View>
+      <Button
+        title="Continue"
+        onPress={() => {
+          handleContinue();
+          handleCadetCodeInput();
+        }}
+      />
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mainText: {
+    fontSize: 14,
+  },
+  selectContainer: {
+    padding: 10,
+  },
+  separator: {
+    padding: 10,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});
+
+export default OneTimeSetStuffScreen;
