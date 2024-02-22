@@ -9,6 +9,8 @@ import {
   View,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { useContext } from "react";
+import { TokenContext } from "../tokenContext";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
@@ -26,12 +28,13 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 //     };
 //   }
 
-const NotifsScreen = ({ navigation, token }) => {
+const NotifsScreen = (navigation) => {
   const route = useRoute();
   //const token = route.params;
+  const token = useContext(TokenContext);
 
   useEffect(() => {
-    console.log("heres the final token");
+    console.log("token from notifs screen");
     console.log(token);
   }, [token]);
 
