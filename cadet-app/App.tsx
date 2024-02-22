@@ -8,6 +8,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { useRoute } from "@react-navigation/native";
+import { TokenContext } from "./tokenContext";
 
 // App Screen function references
 import LoginScreen from "./screens/LoginScreen";
@@ -180,77 +181,78 @@ const TabApp = ({ navigation }) => {
   useEffect(() => {
     console.log("token from tab app");
     console.log(token);
-    navigation.navigate("Messages", token);
   }, [token]);
   return (
-    <BottomTab.Navigator
-      tabBarPosition="bottom"
-      initialRouteName="Dashboard"
-      screenOptions={{ tabBarShowLabel: false }}
-    >
-      <BottomTab.Screen
-        name="Dashboard"
-        component={DashboardScreen}
-        options={{
-          //headerShown: false,
-          tabBarIcon: (tabInfo) => (
-            <Ionicons
-              name="md-home"
-              size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? "#015289" : "#ccc"}
-            />
-          ),
-        }}
-      />
+    <TokenContext.Provider value={token}>
+      <BottomTab.Navigator
+        tabBarPosition="bottom"
+        initialRouteName="Dashboard"
+        screenOptions={{ tabBarShowLabel: false }}
+      >
+        <BottomTab.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{
+            //headerShown: false,
+            tabBarIcon: (tabInfo) => (
+              <Ionicons
+                name="md-home"
+                size={tabInfo.focused ? 24 : 20}
+                color={tabInfo.focused ? "#015289" : "#ccc"}
+              />
+            ),
+          }}
+        />
 
-      <BottomTab.Screen
-        name="IFN"
-        component={AcctScreen}
-        options={{
-          //headerShown: false,
-          //showLabel: false,
-          tabBarIcon: (tabInfo) => (
-            <Ionicons
-              name="location-sharp"
-              size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? "#015289" : "#ccc"}
-            />
-          ),
-        }}
-      />
+        <BottomTab.Screen
+          name="IFN"
+          component={AcctScreen}
+          options={{
+            //headerShown: false,
+            //showLabel: false,
+            tabBarIcon: (tabInfo) => (
+              <Ionicons
+                name="location-sharp"
+                size={tabInfo.focused ? 24 : 20}
+                color={tabInfo.focused ? "#015289" : "#ccc"}
+              />
+            ),
+          }}
+        />
 
-      <BottomTab.Screen
-        name="Messages"
-        component={NotifsScreen}
-        options={{
-          //headerShown: false,
-          //tabBarLabelPosition: "below-icon",
-          tabBarIcon: (tabInfo) => (
-            <Ionicons
-              name="mail"
-              size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? "#015289" : "#ccc"}
-            />
-          ),
-        }}
-      />
+        <BottomTab.Screen
+          name="Messages"
+          component={NotifsScreen}
+          options={{
+            //headerShown: false,
+            //tabBarLabelPosition: "below-icon",
+            tabBarIcon: (tabInfo) => (
+              <Ionicons
+                name="mail"
+                size={tabInfo.focused ? 24 : 20}
+                color={tabInfo.focused ? "#015289" : "#ccc"}
+              />
+            ),
+          }}
+        />
 
-      <BottomTab.Screen
-        name="Routing"
-        component={RouteScreen}
-        options={{
-          //headerShown: false,
-          //tabBarLabelPosition: "below-icon",
-          tabBarIcon: (tabInfo) => (
-            <Ionicons
-              name="md-newspaper"
-              size={tabInfo.focused ? 24 : 20}
-              color={tabInfo.focused ? "#015289" : "#ccc"}
-            />
-          ),
-        }}
-      />
-    </BottomTab.Navigator>
+        <BottomTab.Screen
+          name="Routing"
+          component={RouteScreen}
+          options={{
+            //headerShown: false,
+            //tabBarLabelPosition: "below-icon",
+            tabBarIcon: (tabInfo) => (
+              <Ionicons
+                name="md-newspaper"
+                size={tabInfo.focused ? 24 : 20}
+                color={tabInfo.focused ? "#015289" : "#ccc"}
+              />
+            ),
+          }}
+        />
+      </BottomTab.Navigator>
+    </TokenContext.Provider>
   );
 };
 
@@ -262,7 +264,7 @@ export default function App() {
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(
-      (token) => setExpoPushToken(token)
+      (notifToken) => setExpoPushToken(notifToken)
       // send token to db?
     );
 
