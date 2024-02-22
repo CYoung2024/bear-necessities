@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
+import { useRoute } from "@react-navigation/native";
 
+import * as MyAzureFunctions from "../azureFunctions";
 import DropDownPopupAB from "../functions/NativePopupDropdownAB";
 import DropDownPopupOB from "../functions/NativePopupDropdownOB";
 import UserInputPopup from "../functions/NativePopupUserInputEx";
@@ -14,12 +16,30 @@ let dim = Dimensions.get("window");
 
 function AcctScreen() {
 
+  const route = useRoute();
+  const token = route.params;
+
+  
+
+  const { cadetCode, saveCadetCode } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
+  });
+
+  useEffect(() => {
+    console.log("token from dashboard");
+    console.log(token);
+  }, [token]);
+
   const [loading, setLoading] = useState(false);
   const [cadetStatus, setCadetStatus ] = useState("");
 
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
   const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] = useState(false);
   const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] = useState(false);
+
+
+
 
 
   useEffect(() => {
@@ -31,6 +51,14 @@ function AcctScreen() {
 
     stopLoading();
     console.log("cadetStatus=" + cadetStatus)
+
+    const data =  MyAzureFunctions.call_writeCadetStatus(
+      token,
+      cadetCode,
+      cadetStatus
+    );
+
+
   }, [cadetStatus]);
 
   return (
@@ -178,7 +206,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   leftButtonContainer: {
-    alignItems: 'even-spacing',
+    //alignItems: 'even-spacing',
     flex: 1,
     gap: 5,
     justifyContent: 'center',

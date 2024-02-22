@@ -265,8 +265,8 @@ const DropDownPopup = (props) => {
                                 onPress={() => {
                                     props.setModalVisible(false);
                                     if (item.func && typeof item.func === 'function') item.func();
-                                    if (item.text === 'OK' || defaultButtonText === 'OK' ) {
-                                        saveCadetStatus(value), console.log("cadetStatus=" + value)}
+                                    if (item.text === 'OK' || defaultButtonText === 'OK' ) {{
+                                        props.saveCadetStatus(value), console.log("cadetStatus=" + value)}
                                 }}>
                                 <View
                                     style={[
