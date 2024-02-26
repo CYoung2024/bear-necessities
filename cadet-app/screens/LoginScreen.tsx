@@ -14,6 +14,9 @@ import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
+import { MessageListContext } from "../messageListContext";
+
+import * as MyAzureFunctions from "../azureFunctions";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -116,7 +119,6 @@ function LoginScreen({ navigation }) {
     getSession();
     if (token.accessToken === undefined) {
       $access(false);
-      console.log("No access token");
     } else {
       // When the access token is received, move on and let the user into the app
       if (
@@ -127,13 +129,22 @@ function LoginScreen({ navigation }) {
       ) {
         navigation.navigate("SetValues", token);
       } else {
-        navigation.navigate("TabApp", {
-          screen: "Home",
-          params: token,
-        });
+        handleMoveToTabApp();
       }
     }
   }, [token]);
+
+  const handleMoveToTabApp = async () => {
+    // other init cadet app stuff
+    const messageList = await MyAzureFunctions.call_readCompanyMessages(
+      token,
+      "Alfa"
+    );
+    navigation.navigate("TabApp", {
+      screen: "Home",
+      params: { token, messageList },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>

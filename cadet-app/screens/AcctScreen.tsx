@@ -29,11 +29,6 @@ function AcctScreen() {
     initialCadetStatus: "",
   });
 
-  useEffect(() => {
-    console.log("token from acct screen");
-    console.log(token);
-  }, [token]);
-
   const [loading, setLoading] = useState(false);
   const [cadetStatus, setCadetStatus] = useState("");
 
@@ -55,11 +50,11 @@ function AcctScreen() {
     console.log("im here" + token);
     console.log("im here" + cadetCode);
     console.log("im here" + cadetStatus);
-    const data = MyAzureFunctions.call_writeCadetStatus(
-      token,
-      cadetCode,
-      cadetStatus
-    );
+    // const data = MyAzureFunctions.call_writeCadetStatus(
+    //   token,
+    //   cadetCode,
+    //   cadetStatus
+    // );
   }, [cadetStatus]);
 
   return (

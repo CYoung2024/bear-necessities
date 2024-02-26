@@ -142,7 +142,7 @@ const MainScreen = ({ navigation }) => {
         </View>
         <View style={styles.messagesBox}>
           <Text style={styles.infoBoxText}>Company Messages</Text>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView style={styles.scrollViewer}>
             {loading ? (
               <Text>No current messages :/</Text>
             ) : (
@@ -155,14 +155,16 @@ const MainScreen = ({ navigation }) => {
               ))
             )}
           </ScrollView>
-          <TextInput
-            style={styles.input}
-            onChangeText={setInput}
-            value={input}
-            placeholder="Type a message to send the company"
-            keyboardType="default"
-          />
-          <Button title={"Send Message"} onPress={handleSendMessage} />
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setInput}
+              value={input}
+              placeholder="Type a message to send the company"
+              keyboardType="default"
+            />
+            <Button title={"Send Message"} onPress={handleSendMessage} />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -289,12 +291,24 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   input: {
-    height: "4%",
-    width: "70%",
+    height: "100%",
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: "#fff",
+    flex: 3,
+  },
+  inputContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "1%",
+    padding: "1%",
+  },
+  ScrollViewer: {
+    width: "100%",
+    backgroundColor: "#EEF0BB",
   },
 });
 

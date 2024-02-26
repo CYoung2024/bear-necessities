@@ -21,10 +21,6 @@ const DashboardScreen = ({ navigation }) => {
   const route = useRoute();
   const token = route.params;
 
-  useEffect(() => {
-    console.log("token from dashboard");
-    console.log(token);
-  }, [token]);
   return (
     <View style={styles.container}>
       <View style={styles.WelcomeGreetingContainer}>

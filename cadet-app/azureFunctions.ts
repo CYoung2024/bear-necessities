@@ -16,7 +16,10 @@ export const call_readCadetStatus = async (token, cadetCode) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function readCadetStatus:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
@@ -46,7 +49,10 @@ export const call_writeCadetStatus = async (token, cadetCode, status) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function writeCadetStatus:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
@@ -73,7 +79,10 @@ export const call_initCadetApp = async (token, cadetCode) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function initCadetApp:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
@@ -100,7 +109,10 @@ export const call_readCompanyMessages = async (token, company) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function readCompanyMessages:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
