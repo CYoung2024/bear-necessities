@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import DialogInput from 'react-native-dialog-input';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
 
 import * as MyAzureFunctions from "../azureFunctions";
@@ -9,6 +15,7 @@ import DropDownPopupOB from "../functions/NativePopupDropdownOB";
 import UserInputPopup from "../functions/NativePopupUserInputEx";
 import MyStorage from "../storage";
 import { TokenContext } from "../tokenContext";
+import { StatusContext } from "../StatusContext";
 
 //import AccBuildSelectDialog from '../functions/isAcademicBuildingOptionSelectBox.js'
 
@@ -25,25 +32,28 @@ function AcctScreen() {
   });
 
   const [loading, setLoading] = useState(false);
+  const tempStatus = useContext(StatusContext);
+  useEffect(() => {
+    setCadetStatus(tempStatus);
+  }, [tempStatus]);
   const [cadetStatus, setCadetStatus] = useState("");
 
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
-  const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] = useState(false);
-  const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] = useState(false);
-
+  const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] =
+    useState(false);
+  const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] =
+    useState(false);
 
   useEffect(() => {
     const stopLoading = async () => {
       await setLoading(false);
       console.log("setloading = " + loading);
+      console.log(cadetStatus);
     };
     stopLoading();
   }, [cadetStatus]);
 
-
-
   return (
-      
     <View style={styles.container}>
       {/* <MapArea /> */}
       <View style={styles.mapContainer} />
@@ -125,17 +135,19 @@ function AcctScreen() {
         </View>
 
         <View>
-    <TokenContext.Provider value={token}>
-          <DropDownPopupAB
-            modalVisible={isAcBuildSelectDialogVisible}
-            setModalVisible={setAcBuildSelectDialogVisible}
-            title={"Accademic Building"}
-            message={"Choose which building you will be spending all night in"}
-            buttons={["OK", "Cancel"]}
-            saveCadetStatus={setCadetStatus}
-            //tokenForFunc={token}
-            cadetCodeForFunc={cadetCode}
-          />
+          <TokenContext.Provider value={token}>
+            <DropDownPopupAB
+              modalVisible={isAcBuildSelectDialogVisible}
+              setModalVisible={setAcBuildSelectDialogVisible}
+              title={"Accademic Building"}
+              message={
+                "Choose which building you will be spending all night in"
+              }
+              buttons={["OK", "Cancel"]}
+              saveCadetStatus={setCadetStatus}
+              //tokenForFunc={token}
+              cadetCodeForFunc={cadetCode}
+            />
           </TokenContext.Provider>
         </View>
 

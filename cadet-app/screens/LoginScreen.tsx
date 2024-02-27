@@ -156,7 +156,7 @@ function LoginScreen({ navigation }) {
     // console.log(initInfo.Company);
     // console.log(initInfo.Status);
     // console.log(initInfo.NotifCode);
-    await saveCadetStatus(initInfo.Status);
+    const status = initInfo.Status;
     if (
       (initInfo.NotifCode === undefined ||
         initInfo.NotifCode === null ||
@@ -171,7 +171,7 @@ function LoginScreen({ navigation }) {
     }
     navigation.navigate("TabApp", {
       screen: "Home",
-      params: { token, messageList },
+      params: { token, messageList, status },
     });
   };
 
