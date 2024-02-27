@@ -242,7 +242,7 @@ const TabApp = ({ navigation }) => {
               }}
             />
 
-            <BottomTab.Screen
+            {/* <BottomTab.Screen
               name="Routing"
               component={RouteScreen}
               options={{
@@ -256,7 +256,8 @@ const TabApp = ({ navigation }) => {
                   />
                 ),
               }}
-            />
+            /> */}
+            
           </BottomTab.Navigator>
         </StatusContext.Provider>
       </MessageListContext.Provider>
