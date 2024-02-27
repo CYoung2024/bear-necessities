@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import {
   Alert,
   Modal,
@@ -15,14 +15,9 @@ import MyStorage from "../storage";
 import * as MyAzureFunctions from "../azureFunctions";
 import { TokenContext } from "../tokenContext";
 
-
 const DropDownPopup = (props) => {
-  const { cadetStatus, saveCadetStatus } = MyStorage({
-    initialCadetStatus: "",
-  });
-
   const token = useContext(TokenContext);
-  const [cadetStatus, saveCadetStatus ] = useState('');
+  const [cadetStatus, saveCadetStatus] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("Not Signed In");
   const [items, setItems] = useState([
@@ -183,11 +178,10 @@ const DropDownPopup = (props) => {
                     props.saveCadetStatus(value),
                       console.log("cadetStatus=" + value),
                       MyAzureFunctions.call_writeCadetStatus(
-                                            token,
-                                            props.cadetCodeForFunc,
-                                            value
-                                          );
-                      
+                        token,
+                        props.cadetCodeForFunc,
+                        value
+                      );
                   }
                 }}
                 style={[{ alignSelf: alignSelfProperty }]}
@@ -208,8 +202,8 @@ const DropDownPopup = (props) => {
                         (item.styles && item.styles.color) ||
                         androidDefaults.button.color,
                       //fontFamily:
-                        //(item.styles && item.styles.fontFamily) ||
-                        //androidDefaults.button.fontFamily,
+                      //(item.styles && item.styles.fontFamily) ||
+                      //androidDefaults.button.fontFamily,
                       fontSize:
                         (item.styles && item.styles.fontSize) ||
                         androidDefaults.button.fontSize,
@@ -281,10 +275,10 @@ const DropDownPopup = (props) => {
                     props.saveCadetStatus(value),
                       console.log("cadetStatus=" + value),
                       MyAzureFunctions.call_writeCadetStatus(
-                                            token,
-                                            props.cadetCodeForFunc,
-                                            value
-                                          );
+                        token,
+                        props.cadetCodeForFunc,
+                        value
+                      );
                   }
                 }}
               >
@@ -304,8 +298,8 @@ const DropDownPopup = (props) => {
                         (item.styles && item.styles.color) ||
                         iOSDefaults.button.color,
                       //fontFamily:
-                        //(item.styles && item.styles.fontFamily) ||
-                        //iOSDefaults.button.fontFamily,
+                      //(item.styles && item.styles.fontFamily) ||
+                      //iOSDefaults.button.fontFamily,
                       fontSize:
                         (item.styles && item.styles.fontSize) ||
                         iOSDefaults.button.fontSize,
