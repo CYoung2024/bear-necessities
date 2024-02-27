@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Alert,
     Modal,
@@ -12,16 +12,18 @@ import {
 
 import DropDownPicker from 'react-native-dropdown-picker';
 import MyStorage from "../storage";
+import * as MyAzureFunctions from "../azureFunctions";
+import { TokenContext } from "../tokenContext";
 
 
 
 const DropDownPopup = (props) => {
 
-    const { cadetStatus, saveCadetStatus } = MyStorage(
-        {
-            initialCadetStatus: "",
-        }
-    );
+    
+  const token = useContext(TokenContext);
+
+   
+    const [cadetStatus, saveCadetStatus ] = useState('');
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('Not Signed In');
@@ -41,7 +43,7 @@ const DropDownPopup = (props) => {
             <View style={styles.dropDownContainer}>
                 <DropDownPicker
                     itemKey="value"
-                    style={styles.dropDown}
+                    //style={styles.dropDown}
                     open={open}
                     value={value}
                     items={items}
@@ -175,10 +177,18 @@ const DropDownPopup = (props) => {
                                 index === 0 && buttonLayoutHorizontal === 1 ? { flex: 1 } : {},
                             ]}>
                             <TouchableOpacity
-                                onPress={() => {props.setModalVisible(false), saveCadetStatus("TestAB")
-                                    if (item.func && typeof item.func === 'function') item.func();
+                                onPress={() => {props.setModalVisible(false)
+                                    if (item.func && typeof item.func === 'function') {item.func();}
                                     if (item.text === 'OK' || defaultButtonText === 'OK' ) {
-                                        props.saveCadetStatus(value), console.log("cadetStatus=" + value)}
+                                        props.saveCadetStatus(value), 
+                                        console.log("cadetStatus=" + value), 
+                                        console.log("token=" + token), 
+                                        MyAzureFunctions.call_writeCadetStatus(
+                                            token,
+                                            props.cadetCodeForFunc,
+                                            value
+                                          );
+                                    }
                                 }}
                                 style={[{ alignSelf: alignSelfProperty }]}>
                                 <View
@@ -195,9 +205,9 @@ const DropDownPopup = (props) => {
                                             color:
                                                 (item.styles && item.styles.color) ||
                                                 androidDefaults.button.color,
-                                            fontFamily:
-                                                (item.styles && item.styles.fontFamily) ||
-                                                androidDefaults.button.fontFamily,
+                                            //fontFamily:
+                                                //(item.styles && item.styles.fontFamily) ||
+                                                //androidDefaults.button.fontFamily,
                                             fontSize:
                                                 (item.styles && item.styles.fontSize) ||
                                                 androidDefaults.button.fontSize,
@@ -250,21 +260,27 @@ const DropDownPopup = (props) => {
                         singleButtonWeight = '700';
                     }
                     if (buttonLayoutHorizontal === 1) {
-                        singleButtonWrapperStyle.minWidth = '50%';
+                        //singleButtonWrapperStyle.minWidth = '50%';
                         if (index === 0) {
-                            singleButtonWrapperStyle.borderStyle = 'solid';
-                            singleButtonWrapperStyle.borderRightWidth = 0.55;
-                            singleButtonWrapperStyle.borderRightColor = '#dbdbdf';
+                            //singleButtonWrapperStyle.borderStyle = 'solid';
+                            //singleButtonWrapperStyle.borderRightWidth = 0.55;
+                            //singleButtonWrapperStyle.borderRightColor = '#dbdbdf';
                         }
                     }
                     return (
                         <View style={[styles.iOSButton, singleButtonWrapperStyle]}>
                             <Pressable
-                                onPress={() => {
-                                    props.setModalVisible(false);
-                                    if (item.func && typeof item.func === 'function') item.func();
+                                onPress={() => {props.setModalVisible(false)
+                                    if (item.func && typeof item.func === 'function') {item.func();}
                                     if (item.text === 'OK' || defaultButtonText === 'OK' ) {
-                                        saveCadetStatus(value), console.log("cadetStatus=" + value)}
+                                        props.saveCadetStatus(value), 
+                                        console.log("cadetStatus=" + value), 
+                                        MyAzureFunctions.call_writeCadetStatus(
+                                            token,
+                                            props.cadetCodeForFunc,
+                                            value
+                                          );
+                                    }
                                 }}>
                                 <View
                                     style={[
@@ -280,9 +296,9 @@ const DropDownPopup = (props) => {
                                             color:
                                                 (item.styles && item.styles.color) ||
                                                 iOSDefaults.button.color,
-                                            fontFamily:
-                                                (item.styles && item.styles.fontFamily) ||
-                                                iOSDefaults.button.fontFamily,
+                                            //fontFamily:
+                                                //(item.styles && item.styles.fontFamily) ||
+                                                //iOSDefaults.button.fontFamily,
                                             fontSize:
                                                 (item.styles && item.styles.fontSize) ||
                                                 iOSDefaults.button.fontSize,
