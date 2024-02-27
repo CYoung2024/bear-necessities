@@ -9,6 +9,8 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { useRoute } from "@react-navigation/native";
 import { TokenContext } from "./tokenContext";
+import { StatusContext } from "./StatusContext";
+import { MessageListContext } from "./messageListContext";
 import MyStorage from "./storage";
 
 // App Screen function references
@@ -32,7 +34,6 @@ import {
 } from "@react-navigation/drawer";
 import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
 import NotifsScreen from "./screens/NotifsScreen";
-import { MessageListContext } from "./messageListContext";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -178,79 +179,81 @@ function DrawerApp() {
 // Uses the functions defined in the ./screens folder
 const TabApp = ({ navigation }) => {
   const route = useRoute();
-  const { token, messageList } = route.params;
+  const { token, messageList, status } = route.params;
 
   return (
     <TokenContext.Provider value={token}>
       <MessageListContext.Provider value={messageList}>
-        <BottomTab.Navigator
-          tabBarPosition="bottom"
-          initialRouteName="Dashboard"
-          screenOptions={{ tabBarShowLabel: false }}
-        >
-          <BottomTab.Screen
-            name="Dashboard"
-            component={DashboardScreen}
-            options={{
-              //headerShown: false,
-              tabBarIcon: (tabInfo) => (
-                <Ionicons
-                  name="md-home"
-                  size={tabInfo.focused ? 24 : 20}
-                  color={tabInfo.focused ? "#015289" : "#ccc"}
-                />
-              ),
-            }}
-          />
+        <StatusContext.Provider value={status}>
+          <BottomTab.Navigator
+            tabBarPosition="bottom"
+            initialRouteName="Dashboard"
+            screenOptions={{ tabBarShowLabel: false }}
+          >
+            <BottomTab.Screen
+              name="Dashboard"
+              component={DashboardScreen}
+              options={{
+                //headerShown: false,
+                tabBarIcon: (tabInfo) => (
+                  <Ionicons
+                    name="md-home"
+                    size={tabInfo.focused ? 24 : 20}
+                    color={tabInfo.focused ? "#015289" : "#ccc"}
+                  />
+                ),
+              }}
+            />
 
-          <BottomTab.Screen
-            name="IFN"
-            component={AcctScreen}
-            options={{
-              //headerShown: false,
-              //showLabel: false,
-              tabBarIcon: (tabInfo) => (
-                <Ionicons
-                  name="location-sharp"
-                  size={tabInfo.focused ? 24 : 20}
-                  color={tabInfo.focused ? "#015289" : "#ccc"}
-                />
-              ),
-            }}
-          />
+            <BottomTab.Screen
+              name="IFN"
+              component={AcctScreen}
+              options={{
+                //headerShown: false,
+                //showLabel: false,
+                tabBarIcon: (tabInfo) => (
+                  <Ionicons
+                    name="location-sharp"
+                    size={tabInfo.focused ? 24 : 20}
+                    color={tabInfo.focused ? "#015289" : "#ccc"}
+                  />
+                ),
+              }}
+            />
 
-          <BottomTab.Screen
-            name="Messages"
-            component={NotifsScreen}
-            options={{
-              //headerShown: false,
-              //tabBarLabelPosition: "below-icon",
-              tabBarIcon: (tabInfo) => (
-                <Ionicons
-                  name="mail"
-                  size={tabInfo.focused ? 24 : 20}
-                  color={tabInfo.focused ? "#015289" : "#ccc"}
-                />
-              ),
-            }}
-          />
+            <BottomTab.Screen
+              name="Messages"
+              component={NotifsScreen}
+              options={{
+                //headerShown: false,
+                //tabBarLabelPosition: "below-icon",
+                tabBarIcon: (tabInfo) => (
+                  <Ionicons
+                    name="mail"
+                    size={tabInfo.focused ? 24 : 20}
+                    color={tabInfo.focused ? "#015289" : "#ccc"}
+                  />
+                ),
+              }}
+            />
 
-          <BottomTab.Screen
-            name="Routing"
-            component={RouteScreen}
-            options={{
-              //headerShown: false,
-              //tabBarLabelPosition: "below-icon",
-              tabBarIcon: (tabInfo) => (
-                <Ionicons
-                  name="md-newspaper"
-                  size={tabInfo.focused ? 24 : 20}
-                  color={tabInfo.focused ? "#015289" : "#ccc"}
-                />
-              ),
-            }}
-          />
-        </BottomTab.Navigator>
+            <BottomTab.Screen
+              name="Routing"
+              component={RouteScreen}
+              options={{
+                //headerShown: false,
+                //tabBarLabelPosition: "below-icon",
+                tabBarIcon: (tabInfo) => (
+                  <Ionicons
+                    name="md-newspaper"
+                    size={tabInfo.focused ? 24 : 20}
+                    color={tabInfo.focused ? "#015289" : "#ccc"}
+                  />
+                ),
+              }}
+            />
+          </BottomTab.Navigator>
+        </StatusContext.Provider>
       </MessageListContext.Provider>
     </TokenContext.Provider>
   );
