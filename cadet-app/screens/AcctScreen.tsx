@@ -8,6 +8,7 @@ import DropDownPopupAB from "../functions/NativePopupDropdownAB";
 import DropDownPopupOB from "../functions/NativePopupDropdownOB";
 import UserInputPopup from "../functions/NativePopupUserInputEx";
 import MyStorage from "../storage";
+import { TokenContext } from "../tokenContext";
 
 //import AccBuildSelectDialog from '../functions/isAcademicBuildingOptionSelectBox.js'
 
@@ -18,8 +19,6 @@ function AcctScreen() {
 
   const route = useRoute();
   const token = route.params;
-
-  
 
   const { cadetCode, saveCadetCode } = MyStorage({
     initialCadetCode: "",
@@ -38,10 +37,6 @@ function AcctScreen() {
   const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] = useState(false);
   const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] = useState(false);
 
-
-
-
-
   useEffect(() => {
 
     const stopLoading = async () => {
@@ -52,16 +47,25 @@ function AcctScreen() {
     stopLoading();
     console.log("cadetStatus=" + cadetStatus)
 
-    const data =  MyAzureFunctions.call_writeCadetStatus(
+  }, [cadetStatus]);
+
+
+
+
+  const handleUpdateButton = async () => {
+    const data = await MyAzureFunctions.call_writeCadetStatus(
       token,
       cadetCode,
       cadetStatus
     );
+  }
 
 
-  }, [cadetStatus]);
+
 
   return (
+    <TokenContext.Provider value={token}>
+      
     <View style={styles.container}>
       {/* <MapArea /> */}
       <View style={styles.mapContainer} />
@@ -122,6 +126,7 @@ function AcctScreen() {
               onPress={() => {
                 alert("Signing In For the Night");
                 setCadetStatus("IFN");
+                handleUpdateButton();
                 console.log("cadetStatus=IFN");
               }}
             >
@@ -139,6 +144,8 @@ function AcctScreen() {
             message={"Only type in the name of the club or event"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
+            tokenForFunc={token}
+            cadetCodeForFunc={cadetCode}
           />
         </View>
 
@@ -150,6 +157,8 @@ function AcctScreen() {
             message={"Choose which building you will be spending all night in"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
+            tokenForFunc={token}
+            cadetCodeForFunc={cadetCode}
           />
         </View>
 
@@ -161,10 +170,13 @@ function AcctScreen() {
             message={"Select your status from the dropdown"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
+            tokenForFunc={token}
+            cadetCodeForFunc={cadetCode}
           />
         </View>
       </View>
     </View>
+    </TokenContext.Provider>
   );
 }
 
