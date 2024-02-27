@@ -36,6 +36,9 @@ export const call_writeCadetStatus = async (token, cadetCode, status) => {
     "&status=" +
     status;
 
+    console.log(token);
+    console.log("writeCadetStatus Called");
+
   try {
     const response = await fetch(functionUrl, {
       method: "POST", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
