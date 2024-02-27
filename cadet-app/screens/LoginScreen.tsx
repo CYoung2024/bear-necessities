@@ -207,10 +207,12 @@ const styles = StyleSheet.create({
   },
   bypassContainer: {
     height: "66%",
+    //backgroundColor: "green",
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageBackground: {
     flex: 1,
-    justifyContent: "flex-end",
   },
   image: {
     width: dim.height * 0.8,
@@ -218,9 +220,10 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   buttonContainer: {
+    height: "25%",
     width: "60%",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
   button: {
     backgroundColor: "#015289",

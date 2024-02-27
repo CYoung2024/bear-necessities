@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
+import MapView, { Marker } from "react-native-maps";
 
 import * as MyAzureFunctions from "../azureFunctions";
 import DropDownPopupAB from "../functions/NativePopupDropdownAB";
@@ -31,18 +32,27 @@ function AcctScreen() {
     initialExpoPushToken: "",
   });
 
+  
+  const mapRef = useRef(null);
+
+
   const [loading, setLoading] = useState(false);
   const tempStatus = useContext(StatusContext);
   useEffect(() => {
     setCadetStatus(tempStatus);
   }, [tempStatus]);
-  const [cadetStatus, setCadetStatus] = useState("");
 
+
+
+  const [cadetStatus, setCadetStatus] = useState("");
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
   const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] =
     useState(false);
   const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] =
     useState(false);
+
+
+
 
   useEffect(() => {
     const stopLoading = async () => {
@@ -53,10 +63,37 @@ function AcctScreen() {
     stopLoading();
   }, [cadetStatus]);
 
+
+
   return (
     <View style={styles.container}>
+
+
+
+
       {/* <MapArea /> */}
-      <View style={styles.mapContainer} />
+      <View style={styles.mapContainer}>
+        <MapView
+          ref={mapRef}
+          pitchEnabled={true}
+          showsBuildings={true}
+          style={{
+            alignSelf: "stretch",
+            height: "100%",
+          }}
+          initialRegion={{
+            latitude: 41.37354686499106,
+            longitude: -72.10071999095653,
+            latitudeDelta: 0.007,
+            longitudeDelta: 0.01,
+          }}
+        >
+        </MapView>
+      </View>
+
+
+
+
 
       {/* <ButtonArea /> */}
       <View style={styles.belowMapContainer}>
