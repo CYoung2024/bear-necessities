@@ -13,85 +13,98 @@ import { useRoute } from "@react-navigation/native";
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
-const HEADER_MAX_HEIGHT = dim.height * 0.4;
-const HEADER_MIN_HEIGHT = 70;
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-
 const DashboardScreen = ({ navigation }) => {
-  const route = useRoute();
-  const token = route.params;
+
 
   return (
     <View style={styles.container}>
+
       <View style={styles.WelcomeGreetingContainer}>
-        <Text
-          style={styles.ContentLargeText}
-          adjustsFontSizeToFit
-          allowFontScaling
-          numberOfLines={1}
-        >
+        <Text style={styles.ContentLargeText}>
           Good Morning
         </Text>
       </View>
-      <ScrollView
-        style={styles.scroller}
-      >
+      
+      <View style={ styles.scrollViewContainer}>
+
+      <ScrollView style={styles.scrollViewContent}>
+
         <View style={styles.ConentAreaContainer}>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.SmallContentContainer}>
             <Text style={styles.ContentLargeText}>TRAININGS</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.LargeContentContainer}>
             <Text style={styles.ContentExtraLargeText}>POD</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.SmallContentContainer}>
             <Text style={styles.ContentSmallText}>Emerency Numbers</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.SmallContentContainer}>
             <Text style={styles.ContentExtraSmallText}>Work in progress</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.LargeContentContainer}>
             <Text style={styles.ContentLargeText}>Upcoming Events</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.LargeContentContainer}>
             <Text style={styles.ContentExtraLargeText}>Work in progress</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.SmallContentContainer}>
             <Text style={styles.ContentLargeText}>Work in progress</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.LargeContentContainer}>
             <Text style={styles.ContentSmallText}>Work in progress</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
           <View style={styles.LargeContentContainer}>
             <Text style={styles.ContentExtraSmallText}>Work in progress</Text>
           </View>
+
           <View style={styles.gapBetweenContentContainers} />
         </View>
+
       </ScrollView>
+        
+        </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    flex: 1,
     //alignItems: 'center',
     //backgroundColor: '#DDE4EA',
     flexDirection: "column",
+    justifyContent: "center",
   },
   WelcomeGreetingContainer: {
     backgroundColor: "#F4D79A",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    height: "20%",
+  },
+  scrollViewContainer: {
+    height: "80%",
+    justifyContent: "center",
+
   },
   ConentAreaContainer: {
     alignItems: "center",
@@ -160,10 +173,11 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   scrollViewContent: {
-    marginTop: HEADER_MAX_HEIGHT,
+    //marginTop: HEADER_MAX_HEIGHT,
+
   },
   behindMessageCountArea: {
-    height: HEADER_MAX_HEIGHT,
+    //height: HEADER_MAX_HEIGHT,
     alignContent: "center",
     backgroundColor: "lightblue",
   },
