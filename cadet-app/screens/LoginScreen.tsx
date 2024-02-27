@@ -14,6 +14,9 @@ import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
+import { MessageListContext } from "../messageListContext";
+
+import * as MyAzureFunctions from "../azureFunctions";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -51,9 +54,16 @@ function LoginScreen({ navigation }) {
   const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
 
-  const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
+  const {
+    cadetCode,
+    saveCadetCode,
+    cadetStatus,
+    saveCadetStatus,
+    expoPushToken,
+  } = MyStorage({
     initialCadetCode: "",
     initialCadetStatus: "",
+    initialExpoPushToken: "",
   });
 
   // first half of auth
@@ -116,7 +126,6 @@ function LoginScreen({ navigation }) {
     getSession();
     if (token.accessToken === undefined) {
       $access(false);
-      console.log("No access token");
     } else {
       // When the access token is received, move on and let the user into the app
       if (
@@ -127,13 +136,44 @@ function LoginScreen({ navigation }) {
       ) {
         navigation.navigate("SetValues", token);
       } else {
-        navigation.navigate("TabApp", {
-          screen: "Home",
-          params: token,
-        });
+        handleMoveToTabApp();
       }
     }
   }, [token]);
+
+  const handleMoveToTabApp = async () => {
+    // TODO: show loading animation and don't let them spam the login button
+    const [initInfo] = await MyAzureFunctions.call_initCadetApp(
+      token,
+      cadetCode
+    );
+    const messageList = await MyAzureFunctions.call_readCompanyMessages(
+      token,
+      "Alfa"
+    );
+    // console.log(initInfo.FullName);
+    // console.log(initInfo.Year);
+    // console.log(initInfo.Company);
+    // console.log(initInfo.Status);
+    // console.log(initInfo.NotifCode);
+    await saveCadetStatus(initInfo.Status);
+    if (
+      (initInfo.NotifCode === undefined ||
+        initInfo.NotifCode === null ||
+        initInfo.NotifCode === "" ||
+        initInfo.NotifCode === "undefined") &&
+      initInfo.NotifCode !== expoPushToken // also need to check NotifCode does not contain expoPushToken
+    ) {
+      console.log(token);
+      console.log(cadetCode);
+      console.log(expoPushToken);
+      MyAzureFunctions.call_updatePushToken(token, cadetCode, expoPushToken);
+    }
+    navigation.navigate("TabApp", {
+      screen: "Home",
+      params: { token, messageList },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
