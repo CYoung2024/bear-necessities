@@ -12,6 +12,7 @@ import { TokenContext } from "./tokenContext";
 import { StatusContext } from "./StatusContext";
 import { MessageListContext } from "./messageListContext";
 import MyStorage from "./storage";
+import * as Linking from "expo-linking";
 
 // App Screen function references
 import LoginScreen from "./screens/LoginScreen";
@@ -144,7 +145,11 @@ function DrawerApp() {
           />
           <DrawerItem
             label="Report a Bug"
-            onPress={() => alert("Bug Report Link")}
+            onPress={() =>
+              Linking.openURL(
+                "https://forms.office.com/r/gBt26NVYXC?origin=lprLink"
+              )
+            } // links to a Microsoft Form
           />
           <DrawerItem
             label="Logout"
