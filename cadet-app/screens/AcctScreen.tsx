@@ -9,6 +9,7 @@ import {
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 
 import * as MyAzureFunctions from "../azureFunctions";
 import DropDownPopupAB from "../functions/NativePopupDropdownAB";
@@ -34,6 +35,38 @@ function AcctScreen() {
 
   
   const mapRef = useRef(null);
+  const [deviceLLA, setDeviceLLA] = useState(null);
+  const [userLocation, setuserLocation] = useState(null);
+  const [markerLocation, setMarkerLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    altitude: 0,
+  });
+
+   
+  const handleGetLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      alert("I can't tell where you are...");
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    let { latitude, longitude, altitude } = location.coords;
+    setDeviceLLA({ latitude, longitude, altitude });
+    setMarkerLocation({ latitude, longitude, altitude });
+    mapRef.current.animateCamera(
+      {
+        center: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        heading: 270,
+        pitch: 60,
+        zoom: 18.5,
+      },
+      { duration: 2000 }
+    );
+  };
 
 
   const [loading, setLoading] = useState(false);
@@ -88,6 +121,7 @@ function AcctScreen() {
             longitudeDelta: 0.01,
           }}
         >
+        <Marker title="My Location" coordinate={markerLocation} />
         </MapView>
       </View>
 
@@ -149,6 +183,7 @@ function AcctScreen() {
                   cadetCode,
                   cadetStatus
                 );
+                handleGetLocation();
                 console.log("cadetStatus=IFN");
               }}
             >
