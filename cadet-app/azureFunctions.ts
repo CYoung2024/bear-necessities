@@ -16,7 +16,10 @@ export const call_readCadetStatus = async (token, cadetCode) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function readCadetStatus:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
@@ -49,7 +52,10 @@ export const call_writeCadetStatus = async (token, cadetCode, status) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function writeCadetStatus:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
@@ -76,7 +82,10 @@ export const call_initCadetApp = async (token, cadetCode) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function initCadetApp:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
@@ -103,7 +112,46 @@ export const call_readCompanyMessages = async (token, company) => {
       const data = await response.json();
       return data;
     } else {
-      console.error("Error calling Azure Function:", response.status);
+      console.error(
+        "Error calling Azure Function readCompanyMessages:",
+        response.status
+      );
+      // Handle error responses
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle any network errors or exceptions
+  }
+};
+
+export const call_updatePushToken = async (token, cadetCode, pushToken) => {
+  console.log(token);
+  console.log(cadetCode);
+  console.log(pushToken);
+  const functionUrl =
+    "https://bearnecessititesfunctionapp.azurewebsites.net/api/updatePushToken?code=q3GBgkrvLTQXrEqlD63WKpWmTO0Ds8GmosWuDpe___HFAzFuWpDRvg==" +
+    "&cadetCode=" +
+    cadetCode +
+    "&notifCode=" +
+    pushToken;
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(
+        "Error calling Azure Function updatePushToken:",
+        response.status
+      );
       // Handle error responses
     }
   } catch (error) {
