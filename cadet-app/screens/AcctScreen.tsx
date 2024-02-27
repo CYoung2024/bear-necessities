@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import DialogInput from "react-native-dialog-input";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import DialogInput from 'react-native-dialog-input';
 import { useRoute } from "@react-navigation/native";
 
 import * as MyAzureFunctions from "../azureFunctions";
@@ -38,31 +32,36 @@ function AcctScreen() {
   const [cadetStatus, setCadetStatus] = useState("");
 
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
-  const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] =
-    useState(false);
-  const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] =
-    useState(false);
+  const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] = useState(false);
+  const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] = useState(false);
+
 
   useEffect(() => {
     const stopLoading = async () => {
       await setLoading(false);
       console.log("setloading = " + loading);
     };
-
     stopLoading();
+  }, [cadetStatus]);
 
+
+
+
+  const handleUpdateButton = async () => {
     console.log("cadetStatus=" + cadetStatus);
     console.log("im here" + token);
     console.log("im here" + cadetCode);
     console.log("im here" + cadetStatus);
     const data = MyAzureFunctions.call_writeCadetStatus(
+
       token,
       cadetCode,
       cadetStatus
     );
-  }, [cadetStatus]);
+  }
 
   return (
+      
     <View style={styles.container}>
       {/* <MapArea /> */}
       <View style={styles.mapContainer} />
@@ -116,6 +115,11 @@ function AcctScreen() {
               onPress={() => {
                 alert("Signing In For the Night");
                 setCadetStatus("IFN");
+                MyAzureFunctions.call_writeCadetStatus(
+                  token,
+                  cadetCode,
+                  cadetStatus
+                );
                 console.log("cadetStatus=IFN");
               }}
             >
@@ -133,10 +137,13 @@ function AcctScreen() {
             message={"Only type in the name of the club or event"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
+            tokenForFunc={token}
+            cadetCodeForFunc={cadetCode}
           />
         </View>
 
         <View>
+    <TokenContext.Provider value={token}>
           <DropDownPopupAB
             modalVisible={isAcBuildSelectDialogVisible}
             setModalVisible={setAcBuildSelectDialogVisible}
@@ -144,7 +151,10 @@ function AcctScreen() {
             message={"Choose which building you will be spending all night in"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
+            //tokenForFunc={token}
+            cadetCodeForFunc={cadetCode}
           />
+          </TokenContext.Provider>
         </View>
 
         <View>
@@ -155,6 +165,8 @@ function AcctScreen() {
             message={"Select your status from the dropdown"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
+            tokenForFunc={token}
+            cadetCodeForFunc={cadetCode}
           />
         </View>
       </View>
