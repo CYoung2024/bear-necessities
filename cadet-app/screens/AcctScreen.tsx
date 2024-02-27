@@ -109,6 +109,7 @@ function AcctScreen() {
         <MapView
           ref={mapRef}
           pitchEnabled={true}
+          mapType={"satellite"}
           showsBuildings={true}
           style={{
             alignSelf: "stretch",
@@ -144,6 +145,11 @@ function AcctScreen() {
               onPress={() => {
                 setOffBaseSelectDialogVisible(true);
                 setLoading(true);
+                setMarkerLocation({
+                  latitude: 0,
+                  longitude: 0,
+                  altitude: 0,
+                });
                 console.log("setloading = " + loading);
               }}
             >
@@ -155,6 +161,11 @@ function AcctScreen() {
               onPress={() => {
                 setExcusalInputVisible(true);
                 setLoading(true);
+                setMarkerLocation({
+                  latitude: 0,
+                  longitude: 0,
+                  altitude: 0,
+                });
                 console.log("setloading = " + loading);
               }}
             >
@@ -166,6 +177,11 @@ function AcctScreen() {
               onPress={() => {
                 setAcBuildSelectDialogVisible(true);
                 setLoading(true);
+                setMarkerLocation({
+                  latitude: 0,
+                  longitude: 0,
+                  altitude: 0,
+                });
               }}
             >
               <Text style={styles.smallText}>Academic Building</Text>
