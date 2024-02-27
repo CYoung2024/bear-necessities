@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
 import { useRoute } from "@react-navigation/native";
@@ -17,8 +17,8 @@ let dim = Dimensions.get("window");
 
 function AcctScreen() {
 
-  const route = useRoute();
-  const token = route.params;
+
+  const token = useContext(TokenContext);
 
   const { cadetCode, saveCadetCode } = MyStorage({
     initialCadetCode: "",
@@ -64,7 +64,6 @@ function AcctScreen() {
 
 
   return (
-    <TokenContext.Provider value={token}>
       
     <View style={styles.container}>
       {/* <MapArea /> */}
@@ -126,7 +125,11 @@ function AcctScreen() {
               onPress={() => {
                 alert("Signing In For the Night");
                 setCadetStatus("IFN");
-                handleUpdateButton();
+                MyAzureFunctions.call_writeCadetStatus(
+                  token,
+                  cadetCode,
+                  cadetStatus
+                );
                 console.log("cadetStatus=IFN");
               }}
             >
@@ -150,6 +153,7 @@ function AcctScreen() {
         </View>
 
         <View>
+    <TokenContext.Provider value={token}>
           <DropDownPopupAB
             modalVisible={isAcBuildSelectDialogVisible}
             setModalVisible={setAcBuildSelectDialogVisible}
@@ -157,9 +161,10 @@ function AcctScreen() {
             message={"Choose which building you will be spending all night in"}
             buttons={["OK", "Cancel"]}
             saveCadetStatus={setCadetStatus}
-            tokenForFunc={token}
+            //tokenForFunc={token}
             cadetCodeForFunc={cadetCode}
           />
+          </TokenContext.Provider>
         </View>
 
         <View>
@@ -176,7 +181,6 @@ function AcctScreen() {
         </View>
       </View>
     </View>
-    </TokenContext.Provider>
   );
 }
 

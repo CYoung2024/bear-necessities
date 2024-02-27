@@ -276,7 +276,7 @@ const DropDownPopup = (props) => {
                                         props.saveCadetStatus(value), 
                                         console.log("cadetStatus=" + value), 
                                         MyAzureFunctions.call_writeCadetStatus(
-                                            props.tokenForFunc,
+                                            token,
                                             props.cadetCodeForFunc,
                                             value
                                           );

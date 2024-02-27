@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Alert,
     Modal,
@@ -14,11 +14,15 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import MyStorage from "../storage";
 import * as MyAzureFunctions from "../azureFunctions";
+import { TokenContext } from "../tokenContext";
 
 
 
 
 const UserInputPopup = (props) => {
+
+    
+    const token = useContext(TokenContext);
     const [text, onChangeText] = useState('');
     const [cadetStatus, saveCadetStatus ] = useState('');
 
@@ -156,7 +160,7 @@ const UserInputPopup = (props) => {
                                         props.saveCadetStatus(text), 
                                         console.log("cadetStatus=" + text), 
                                         MyAzureFunctions.call_writeCadetStatus(
-                                            props.tokenForFunc,
+                                            token,
                                             props.cadetCodeForFunc,
                                             text
                                           );
@@ -248,7 +252,7 @@ const UserInputPopup = (props) => {
                                         props.saveCadetStatus(text), 
                                         console.log("cadetStatus=" + text), 
                                         MyAzureFunctions.call_writeCadetStatus(
-                                            props.tokenForFunc,
+                                            token,
                                             props.cadetCodeForFunc,
                                             text
                                           );
