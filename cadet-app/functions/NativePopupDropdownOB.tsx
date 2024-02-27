@@ -16,6 +16,8 @@ import MyStorage from "../storage";
 const DropDownPopup = (props) => {
   const { cadetStatus, saveCadetStatus } = MyStorage({
     initialCadetStatus: "",
+    initialExpoPushToken: "",
+    initialCadetCode: "",
   });
 
   const [open, setOpen] = useState(false);

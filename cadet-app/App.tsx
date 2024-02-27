@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Platform } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -9,6 +9,7 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { useRoute } from "@react-navigation/native";
 import { TokenContext } from "./tokenContext";
+import MyStorage from "./storage";
 
 // App Screen function references
 import LoginScreen from "./screens/LoginScreen";
@@ -256,15 +257,18 @@ const TabApp = ({ navigation }) => {
 };
 
 export default function App() {
-  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
+  const { expoPushToken, saveExpoPushToken } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
+    initialExpoPushToken: "",
+  });
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(
-      (notifToken) => setExpoPushToken(notifToken)
-      // send token to db?
+    registerForPushNotificationsAsync().then((notifToken) =>
+      saveExpoPushToken(notifToken)
     );
 
     notificationListener.current =

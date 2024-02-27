@@ -27,6 +27,7 @@ function AcctScreen() {
   const { cadetCode, saveCadetCode } = MyStorage({
     initialCadetCode: "",
     initialCadetStatus: "",
+    initialExpoPushToken: "",
   });
 
   const [loading, setLoading] = useState(false);
