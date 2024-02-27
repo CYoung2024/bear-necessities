@@ -39,8 +39,6 @@ const DashboardScreen = ({ navigation }) => {
       </View>
       <ScrollView
         style={styles.scroller}
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-        scrollEventThrottle={16}
       >
         <View style={styles.ConentAreaContainer}>
           <View style={styles.gapBetweenContentContainers} />
@@ -173,7 +171,9 @@ const styles = StyleSheet.create({
     alignContent: "center",
     backgroundColor: "lightblue",
   },
-  scroller: {},
+  scroller: {
+    height: "50%"
+  },
 });
 
 export default DashboardScreen;
