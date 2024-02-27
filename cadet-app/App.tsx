@@ -136,13 +136,17 @@ function DrawerApp() {
       drawerContent={(props) => (
         <DrawerContentScrollView>
           <DrawerItemList {...props} />
-          <DrawerItem
+
+          
+          {/* <DrawerItem
             label="Settings"
             onPress={() => {
               props.navigation.closeDrawer(),
                 props.navigation.navigate("Settings", token);
             }}
-          />
+          /> */}
+
+
           <DrawerItem
             label="Report a Bug"
             onPress={() =>
@@ -214,7 +218,7 @@ const TabApp = ({ navigation }) => {
               name="IFN"
               component={AcctScreen}
               options={{
-                //headerShown: false,
+                headerShown: false,
                 //showLabel: false,
                 tabBarIcon: (tabInfo) => (
                   <Ionicons
