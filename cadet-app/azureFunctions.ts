@@ -36,8 +36,8 @@ export const call_writeCadetStatus = async (token, cadetCode, status) => {
     "&status=" +
     status;
 
-    console.log(token);
-    console.log("writeCadetStatus Called");
+  console.log(token);
+  console.log("writeCadetStatus Called");
 
   try {
     const response = await fetch(functionUrl, {
@@ -125,9 +125,6 @@ export const call_readCompanyMessages = async (token, company) => {
 };
 
 export const call_updatePushToken = async (token, cadetCode, pushToken) => {
-  console.log(token);
-  console.log(cadetCode);
-  console.log(pushToken);
   const functionUrl =
     "https://bearnecessititesfunctionapp.azurewebsites.net/api/updatePushToken?code=q3GBgkrvLTQXrEqlD63WKpWmTO0Ds8GmosWuDpe___HFAzFuWpDRvg==" +
     "&cadetCode=" +
