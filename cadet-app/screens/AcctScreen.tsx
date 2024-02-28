@@ -33,7 +33,6 @@ function AcctScreen() {
     initialExpoPushToken: "",
   });
 
-  
   const mapRef = useRef(null);
   const [deviceLLA, setDeviceLLA] = useState(null);
   const [userLocation, setuserLocation] = useState(null);
@@ -43,7 +42,6 @@ function AcctScreen() {
     altitude: 0,
   });
 
-   
   const handleGetLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -68,14 +66,11 @@ function AcctScreen() {
     );
   };
 
-
   const [loading, setLoading] = useState(false);
   const tempStatus = useContext(StatusContext);
   useEffect(() => {
     setCadetStatus(tempStatus);
   }, [tempStatus]);
-
-
 
   const [cadetStatus, setCadetStatus] = useState("");
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
@@ -84,26 +79,15 @@ function AcctScreen() {
   const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] =
     useState(false);
 
-
-
-
   useEffect(() => {
     const stopLoading = async () => {
       await setLoading(false);
-      console.log("setloading = " + loading);
-      console.log(cadetStatus);
     };
     stopLoading();
   }, [cadetStatus]);
 
-
-
   return (
     <View style={styles.container}>
-
-
-
-
       {/* <MapArea /> */}
       <View style={styles.mapContainer}>
         <MapView
@@ -122,13 +106,9 @@ function AcctScreen() {
             longitudeDelta: 0.01,
           }}
         >
-        <Marker title="My Location" coordinate={markerLocation} />
+          <Marker title="My Location" coordinate={markerLocation} />
         </MapView>
       </View>
-
-
-
-
 
       {/* <ButtonArea /> */}
       <View style={styles.belowMapContainer}>
@@ -150,7 +130,6 @@ function AcctScreen() {
                   longitude: 0,
                   altitude: 0,
                 });
-                console.log("setloading = " + loading);
               }}
             >
               <Text style={styles.smallText}>Liberty/Leave</Text>
@@ -166,7 +145,6 @@ function AcctScreen() {
                   longitude: 0,
                   altitude: 0,
                 });
-                console.log("setloading = " + loading);
               }}
             >
               <Text style={styles.smallText}>Excusal</Text>

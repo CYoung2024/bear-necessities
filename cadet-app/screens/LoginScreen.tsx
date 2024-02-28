@@ -164,9 +164,6 @@ function LoginScreen({ navigation }) {
         initInfo.NotifCode === "undefined") &&
       initInfo.NotifCode !== expoPushToken // also need to check NotifCode does not contain expoPushToken
     ) {
-      console.log(token);
-      console.log(cadetCode);
-      console.log(expoPushToken);
       MyAzureFunctions.call_updatePushToken(token, cadetCode, expoPushToken);
     }
     navigation.navigate("TabApp", {
