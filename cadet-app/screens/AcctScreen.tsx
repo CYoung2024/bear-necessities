@@ -16,8 +16,8 @@ import DropDownPopupAB from "../functions/NativePopupDropdownAB";
 import DropDownPopupOB from "../functions/NativePopupDropdownOB";
 import UserInputPopup from "../functions/NativePopupUserInputEx";
 import MyStorage from "../storage";
-import { TokenContext } from "../tokenContext";
-import { StatusContext } from "../StatusContext";
+import { TokenContext } from "../contextToken";
+import { StatusContext } from "../contextStatus";
 
 //import AccBuildSelectDialog from '../functions/isAcademicBuildingOptionSelectBox.js'
 

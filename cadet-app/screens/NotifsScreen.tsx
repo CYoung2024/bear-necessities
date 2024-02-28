@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Animated,
   Dimensions,
@@ -10,17 +10,14 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useContext } from "react";
-import { TokenContext } from "../tokenContext";
-import { MessageListContext } from "../messageListContext";
+import { TokenContext } from "../contextToken";
+import { MessageListContext } from "../contextMessageList";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
-const HEADER_MAX_HEIGHT = dim.height * 0.6;
-const HEADER_MIN_HEIGHT = 70;
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-
 const NotifsScreen = (navigation) => {
+  const scrollViewRef = useRef();
   const [loading, setLoading] = useState(true);
   const token = useContext(TokenContext);
   const messageList = useContext(MessageListContext);
@@ -35,22 +32,26 @@ const NotifsScreen = (navigation) => {
   }, [messageList]);
 
   return (
-    <View style={styles.fill}>
-      <ScrollView style={styles.fill} scrollEventThrottle={16}>
-        <ScrollView style={styles.scrollViewer}>
+    <View style={styles.container}>
+        <ScrollView 
+        style={styles.scrollView}
+        ref={scrollViewRef}
+        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}>
           {loading ? (
             <Text>No current messages :/</Text>
           ) : (
             messageList.map((item, index) => (
-              <View key={index} style={styles.touchName}>
-                <Text key={index} style={styles.acctDispText}>
-                  {item.MessageContent} {item.TimeSent}
-                </Text>
+              <View key={index} style={styles.spacer}>
+                <View key={index} style={styles.textbox}>
+                  <Text key={index} style={styles.acctDispText}>
+                    {item.MessageContent}
+                    {item.TimeSent}
+                  </Text>
+                </View>
               </View>
             ))
           )}
         </ScrollView>
-      </ScrollView>
     </View>
   );
 };
@@ -59,60 +60,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-  },
-  MessageCountAreaContainer: {
-    height: "100%",
-  },
-  behindMessageCountArea: {
-    height: HEADER_MAX_HEIGHT,
-  },
-  ConversationAreaContainer: {
-    alignItems: "center",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    height: "100%",
-    justifyContent: "center",
-  },
-  ConversationContainer: {
-    height: 75,
+    alignItems: 'center',
     backgroundColor: "white",
-    borderTopColor: "lightgrey",
-    borderTopWidth: 1,
-    width: dim.width,
   },
-  ConversationCoverText: {
-    fontSize: 32,
-    color: "black",
+  scrollView: {
+    marginTop: 20,
+    width: '95%',
   },
-  BottomConversationArea: {
-    height: dim.height,
-    backgroundColor: "white",
-    borderTopColor: "lightgrey",
-    borderTopWidth: 1,
+  spacer: {
+    borderBottomWidth: 10,
+    borderBottomColor: "white",
   },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
+  textbox: {
+    display: "flex",
+    justifyContent: 'center',
+    backgroundColor: "lightblue",
+    borderRadius: 18,
+    height: 40,
   },
-  bar: {
-    backgroundColor: "white",
-    height: "100%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    backgroundColor: "transparent",
-    color: "black",
-    fontSize: 48,
-  },
-  scrollViewContent: {
-    marginTop: HEADER_MAX_HEIGHT,
+  acctDispText: {
+    fontSize: 17,
+    padding: 10,
+    alignContent: 'stretch',
   },
 });
 

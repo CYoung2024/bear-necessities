@@ -14,7 +14,7 @@ import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
-import { MessageListContext } from "../messageListContext";
+import { MessageListContext } from "../contextMessageList";
 
 import * as MyAzureFunctions from "../azureFunctions";
 
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   buttonContainer: {
-    height: "25%",
+    height: "11%",
     width: "60%",
     alignItems: "center",
     justifyContent: "center",

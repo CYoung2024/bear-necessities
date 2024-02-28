@@ -8,9 +8,9 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { useRoute } from "@react-navigation/native";
-import { TokenContext } from "./tokenContext";
-import { StatusContext } from "./StatusContext";
-import { MessageListContext } from "./messageListContext";
+import { TokenContext } from "./contextToken";
+import { StatusContext } from "./contextStatus";
+import { MessageListContext } from "./contextMessageList";
 import MyStorage from "./storage";
 import * as Linking from "expo-linking";
 
@@ -171,6 +171,7 @@ function DrawerApp() {
         options={{
           title: "Home",
           headerStatusBarHeight: 0,
+          headerShown: false,
           drawerIcon: ({ focused }) => (
             <Ionicons
               name="md-home"
@@ -190,20 +191,31 @@ const TabApp = ({ navigation }) => {
   const route = useRoute();
   const { token, messageList, status } = route.params;
 
+
+
   return (
     <TokenContext.Provider value={token}>
+
       <MessageListContext.Provider value={messageList}>
+
         <StatusContext.Provider value={status}>
+          
           <BottomTab.Navigator
             tabBarPosition="bottom"
             initialRouteName="Dashboard"
-            screenOptions={{ tabBarShowLabel: false }}
+            screenOptions={{ 
+              tabBarShowLabel: false,
+              headerShown: true,
+            }}
           >
             <BottomTab.Screen
               name="Dashboard"
               component={DashboardScreen}
               options={{
                 //headerShown: false,
+                headerStyle: {
+                  backgroundColor: '#f4511e',
+                },
                 tabBarIcon: (tabInfo) => (
                   <Ionicons
                     name="md-home"
@@ -218,7 +230,7 @@ const TabApp = ({ navigation }) => {
               name="IFN"
               component={AcctScreen}
               options={{
-                headerShown: false,
+                headerShown: true,
                 //showLabel: false,
                 tabBarIcon: (tabInfo) => (
                   <Ionicons
