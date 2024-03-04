@@ -88,6 +88,11 @@ function AcctScreen() {
 
   return (
     <View style={styles.container}>
+
+      <View style={styles.header}/>
+
+      <View style={styles.belowHeader}>
+
       {/* <MapArea /> */}
       <View style={styles.mapContainer}>
         <MapView
@@ -230,6 +235,8 @@ function AcctScreen() {
           />
         </View>
       </View>
+        
+        </View>
     </View>
   );
 }
@@ -241,10 +248,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
   },
+  header: {
+    height: 40,
+    backgroundColor: "white",
+  },
+  belowHeader: {
+    flex: 1,
+  },
   mapContainer: {
     backgroundColor: "darkgreen",
     height: "75%",
     width: dim.width * 1.0,
+    borderRadius: 20,
   },
   belowMapContainer: {
     alignItems: "center",

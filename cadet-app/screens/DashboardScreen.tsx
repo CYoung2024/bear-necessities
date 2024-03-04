@@ -53,13 +53,17 @@ const DashboardScreen = ({ navigation }) => {
   return (
     <View style={styles.Container}>
 
+    <View style={styles.header}/>
+
+    <View style={styles.belowHeader}>
+
         <ScrollView style={styles.ScrollViewContainer}>
 
           <View style={styles.ContentAreaContainer}>
 
             <View style={styles.GapBetweenContentContainers}/>
             <View style={styles.SmallContentContainer}>
-              <Text style={styles.ContentLargeText}>POD - 27Feb2024</Text>
+              <Text style={styles.ContentLargeText}>POD - 22May2024</Text>
               <Text style={styles.ContentMicroText}>{PlanOfTheDay}</Text>
             </View>
 
@@ -111,6 +115,7 @@ const DashboardScreen = ({ navigation }) => {
             </View>
           </View>
         </ScrollView>
+        </View>
       </View>
   );
 };
@@ -120,6 +125,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: "white",
+  },
+  header: {
+    height: 40,
+    backgroundColor: "white",
+  },
+  belowHeader: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: 'center',
   },
   ScrollViewContainer: {
     display: 'flex',

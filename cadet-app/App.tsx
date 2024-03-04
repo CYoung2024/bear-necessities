@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -205,7 +205,7 @@ const TabApp = ({ navigation }) => {
             initialRouteName="Dashboard"
             screenOptions={{ 
               tabBarShowLabel: false,
-              headerShown: true,
+              //headerShown: true,
             }}
           >
             <BottomTab.Screen
@@ -213,9 +213,9 @@ const TabApp = ({ navigation }) => {
               component={DashboardScreen}
               options={{
                 //headerShown: false,
-                headerStyle: {
-                  backgroundColor: '#f4511e',
-                },
+                //headerStyle: {
+                //  backgroundColor: '#f4511e',
+                //},
                 tabBarIcon: (tabInfo) => (
                   <Ionicons
                     name="md-home"
@@ -230,7 +230,7 @@ const TabApp = ({ navigation }) => {
               name="IFN"
               component={AcctScreen}
               options={{
-                headerShown: true,
+                //headerShown: true,
                 //showLabel: false,
                 tabBarIcon: (tabInfo) => (
                   <Ionicons
