@@ -58,9 +58,14 @@ const NotifsScreen = (navigation) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header} />
 
-      <View style={styles.belowHeader}>
+    <View style={styles.header}>
+      <Text style={styles.headerText}>
+        OOD Notifications
+      </Text>
+    </View>
+
+    <View style={styles.belowHeader}>
         <ScrollView
           style={styles.scrollView}
           ref={scrollViewRef}
@@ -99,8 +104,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   header: {
-    height: 40,
+    height: 50,
     backgroundColor: "white",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
   belowHeader: {
     flex: 1,
@@ -117,18 +128,20 @@ const styles = StyleSheet.create({
   textbox: {
     flexDirection: "row",
     backgroundColor: "lightblue",
-    borderRadius: 18,
+    borderRadius: 25,
     flexWrap: "wrap",
-    padding: 10,
-    justifyContent: "space-between",
+    padding: 11,
+    justifyContent: "flex-end",
   },
   acctDispText: {
     fontSize: 17,
     alignContent: "flex-start",
+    width: "100%",
   },
   acctDispText2: {
     fontSize: 12,
     alignContent: "flex-end",
+    textAlign: "right",
   },
 });
 

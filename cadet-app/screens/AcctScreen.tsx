@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
@@ -88,155 +89,188 @@ function AcctScreen() {
 
   return (
     <View style={styles.container}>
-
-      <View style={styles.header}/>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Accountability</Text>
+      </View>
 
       <View style={styles.belowHeader}>
-
-      {/* <MapArea /> */}
-      <View style={styles.mapContainer}>
-        <MapView
-          ref={mapRef}
-          pitchEnabled={true}
-          mapType={"satellite"}
-          showsBuildings={true}
-          style={{
-            alignSelf: "stretch",
-            height: "100%",
-          }}
-          initialRegion={{
-            latitude: 41.37354686499106,
-            longitude: -72.10071999095653,
-            latitudeDelta: 0.007,
-            longitudeDelta: 0.01,
-          }}
-        >
-          <Marker title="My Location" coordinate={markerLocation} />
-        </MapView>
-      </View>
-
-      {/* <ButtonArea /> */}
-      <View style={styles.belowMapContainer}>
-        <View style={styles.currentStatusContainer}>
-          <Text numberOfLines={1} adjustsFontSizeToFit style={styles.largeText}>
-            Status: {loading ? "loading..." : cadetStatus}
-          </Text>
+        {/* <MapArea /> */}
+        <View style={styles.mapContainer}>
+          <MapView
+            ref={mapRef}
+            pitchEnabled={true}
+            //mapType={"satellite"}
+            showsBuildings={true}
+            style={{
+              alignSelf: "stretch",
+              height: "100%",
+            }}
+            initialRegion={{
+              latitude: 41.37354686499106,
+              longitude: -72.10071999095653,
+              latitudeDelta: 0.007,
+              longitudeDelta: 0.01,
+            }}
+          >
+            <Marker title="My Location" coordinate={markerLocation} />
+          </MapView>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <View style={styles.leftButtonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setOffBaseSelectDialogVisible(true);
-                setLoading(true);
-                setMarkerLocation({
-                  latitude: 0,
-                  longitude: 0,
-                  altitude: 0,
-                });
-              }}
+        {/* <ButtonArea /> */}
+        <View style={styles.belowMapContainer}>
+          <View style={styles.currentStatusContainer}>
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={styles.largeText}
             >
-              <Text style={styles.smallText}>Liberty/Leave</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setExcusalInputVisible(true);
-                setLoading(true);
-                setMarkerLocation({
-                  latitude: 0,
-                  longitude: 0,
-                  altitude: 0,
-                });
-              }}
-            >
-              <Text style={styles.smallText}>Excusal</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setAcBuildSelectDialogVisible(true);
-                setLoading(true);
-                setMarkerLocation({
-                  latitude: 0,
-                  longitude: 0,
-                  altitude: 0,
-                });
-              }}
-            >
-              <Text style={styles.smallText}>Academic Building</Text>
-            </TouchableOpacity>
+              Status: {loading ? "loading..." : cadetStatus}
+            </Text>
           </View>
 
-          <View style={styles.rightButtonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                alert("Signing In For the Night");
-                setCadetStatus("IFN");
-                MyAzureFunctions.call_writeCadetStatus(
-                  token,
-                  cadetCode,
-                  cadetStatus
-                );
-                handleGetLocation();
-                console.log("cadetStatus=IFN");
-              }}
-            >
-              <Text style={styles.smallText}>Sign</Text>
-              <Text style={styles.largeText}>IFN</Text>
-            </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <View style={styles.leftButtonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setOffBaseSelectDialogVisible(true);
+                  setLoading(true);
+                  setMarkerLocation({
+                    latitude: 0,
+                    longitude: 0,
+                    altitude: 0,
+                  });
+                }}
+              >
+                <Text style={styles.smallText}>Liberty/Leave</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setExcusalInputVisible(true);
+                  setLoading(true);
+                  setMarkerLocation({
+                    latitude: 0,
+                    longitude: 0,
+                    altitude: 0,
+                  });
+                }}
+              >
+                <Text style={styles.smallText}>Barracks Sign-out</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setAcBuildSelectDialogVisible(true);
+                  setLoading(true);
+                  setMarkerLocation({
+                    latitude: 0,
+                    longitude: 0,
+                    altitude: 0,
+                  });
+                }}
+              >
+                <Text style={styles.smallText}>Academic Building</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.rightButtonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  Alert.alert(
+                    "Sign IFN",
+                    "You are about to sign IFN, and your current location will be stored in the app",
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => console.log("IFN not passed"),
+                        style: "cancel",
+                      },
+                      {
+                        text: "OK",
+                        onPress: () => {
+                          setCadetStatus("IFN");
+                          setLoading(false);
+                          MyAzureFunctions.call_writeCadetStatus(
+                            token,
+                            cadetCode,
+                            cadetStatus
+                          );
+                          handleGetLocation();
+                          console.log("cadetStatus=IFN");
+                        },
+                        style: "default",
+                      },
+                    ]
+                  );
+                }}
+              >
+                <Text style={styles.largeText}>IFN</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <View>
-          <UserInputPopup
-            modalVisible={isExcusalInputVisible}
-            setModalVisible={setExcusalInputVisible}
-            title={"Which Excusal?"}
-            message={"Only type in the name of the club or event"}
-            buttons={["OK", "Cancel"]}
-            saveCadetStatus={setCadetStatus}
-            tokenForFunc={token}
-            cadetCodeForFunc={cadetCode}
-          />
-        </View>
-
-        <View>
-          <TokenContext.Provider value={token}>
-            <DropDownPopupAB
-              modalVisible={isAcBuildSelectDialogVisible}
-              setModalVisible={setAcBuildSelectDialogVisible}
-              title={"Accademic Building"}
-              message={
-                "Choose which building you will be spending all night in"
-              }
-              buttons={["OK", "Cancel"]}
+          <View>
+            <UserInputPopup
+              modalVisible={isExcusalInputVisible}
+              setModalVisible={setExcusalInputVisible}
+              title={"Where Ya Headed?"}
+              message={"Type in the box below if you are on an excusal, have a CS event, or are just going on an offbase run"}
+              buttons={[{
+                text: "Cancel",
+                func: () => {setLoading(false);}
+              },{
+                text: "OK"
+              }]}
               saveCadetStatus={setCadetStatus}
-              //tokenForFunc={token}
+              tokenForFunc={token}
               cadetCodeForFunc={cadetCode}
             />
-          </TokenContext.Provider>
-        </View>
+          </View>
 
-        <View>
-          <DropDownPopupOB
-            modalVisible={isOffBaseSelectDialogVisible}
-            setModalVisible={setOffBaseSelectDialogVisible}
-            title={"Liberty Sign-Out"}
-            message={"Select your status from the dropdown"}
-            buttons={["OK", "Cancel"]}
-            saveCadetStatus={setCadetStatus}
-            tokenForFunc={token}
-            cadetCodeForFunc={cadetCode}
-          />
+          <View>
+            <TokenContext.Provider value={token}>
+              <DropDownPopupAB
+                modalVisible={isAcBuildSelectDialogVisible}
+                setModalVisible={setAcBuildSelectDialogVisible}
+                title={"Accademic Building"}
+                message={
+                  "Choose which building you will be hanging out in"
+                }
+                buttons={[{
+                  text: "Cancel",
+                  func: () => {setLoading(false);}
+                },{
+                  text: "OK"
+                }]}
+                saveCadetStatus={setCadetStatus}
+                cadetCodeForFunc={cadetCode}
+              />
+            </TokenContext.Provider>
+          </View>
+
+          <View>
+            <DropDownPopupOB
+              modalVisible={isOffBaseSelectDialogVisible}
+              setModalVisible={setOffBaseSelectDialogVisible}
+              title={"Liberty Sign-Out"}
+              message={"Select your status from the dropdown"}
+              buttons={[{
+                text: "Cancel",
+                func: () => {setLoading(false);}
+              },{
+                text: "OK"
+              }]}
+              saveCadetStatus={setCadetStatus}
+              tokenForFunc={token}
+              cadetCodeForFunc={cadetCode}
+            />
+          </View>
         </View>
       </View>
-        
-        </View>
     </View>
   );
 }
@@ -249,8 +283,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   header: {
-    height: 40,
+    height: 50,
     backgroundColor: "white",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
   belowHeader: {
     flex: 1,
@@ -283,9 +323,9 @@ const styles = StyleSheet.create({
     height: "75%",
     justifyContent: "center",
     padding: 5,
+    backgroundColor: "white",
   },
   leftButtonContainer: {
-    //alignItems: 'even-spacing',
     flex: 1,
     gap: 5,
     justifyContent: "center",

@@ -35,12 +35,13 @@ const DashboardScreen = ({ navigation }) => {
   `;
 
   const commonNumbers = `
-  CHDO: (860) 625-2013
-  Watch Office Phone: (860) 444-8294
-  CGA Emergency: (860) 444-8402
-  Help Desk: (860) 444-8324 (TECH)
-  SMPO: (860) 625-0530
-  Duty Engineer: (860) 625-1166
+  CHDO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-2013
+  SMPO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-0530
+  Duty Engineer: \t(860) 625-1166
+
+  Watch Office: \t\t\t(860) 444-8294
+  CGPD: \t\t\t\t\t\t\t\t\t\t\t\t(860) 444-5555
+  IT Desk: \t\t\t\t\t\t\t\t\t\t(860) 444-8324
   `;
 
   const trainingsAt1100 = `
@@ -53,15 +54,18 @@ const DashboardScreen = ({ navigation }) => {
   return (
     <View style={styles.Container}>
 
-    <View style={styles.header}/>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
+          Dashboard
+        </Text>
+      </View>
 
-    <View style={styles.belowHeader}>
+      <View style={styles.belowHeader}>
 
         <ScrollView style={styles.ScrollViewContainer}>
 
           <View style={styles.ContentAreaContainer}>
 
-            <View style={styles.GapBetweenContentContainers}/>
             <View style={styles.SmallContentContainer}>
               <Text style={styles.ContentLargeText}>POD - 22May2024</Text>
               <Text style={styles.ContentMicroText}>{PlanOfTheDay}</Text>
@@ -75,7 +79,7 @@ const DashboardScreen = ({ navigation }) => {
 
             <View style={styles.GapBetweenContentContainers}/>
             <View style={styles.SmallContentContainer}>
-              <Text style={styles.ContentLargeText}>Quick Access Contacts</Text>
+              <Text style={styles.ContentLargeText}>Quick Contacts</Text>
               <Text style={styles.ContentSmallText}>{commonNumbers}</Text>
             </View>
 
@@ -127,8 +131,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   header: {
-    height: 40,
+    height: 50,
     backgroundColor: "white",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
   belowHeader: {
     flex: 1,
@@ -150,7 +160,7 @@ const styles = StyleSheet.create({
   SmallContentContainer: {
     //flex: 1,
     //height: 200,
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#f7f7f7',
     borderColor: "lightgrey",
     borderWidth: 5,
     borderRadius: 10,
