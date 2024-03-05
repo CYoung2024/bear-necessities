@@ -58,14 +58,11 @@ const NotifsScreen = (navigation) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>OOD Notifications</Text>
+      </View>
 
-    <View style={styles.header}>
-      <Text style={styles.headerText}>
-        OOD Notifications
-      </Text>
-    </View>
-
-    <View style={styles.belowHeader}>
+      <View style={styles.belowHeader}>
         <ScrollView
           style={styles.scrollView}
           ref={scrollViewRef}
@@ -106,8 +103,8 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     backgroundColor: "white",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerText: {
     fontSize: 30,
