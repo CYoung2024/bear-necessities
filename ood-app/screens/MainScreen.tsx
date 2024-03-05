@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useRoute } from "@react-navigation/native";
+import moment from "moment-timezone";
 
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
@@ -23,20 +24,7 @@ const coastGuardLBlue = "#B3E0FF";
 const coastGuardYellow = "#f0ac1b";
 
 const MainScreen = ({ navigation }) => {
-  const {
-    company,
-    saveCompany,
-    cadetList1c,
-    saveCadetList1c,
-    cadetList2c,
-    saveCadetList2c,
-    cadetList3c,
-    saveCadetList3c,
-    cadetList4c,
-    saveCadetList4c,
-    messageList,
-    saveMessageList,
-  } = MyStorage({
+  const { company, saveCompany, messageList, saveMessageList } = MyStorage({
     initialCompany: "",
     initialCadetList1c: "",
     initialCadetList2c: "",
@@ -50,18 +38,6 @@ const MainScreen = ({ navigation }) => {
   const token = route.params;
   const [loading, setLoading] = useState(true);
 
-  const [timePhrase, setTimePhrase] = useState("TimePhrase");
-  let today = new Date();
-  let curHr = today.getHours();
-
-  // if (curHr < 12) {
-  //   setTimePhrase("Good Morning ");
-  // } else if (curHr < 18) {
-  //   setTimePhrase("Good Afternoon ");
-  // } else {
-  //   setTimePhrase("Good Evening ");
-  // }
-
   useEffect(() => {
     const stopLoading = async () => {
       if (messageList.length > 0) {
@@ -74,6 +50,12 @@ const MainScreen = ({ navigation }) => {
   const handleMoreInfoPress = () => {
     navigation.navigate("Company Accountability", token);
   };
+
+  function convertTime(original: string): string {
+    const est = moment(original).tz("America/New_York"); //TODO: pull time zone from device
+    const newTime = est.format("Do HH:mm");
+    return newTime;
+  }
 
   async function sendMessage(expoPushToken) {
     const message = {
@@ -110,6 +92,8 @@ const MainScreen = ({ navigation }) => {
     setInput("");
   };
 
+  //let count1c = cadetList1c.filter((cadet) => cadet.status === null).length;
+
   return (
     <SafeAreaView style={styles.containerWebpage}>
       <View style={styles.headerBox}>
@@ -142,19 +126,24 @@ const MainScreen = ({ navigation }) => {
         </View>
         <View style={styles.messagesBox}>
           <Text style={styles.infoBoxText}>Company Messages</Text>
-          <ScrollView style={styles.scrollViewer}>
-            {loading ? (
-              <Text>No current messages :/</Text>
-            ) : (
-              messageList.map((item, index) => (
-                <View key={index} style={styles.touchName}>
-                  <Text key={index} style={styles.acctDispText}>
-                    {item.MessageContent} {item.TimeSent}
-                  </Text>
-                </View>
-              ))
-            )}
-          </ScrollView>
+          <View style={styles.scrollViewer}>
+            <ScrollView style={styles.scroll}>
+              {loading ? (
+                <Text>No current messages :/</Text>
+              ) : (
+                messageList.map((item, index) => (
+                  <View key={index} style={styles.individualMessage}>
+                    <Text key={`content-${index}`} style={styles.messageText}>
+                      {item.MessageContent}
+                    </Text>
+                    <Text key={`time-${index}`} style={styles.messageTime}>
+                      {convertTime(item.TimeSent)}
+                    </Text>
+                  </View>
+                ))
+              )}
+            </ScrollView>
+          </View>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -180,7 +169,7 @@ const styles = StyleSheet.create({
   },
   containerWebpage: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#DCDCDC",
     alignItems: "center",
     justifyContent: "center",
     flexWrap: "wrap",
@@ -191,10 +180,9 @@ const styles = StyleSheet.create({
   headerBox: {
     width: "70%",
     height: "20%",
-    backgroundColor: "#ddd",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "black",
     borderWidth: 5,
     borderRadius: 20,
   },
@@ -204,7 +192,6 @@ const styles = StyleSheet.create({
   containerBoxes: {
     width: "100%",
     height: "74%",
-    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "space-evenly",
     flexWrap: "wrap",
@@ -214,25 +201,24 @@ const styles = StyleSheet.create({
   accountabilityBox: {
     flex: 1,
     height: "100%",
-    backgroundColor: "#EEF0BB",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
-    borderColor: "blue",
-    borderWidth: 5,
     margin: "1%",
+    borderRadius: 20,
   },
   messagesBox: {
     flex: 2,
     height: "100%",
-    backgroundColor: "#EEF0BB",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
-    borderColor: "blue",
-    borderWidth: 5,
     margin: "1%",
+    borderRadius: 20,
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   infoBoxText: {
     fontSize: RFPercentage(4),
     alignItems: "center",
-    backgroundColor: "#EEF0BB",
     textAlign: "center",
   },
 
@@ -241,13 +227,11 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "70%",
     alignItems: "center",
-    backgroundColor: "#EEF0BB",
     fontSize: RFPercentage(1),
     rowGap: 5,
   },
   NotifText: {
     fontSize: RFPercentage(2),
-    backgroundColor: "#EEF0BB",
   },
   percentageBox1c: {
     height: 45,
@@ -280,7 +264,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: 300,
     height: "5%",
-    backgroundColor: "#EEF0BB",
     margin: 30,
   },
   button: {
@@ -297,18 +280,44 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
     flex: 3,
+    marginRight: 10,
+    paddingLeft: 5,
   },
   inputContainer: {
-    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    margin: "1%",
-    padding: "1%",
+    alignContent: "flex-end",
+    width: "95%",
+    marginTop: "1%",
+    marginBottom: "2%",
   },
-  ScrollViewer: {
-    width: "100%",
-    backgroundColor: "#EEF0BB",
+  scrollViewer: {
+    width: "95%",
+    borderWidth: 2,
+    borderColor: "#DCDCDC",
+    borderRadius: 5,
+    alignContent: "flex-start",
+    flex: 1,
+  },
+  scroll: {
+    flex: 1,
+  },
+  individualMessage: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: 10,
+    justifyContent: "space-between",
+    borderTopWidth: 1,
+    borderTopColor: "#DCDCDC",
+  },
+  messageText: {
+    fontSize: 17,
+    alignContent: "flex-start",
+  },
+  messageTime: {
+    fontSize: 12,
+    alignContent: "flex-end",
   },
 });
 
