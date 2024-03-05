@@ -36,6 +36,9 @@ import {
 } from "@react-navigation/drawer";
 import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
 
+import { LogBox } from "react-native";
+LogBox.ignoreAllLogs();
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
