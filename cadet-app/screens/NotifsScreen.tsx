@@ -59,12 +59,9 @@ const NotifsScreen = (navigation) => {
 
   return (
     <View style={styles.container}>
-
-    <View style={styles.header}>
-      <Text style={styles.headerText}>
-        OOD Notifications
-      </Text>
-    </View>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>OOD Notifications</Text>
+      </View>
 
     <View style={styles.belowHeader}>
       <LinearGradient
@@ -112,8 +109,8 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     backgroundColor: "white",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerText: {
     fontSize: 30,
