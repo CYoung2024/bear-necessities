@@ -182,6 +182,7 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity
           style={styles.button}
           onPress={async () => {
+            navigation.navigate("Loading")
             const authorizeResult = await authRequest.promptAsync(discovery);
             await $authorizeResult(authorizeResult);
           }}
