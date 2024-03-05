@@ -10,6 +10,8 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { DrawerActions } from "@react-navigation/native";
+import * as Apptsx from "../App"
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
@@ -17,7 +19,6 @@ let dim = Dimensions.get("window");
 const USCGALogo = require("../assets/icon.png");
 
 const DashboardScreen = ({ navigation }) => {
-
 
   const PlanOfTheDay = `
   0600-0730: Buffet Breakfast
@@ -35,7 +36,7 @@ const DashboardScreen = ({ navigation }) => {
   1955: Restricted Cadet Formation   
   2000-2300: Academic Study Time 
   2130-2200: Restricted Cadet Check-in w/ OODs
-  2300: Taps  
+  2300: Taps
   `;
 
   const trainingsAt1100 = `
@@ -64,11 +65,17 @@ const DashboardScreen = ({ navigation }) => {
 
       <View style={styles.header}>
         <View style={styles.drawerButton}>
-          <Image source={USCGALogo}/>
+          <TouchableOpacity 
+            style={styles.circleIcon}
+            onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer())}}>
+
+          </TouchableOpacity>
         </View>
         <Text style={styles.headerText}>
           Dashboard
         </Text>
+        <View style={styles.whiteSpace}>
+        </View>
       </View>
 
       <View style={styles.belowHeader}>
@@ -145,14 +152,28 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 50,
+    width: "100%",
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    backgroundColor: "transparent",
   },
   drawerButton: {
     height: 50,
     width: 50,
-    backgroundColor: "green",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  circleIcon: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: "#f0ac1b",
+  },
+  whiteSpace: {
+    height: 50,
+    width: 50,
+    backgroundColor: "transparent",
   },
   headerText: {
     fontSize: 30,
