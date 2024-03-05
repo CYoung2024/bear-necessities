@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { Platform, View } from "react-native";
+import { Platform, BackHandler, Alert } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -87,45 +87,33 @@ const BottomTab = createMaterialTopTabNavigator();
 
 function StackApp() {
   // Configure settings transition animation
-  const config = {
-    animation: "spring",
-    config: {
-      stiffness: 10,
-    },
-  };
 
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="Loading"
         component={LoadingScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="SetValues"
         component={OneTimeSetStuffScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="TabApp"
         component={DrawerApp}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{
-          headerShown: true,
-          //headerStatusBarHeight: 0,
-          // transitionSpec: {
-          //   open: config,
-          //   close: config,
-        }}
+        options={{ headerShown: true }}
       />
     </Stack.Navigator>
   );
@@ -197,8 +185,27 @@ function DrawerApp() {
 const TabApp = ({ navigation }) => {
   const route = useRoute();
   const { token, messageList, status } = route.params;
+  
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Would you like to exit the app?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
 
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <TokenContext.Provider value={token}>
@@ -320,6 +327,27 @@ export default function App() {
       );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
+  }, []);
+  
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Would you like to exit the app?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   return (

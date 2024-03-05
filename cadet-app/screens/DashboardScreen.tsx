@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
@@ -34,8 +35,14 @@ const DashboardScreen = ({ navigation }) => {
   2300: Taps  
   `;
 
-  const commonNumbers = `
-  CHDO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-2013
+  const trainingsAt1100 = `
+  1/c - Traits of an Honorable Officer (CO Rooms)
+  2/c - Class Meeting (Dimick)
+  3/c - Updated Conduct System Brief (Leamy)
+  4/c - Updated Conduct System Brief (Leamy)
+  `;
+
+  const commonNumbers = `  CHDO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-2013
   SMPO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-0530
   Duty Engineer: \t(860) 625-1166
 
@@ -44,15 +51,13 @@ const DashboardScreen = ({ navigation }) => {
   IT Desk: \t\t\t\t\t\t\t\t\t\t(860) 444-8324
   `;
 
-  const trainingsAt1100 = `
-  1/c - Traits of an Honorable Officer (CO Rooms)
-  2/c - Class Meeting (Dimick)
-  3/c - Updated Conduct System Brief (Leamy)
-  4/c - Updated Conduct System Brief (Leamy)
-  `;
-
   return (
     <View style={styles.Container}>
+          
+    <LinearGradient
+      colors={['rgba(256,256,256,1.3)', 'transparent']}
+      style={styles.gradient}
+    >
 
       <View style={styles.header}>
         <Text style={styles.headerText}>
@@ -118,8 +123,10 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.ContentLargeText}>Info Card</Text>
             </View>
           </View>
+        
         </ScrollView>
         </View>
+        </LinearGradient>
       </View>
   );
 };
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: "white",
+    backgroundColor: "lightblue",
   },
   header: {
     height: 50,
@@ -142,17 +149,20 @@ const styles = StyleSheet.create({
   },
   belowHeader: {
     flex: 1,
-    backgroundColor: "white",
+    alignItems: 'center',
+  },
+  gradient: {
+    width: '100%',
+    height: '100%',
     alignItems: 'center',
   },
   ScrollViewContainer: {
     display: 'flex',
-    backgroundColor: "white",
   },
   ContentAreaContainer: {
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: "white",
+    //backgroundColor: "white",
   },
   GapBetweenContentContainers: {
     height: dim.width * 0.025,

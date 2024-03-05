@@ -9,6 +9,7 @@ import {
   View,
   RefreshControl,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import moment from "moment-timezone";
 import { useRoute } from "@react-navigation/native";
 import { useContext } from "react";
@@ -62,7 +63,11 @@ const NotifsScreen = (navigation) => {
         <Text style={styles.headerText}>OOD Notifications</Text>
       </View>
 
-      <View style={styles.belowHeader}>
+    <View style={styles.belowHeader}>
+      <LinearGradient
+        colors={['rgba(256,256,256,1.3)', 'transparent']}
+        style={styles.gradient}
+      >
         <ScrollView
           style={styles.scrollView}
           ref={scrollViewRef}
@@ -90,6 +95,7 @@ const NotifsScreen = (navigation) => {
             ))
           )}
         </ScrollView>
+        </LinearGradient>
       </View>
     </View>
   );
@@ -112,15 +118,20 @@ const styles = StyleSheet.create({
   },
   belowHeader: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "lightblue",
     alignItems: "center",
+  },
+  gradient: {
+    width: '100%',
+    height: '200%',
+    alignItems: 'center',
   },
   scrollView: {
     width: "95%",
   },
   spacer: {
     borderBottomWidth: 10,
-    borderBottomColor: "white",
+    borderBottomColor: "transparent",
   },
   textbox: {
     flexDirection: "row",
