@@ -25,6 +25,7 @@ const DropDownPopup = (props) => {
     { label: "Short", value: "Short" },
     { label: "Long", value: "Long" },
     { label: "Leave", value: "Leave" },
+    { label: "Gangway", value: "Gangway" },
     { label: "C-Leave", value: "C-Leave" },
     { label: "E-Leave", value: "E-Leave" },
     { label: "R-Leave", value: "R-Leave" },
