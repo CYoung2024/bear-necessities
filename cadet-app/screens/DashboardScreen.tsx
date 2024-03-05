@@ -5,16 +5,21 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Image,
   TouchableOpacity,
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { DrawerActions } from "@react-navigation/native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
-const DashboardScreen = ({ navigation }) => {
+const USCGALogo = require("../assets/icon.png");
+const CircleList = require("../assets/list-circle-sharp.svg");
 
+const DashboardScreen = ({ navigation }) => {
 
   const PlanOfTheDay = `
   0600-0730: Buffet Breakfast
@@ -32,7 +37,7 @@ const DashboardScreen = ({ navigation }) => {
   1955: Restricted Cadet Formation   
   2000-2300: Academic Study Time 
   2130-2200: Restricted Cadet Check-in w/ OODs
-  2300: Taps  
+  2300: Taps
   `;
 
   const trainingsAt1100 = `
@@ -60,9 +65,23 @@ const DashboardScreen = ({ navigation }) => {
     >
 
       <View style={styles.header}>
+        <View style={styles.drawerButton}>
+          <TouchableOpacity 
+            style={styles.circleIcon}
+            onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
+            <Ionicons
+              name={"list-circle-sharp"}
+              size={40}
+              color={"#000"}
+            />
+
+          </TouchableOpacity>
+        </View>
         <Text style={styles.headerText}>
           Dashboard
         </Text>
+        <View style={styles.whiteSpace}>
+        </View>
       </View>
 
       <View style={styles.belowHeader}>
@@ -139,8 +158,30 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 50,
+    width: "100%",
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: "transparent",
+  },
+  drawerButton: {
+    height: 50,
+    width: 50,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  circleIcon: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: "transparent",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  whiteSpace: {
+    height: 50,
+    width: 50,
+    backgroundColor: "transparent",
   },
   headerText: {
     fontSize: 30,

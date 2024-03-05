@@ -36,8 +36,8 @@ import {
 } from "@react-navigation/drawer";
 import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
 
-import { LogBox } from "react-native";
-LogBox.ignoreAllLogs();
+//import { LogBox } from "react-native";
+//LogBox.ignoreAllLogs();
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -125,7 +125,7 @@ function StackApp() {
 // Defines second app navigation layer
 // The side drawer allows users to navigate between the tab screen
 // and the settings screen
-function DrawerApp() {
+export function DrawerApp({navigation}) {
   const route = useRoute();
   const token = route.params;
 

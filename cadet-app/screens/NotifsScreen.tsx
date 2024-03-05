@@ -62,39 +62,38 @@ const NotifsScreen = (navigation) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>OOD Notifications</Text>
       </View>
-
-    <View style={styles.belowHeader}>
-      <LinearGradient
-        colors={['rgba(256,256,256,1.3)', 'transparent']}
-        style={styles.gradient}
-      >
-        <ScrollView
-          style={styles.scrollView}
-          ref={scrollViewRef}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          onContentSizeChange={() =>
-            scrollViewRef.current.scrollToEnd({ animated: true })
-          }
+      <View style={styles.belowHeader}>
+        <LinearGradient
+          colors={["rgba(256,256,256,0.9)", "transparent"]}
+          style={styles.gradient}
         >
-          {loading ? (
-            <Text>No current messages :/</Text>
-          ) : (
-            newMessages.map((item, index) => (
-              <View key={index} style={styles.spacer}>
-                <View key={index} style={styles.textbox}>
-                  <Text key={`content-${index}`} style={styles.acctDispText}>
-                    {item.MessageContent}
-                  </Text>
-                  <Text key={`time-${index}`} style={styles.acctDispText2}>
-                    {convertTime(item.TimeSent)}
-                  </Text>
+          <ScrollView
+            style={styles.scrollView}
+            ref={scrollViewRef}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onContentSizeChange={() =>
+              scrollViewRef.current.scrollToEnd({ animated: true })
+            }
+          >
+            {loading ? (
+              <Text>No current messages :/</Text>
+            ) : (
+              newMessages.map((item, index) => (
+                <View key={index} style={styles.spacer}>
+                  <View key={index} style={styles.textbox}>
+                    <Text key={`content-${index}`} style={styles.acctDispText}>
+                      {item.MessageContent}
+                    </Text>
+                    <Text key={`time-${index}`} style={styles.acctDispText2}>
+                      {convertTime(item.TimeSent)}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))
-          )}
-        </ScrollView>
+              ))
+            )}
+          </ScrollView>
         </LinearGradient>
       </View>
     </View>
@@ -118,13 +117,14 @@ const styles = StyleSheet.create({
   },
   belowHeader: {
     flex: 1,
-    backgroundColor: "lightblue",
+    backgroundColor: "lightgrey",
     alignItems: "center",
   },
   gradient: {
-    width: '100%',
-    height: '200%',
-    alignItems: 'center',
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
   },
   scrollView: {
     width: "95%",
