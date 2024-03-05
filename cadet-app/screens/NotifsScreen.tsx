@@ -9,6 +9,7 @@ import {
   View,
   RefreshControl,
 } from "react-native";
+import moment from "moment-timezone";
 import { useRoute } from "@react-navigation/native";
 import { useContext } from "react";
 import { TokenContext } from "../contextToken";
@@ -18,6 +19,12 @@ import * as MyAzureFunctions from "../azureFunctions";
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
+function convertTime(original: string): string {
+  const est = moment(original).tz("America/New_York"); // maybe pull time zone from device
+  const newTime = est.format("Do HH:mm");
+  return newTime;
+}
+
 const NotifsScreen = (navigation) => {
   const messageList = useContext(MessageListContext);
   const token = useContext(TokenContext);
@@ -25,12 +32,10 @@ const NotifsScreen = (navigation) => {
   const scrollViewRef = useRef();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [newMessages, setNewMessages] = useState(messageList)
+  const [newMessages, setNewMessages] = useState(messageList);
 
-  const onRefresh = React.useCallback( async () => {
+  const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    console.log("Refreshing Messages");
-
     const messageListUpdated = await MyAzureFunctions.call_readCompanyMessages(
       token,
       "Alfa"
@@ -53,18 +58,17 @@ const NotifsScreen = (navigation) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header} />
 
-    <View style={styles.header}/>
-
-    <View style={styles.belowHeader}>
-        <ScrollView 
+      <View style={styles.belowHeader}>
+        <ScrollView
           style={styles.scrollView}
           ref={scrollViewRef}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          onContentSizeChange={
-            () => scrollViewRef.current.scrollToEnd({animated: true})
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: true })
           }
         >
           {loading ? (
@@ -73,16 +77,18 @@ const NotifsScreen = (navigation) => {
             newMessages.map((item, index) => (
               <View key={index} style={styles.spacer}>
                 <View key={index} style={styles.textbox}>
-                  <Text key={index} style={styles.acctDispText}>
+                  <Text key={`content-${index}`} style={styles.acctDispText}>
                     {item.MessageContent}
-                    {item.TimeSent}
+                  </Text>
+                  <Text key={`time-${index}`} style={styles.acctDispText2}>
+                    {convertTime(item.TimeSent)}
                   </Text>
                 </View>
               </View>
             ))
           )}
         </ScrollView>
-        </View>
+      </View>
     </View>
   );
 };
@@ -91,7 +97,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    //alignItems: 'center',
   },
   header: {
     height: 40,
@@ -100,27 +105,30 @@ const styles = StyleSheet.create({
   belowHeader: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: 'center',
+    alignItems: "center",
   },
   scrollView: {
-    //marginTop: 20,
-    width: '95%',
+    width: "95%",
   },
   spacer: {
     borderBottomWidth: 10,
     borderBottomColor: "white",
   },
   textbox: {
-    display: "flex",
-    justifyContent: 'center',
+    flexDirection: "row",
     backgroundColor: "lightblue",
     borderRadius: 18,
-    height: 40,
+    flexWrap: "wrap",
+    padding: 10,
+    justifyContent: "space-between",
   },
   acctDispText: {
     fontSize: 17,
-    padding: 10,
-    alignContent: 'stretch',
+    alignContent: "flex-start",
+  },
+  acctDispText2: {
+    fontSize: 12,
+    alignContent: "flex-end",
   },
 });
 
