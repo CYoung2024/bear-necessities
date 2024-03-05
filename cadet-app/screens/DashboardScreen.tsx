@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Image,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -12,6 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
+
+const USCGALogo = require("../assets/icon.png");
 
 const DashboardScreen = ({ navigation }) => {
 
@@ -60,6 +63,9 @@ const DashboardScreen = ({ navigation }) => {
     >
 
       <View style={styles.header}>
+        <View style={styles.drawerButton}>
+          <Image source={USCGALogo}/>
+        </View>
         <Text style={styles.headerText}>
           Dashboard
         </Text>
@@ -140,7 +146,13 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  drawerButton: {
+    height: 50,
+    width: 50,
+    backgroundColor: "green",
   },
   headerText: {
     fontSize: 30,
