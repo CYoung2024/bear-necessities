@@ -16,10 +16,11 @@ import * as Linking from "expo-linking";
 
 // App Screen function references
 import LoginScreen from "./screens/LoginScreen";
+import LoadingScreen from "./screens/LoadingScreen";
 import OneTimeSetStuffScreen from "./screens/OneTimeSetStuffScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import AcctScreen from "./screens/AcctScreen";
-import MessagesScreen from "./screens/NotifsScreen";
+import NotifsScreen from "./screens/NotifsScreen";
 import RouteScreen from "./screens/RoutingScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
@@ -34,7 +35,6 @@ import {
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
 import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
-import NotifsScreen from "./screens/NotifsScreen";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -83,6 +83,8 @@ const BottomTab = createMaterialTopTabNavigator();
 // Defines first app navigation layer
 // Once the Login screen is bypassed, it should not be returned to,
 // nor should the user see it again unless they leave base or log out
+
+
 function StackApp() {
   // Configure settings transition animation
   const config = {
@@ -97,6 +99,11 @@ function StackApp() {
       <Stack.Screen
         name="Login"
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Loading"
+        component={LoadingScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -205,6 +212,9 @@ const TabApp = ({ navigation }) => {
             initialRouteName="Dashboard"
             screenOptions={{ 
               tabBarShowLabel: false,
+              tabBarStyle: {
+                borderTopWidth: 0,
+              }
               //headerShown: true,
             }}
           >
