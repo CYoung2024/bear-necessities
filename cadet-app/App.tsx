@@ -169,7 +169,7 @@ export function DrawerApp({navigation}) {
         options={{
           title: "Home",
           headerStatusBarHeight: 0,
-          headerShown: true,
+          headerShown: false,
           drawerIcon: ({ focused }) => (
             <Ionicons
               name="md-home"

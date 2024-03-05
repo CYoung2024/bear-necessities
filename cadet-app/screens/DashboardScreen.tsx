@@ -11,12 +11,13 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { DrawerActions } from "@react-navigation/native";
-import * as Apptsx from "../App"
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
 const USCGALogo = require("../assets/icon.png");
+const CircleList = require("../assets/list-circle-sharp.svg");
 
 const DashboardScreen = ({ navigation }) => {
 
@@ -67,7 +68,12 @@ const DashboardScreen = ({ navigation }) => {
         <View style={styles.drawerButton}>
           <TouchableOpacity 
             style={styles.circleIcon}
-            onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer())}}>
+            onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
+            <Ionicons
+              name={"list-circle-sharp"}
+              size={40}
+              color={"#000"}
+            />
 
           </TouchableOpacity>
         </View>
@@ -168,7 +174,9 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
-    backgroundColor: "#f0ac1b",
+    backgroundColor: "transparent",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   whiteSpace: {
     height: 50,

@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   belowHeader: {
     flex: 1,
-    backgroundColor: "#f0d9a8",
+    backgroundColor: "lightgrey",
     alignItems: "center",
   },
   gradient: {
