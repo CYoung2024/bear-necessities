@@ -97,7 +97,7 @@ const DashboardScreen = ({ navigation }) => {
 
             <View style={styles.GapBetweenContentContainers}/>
             <View style={styles.SmallContentContainer}>
-              <Text style={styles.ContentLargeText}>1100 Trainingss</Text>
+              <Text style={styles.ContentLargeText}>1100 Trainings</Text>
               <Text style={styles.ContentMicroText}>{trainingsAt1100}</Text>
             </View>
 
@@ -226,6 +226,10 @@ const styles = StyleSheet.create({
   },
   ContentSmallText: {
     fontSize: 25,
+    color: 'black',
+  },
+  ContentTinyText: {
+    fontSize: 15,
     color: 'black',
   },
   ContentMicroText: {
