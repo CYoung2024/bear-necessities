@@ -228,6 +228,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
   },
+  ContentTinyText: {
+    fontSize: 15,
+    color: 'black',
+  },
   ContentMicroText: {
     fontSize: 15,
     color: 'black',
