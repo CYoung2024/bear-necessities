@@ -12,7 +12,7 @@ import {
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
-import { ADConfig } from "../secret-config";
+//import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
 import { MessageListContext } from "../contextMessageList";
 
@@ -51,8 +51,11 @@ function LoginScreen({ navigation }) {
     "offline_access",
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
-  const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
-  const redirectUrl = AuthSession.makeRedirectUri();
+  const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
+  const redirectUrl = AuthSession.makeRedirectUri({
+    scheme: "com.cyoung2024.cadetapp",
+    path: "auth",
+  });
 
   const {
     cadetCode,
@@ -80,9 +83,9 @@ function LoginScreen({ navigation }) {
       responseType: AuthSession.ResponseType.Code,
       scopes: scopes,
       usePKCE: true,
-      clientId: ADConfig.applicationClientID,
+      clientId: process.env.EXPO_PUBLIC_applicationClientID,
       redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
-      state: ADConfig.state,
+      state: process.env.EXPO_PUBLIC_state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
@@ -97,7 +100,7 @@ function LoginScreen({ navigation }) {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {
         code: authorizeResult.params.code,
-        clientId: ADConfig.applicationClientID,
+        clientId: process.env.EXPO_PUBLIC_applicationClientID,
         redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
 
         extraParams: {
@@ -182,7 +185,7 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity
           style={styles.button}
           onPress={async () => {
-            navigation.navigate("Loading")
+            navigation.navigate("Loading");
             const authorizeResult = await authRequest.promptAsync(discovery);
             await $authorizeResult(authorizeResult);
           }}

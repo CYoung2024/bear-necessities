@@ -2,7 +2,7 @@
   "expo": {
     "name": "cadet-app",
     "slug": "cadet-app",
-    "scheme": "myapp",
+    "scheme": "com.cyoung2024.cadetapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -42,6 +42,11 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5a26a991-de18-4e45-8a04-f3106e687040"
+      }
+    }
   }
 }
