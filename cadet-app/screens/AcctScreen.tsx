@@ -5,11 +5,11 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert
+  Alert,
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
-import MapView, { Marker } from "react-native-maps";
+//import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
 import * as MyAzureFunctions from "../azureFunctions";
@@ -53,18 +53,18 @@ function AcctScreen() {
     let { latitude, longitude, altitude } = location.coords;
     setDeviceLLA({ latitude, longitude, altitude });
     setMarkerLocation({ latitude, longitude, altitude });
-    mapRef.current.animateCamera(
-      {
-        center: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        },
-        heading: 270,
-        pitch: 60,
-        zoom: 18.5,
-      },
-      { duration: 2000 }
-    );
+    // mapRef.current.animateCamera(
+    //   {
+    //     center: {
+    //       latitude: location.coords.latitude,
+    //       longitude: location.coords.longitude,
+    //     },
+    //     heading: 270,
+    //     pitch: 60,
+    //     zoom: 18.5,
+    //   },
+    //   { duration: 2000 }
+    // );
   };
 
   const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ function AcctScreen() {
       <View style={styles.belowHeader}>
         {/* <MapArea /> */}
         <View style={styles.mapContainer}>
-          <MapView
+          {/* <MapView
             ref={mapRef}
             pitchEnabled={true}
             //mapType={"satellite"}
@@ -113,7 +113,7 @@ function AcctScreen() {
             }}
           >
             <Marker title="My Location" coordinate={markerLocation} />
-          </MapView>
+          </MapView> */}
         </View>
 
         {/* <ButtonArea /> */}
@@ -218,13 +218,20 @@ function AcctScreen() {
               modalVisible={isExcusalInputVisible}
               setModalVisible={setExcusalInputVisible}
               title={"Where Ya Headed?"}
-              message={"Type in the box below if you are on an excusal, have a CS event, or are just going on an offbase run"}
-              buttons={[{
-                text: "Cancel",
-                func: () => {setLoading(false);}
-              },{
-                text: "OK"
-              }]}
+              message={
+                "Type in the box below if you are on an excusal, have a CS event, or are just going on an offbase run"
+              }
+              buttons={[
+                {
+                  text: "Cancel",
+                  func: () => {
+                    setLoading(false);
+                  },
+                },
+                {
+                  text: "OK",
+                },
+              ]}
               saveCadetStatus={setCadetStatus}
               tokenForFunc={token}
               cadetCodeForFunc={cadetCode}
@@ -237,15 +244,18 @@ function AcctScreen() {
                 modalVisible={isAcBuildSelectDialogVisible}
                 setModalVisible={setAcBuildSelectDialogVisible}
                 title={"Accademic Building"}
-                message={
-                  "Choose which building you will be hanging out in"
-                }
-                buttons={[{
-                  text: "Cancel",
-                  func: () => {setLoading(false);}
-                },{
-                  text: "OK"
-                }]}
+                message={"Choose which building you will be hanging out in"}
+                buttons={[
+                  {
+                    text: "Cancel",
+                    func: () => {
+                      setLoading(false);
+                    },
+                  },
+                  {
+                    text: "OK",
+                  },
+                ]}
                 saveCadetStatus={setCadetStatus}
                 cadetCodeForFunc={cadetCode}
               />
@@ -258,12 +268,17 @@ function AcctScreen() {
               setModalVisible={setOffBaseSelectDialogVisible}
               title={"Liberty Sign-Out"}
               message={"Select your status from the dropdown"}
-              buttons={[{
-                text: "Cancel",
-                func: () => {setLoading(false);}
-              },{
-                text: "OK"
-              }]}
+              buttons={[
+                {
+                  text: "Cancel",
+                  func: () => {
+                    setLoading(false);
+                  },
+                },
+                {
+                  text: "OK",
+                },
+              ]}
               saveCadetStatus={setCadetStatus}
               tokenForFunc={token}
               cadetCodeForFunc={cadetCode}
@@ -285,8 +300,8 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     backgroundColor: "white",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerText: {
     fontSize: 30,

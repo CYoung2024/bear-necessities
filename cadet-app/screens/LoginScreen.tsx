@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Animated,
   Dimensions,
   Image,
   SafeAreaView,
@@ -197,9 +196,6 @@ function LoginScreen({ navigation }) {
   );
 }
 
-// Exports the Login Screen to App.ts
-export default LoginScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -239,3 +235,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default LoginScreen;

@@ -87,7 +87,6 @@ const BottomTab = createMaterialTopTabNavigator();
 // Once the Login screen is bypassed, it should not be returned to,
 // nor should the user see it again unless they leave base or log out
 
-
 function StackApp() {
   // Configure settings transition animation
 
@@ -125,7 +124,7 @@ function StackApp() {
 // Defines second app navigation layer
 // The side drawer allows users to navigate between the tab screen
 // and the settings screen
-export function DrawerApp({navigation}) {
+export function DrawerApp({ navigation }) {
   const route = useRoute();
   const token = route.params;
 
@@ -135,7 +134,6 @@ export function DrawerApp({navigation}) {
         <DrawerContentScrollView>
           <DrawerItemList {...props} />
 
-          
           {/* <DrawerItem
             label="Settings"
             onPress={() => {
@@ -143,7 +141,6 @@ export function DrawerApp({navigation}) {
                 props.navigation.navigate("Settings", token);
             }}
           /> */}
-
 
           <DrawerItem
             label="Report a Bug"
@@ -188,23 +185,23 @@ export function DrawerApp({navigation}) {
 const TabApp = ({ navigation }) => {
   const route = useRoute();
   const { token, messageList, status } = route.params;
-  
+
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Hold on!', 'Would you like to exit the app?', [
+      Alert.alert("Hold on!", "Would you like to exit the app?", [
         {
-          text: 'Cancel',
+          text: "Cancel",
           onPress: () => null,
-          style: 'cancel',
+          style: "cancel",
         },
-        {text: 'Yes', onPress: () => BackHandler.exitApp()},
+        { text: "Yes", onPress: () => BackHandler.exitApp() },
       ]);
       return true;
     };
 
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
+      "hardwareBackPress",
+      backAction
     );
 
     return () => backHandler.remove();
@@ -212,19 +209,16 @@ const TabApp = ({ navigation }) => {
 
   return (
     <TokenContext.Provider value={token}>
-
       <MessageListContext.Provider value={messageList}>
-
         <StatusContext.Provider value={status}>
-          
           <BottomTab.Navigator
             tabBarPosition="bottom"
             initialRouteName="Dashboard"
-            screenOptions={{ 
+            screenOptions={{
               tabBarShowLabel: false,
               tabBarStyle: {
                 borderTopWidth: 0,
-              }
+              },
               //headerShown: true,
             }}
           >
@@ -293,7 +287,6 @@ const TabApp = ({ navigation }) => {
                 ),
               }}
             /> */}
-            
           </BottomTab.Navigator>
         </StatusContext.Provider>
       </MessageListContext.Provider>
@@ -312,42 +305,44 @@ export default function App() {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((notifToken) =>
-      saveExpoPushToken(notifToken)
-    );
-
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {});
-
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
+    if (Platform.OS !== "web") {
+      registerForPushNotificationsAsync().then((notifToken) =>
+        saveExpoPushToken(notifToken)
       );
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
+
+      notificationListener.current =
+        Notifications.addNotificationReceivedListener((notification) => {
+          setNotification(notification);
+        });
+
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener((response) => {});
+
+      return () => {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
+    }
   }, []);
-  
+
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Hold on!', 'Would you like to exit the app?', [
+      Alert.alert("Hold on!", "Would you like to exit the app?", [
         {
-          text: 'Cancel',
+          text: "Cancel",
           onPress: () => null,
-          style: 'cancel',
+          style: "cancel",
         },
-        {text: 'Yes', onPress: () => BackHandler.exitApp()},
+        { text: "Yes", onPress: () => BackHandler.exitApp() },
       ]);
       return true;
     };
 
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
+      "hardwareBackPress",
+      backAction
     );
 
     return () => backHandler.remove();
