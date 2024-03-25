@@ -36,7 +36,7 @@ const DropDownPopup = (props) => {
       <View style={styles.dropDownContainer}>
         <DropDownPicker
           itemKey="value"
-          style={styles.dropDown}
+          //style={styles.dropDown}
           open={open}
           value={value}
           items={items}
@@ -259,7 +259,7 @@ const DropDownPopup = (props) => {
             singleButtonWeight = "700";
           }
           if (buttonLayoutHorizontal === 1) {
-            //singleButtonWrapperStyle.minWidth = "50%";
+            singleButtonWrapperStyle.minWidth = "50%";
             if (index === 0) {
               //singleButtonWrapperStyle.borderStyle = "solid";
               //singleButtonWrapperStyle.borderRightWidth = 0.55;

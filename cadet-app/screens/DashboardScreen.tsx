@@ -47,14 +47,26 @@ const DashboardScreen = ({ navigation }) => {
   4/c - Updated Conduct System Brief (Leamy)
   `;
 
-  const commonNumbers = `  CHDO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-2013
-  SMPO: \t\t\t\t\t\t\t\t\t\t\t(860) 625-0530
-  Duty Engineer: \t(860) 625-1166
+  const commonPeople = `  CHDO:
+  SMPO:
+  Duty Engineer:
 
-  Watch Office: \t\t\t(860) 444-8294
-  CGPD: \t\t\t\t\t\t\t\t\t\t\t\t(860) 444-5555
-  IT Desk: \t\t\t\t\t\t\t\t\t\t(860) 444-8324
+  Watch Office:
+  CGPD:
+  IT Desk:
   `;
+  
+  const commonNumbers = `  (860) 625-2013
+  (860) 625-0530
+  (860) 625-1166
+
+  (860) 444-8294
+  (860) 444-5555
+  (860) 444-8324
+  `;
+
+
+
 
   return (
     <View style={styles.Container}>
@@ -104,7 +116,10 @@ const DashboardScreen = ({ navigation }) => {
             <View style={styles.GapBetweenContentContainers}/>
             <View style={styles.SmallContentContainer}>
               <Text style={styles.ContentLargeText}>Quick Contacts</Text>
-              <Text style={styles.ContentSmallText}>{commonNumbers}</Text>
+              <View style={styles.InteriorContainer}>
+                <Text style={styles.ContentSmallText}>{commonPeople}</Text>
+                <Text style={styles.ContentSmallText}>{commonNumbers}</Text>
+              </View>
             </View>
 
             <View style={styles.GapBetweenContentContainers}/>
@@ -202,14 +217,11 @@ const styles = StyleSheet.create({
   ContentAreaContainer: {
     alignItems: 'center',
     flexDirection: 'column',
-    //backgroundColor: "white",
   },
   GapBetweenContentContainers: {
     height: dim.width * 0.025,
   },
   SmallContentContainer: {
-    //flex: 1,
-    //height: 200,
     backgroundColor: '#f7f7f7',
     borderColor: "lightgrey",
     borderWidth: 5,
@@ -217,6 +229,10 @@ const styles = StyleSheet.create({
     width: dim.width * 0.95,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  InteriorContainer: {
+    flexDirection: 'row',
+    display: 'flex',
   },
   ContentLargeText: {
     fontSize: 40,
@@ -226,7 +242,9 @@ const styles = StyleSheet.create({
   },
   ContentSmallText: {
     fontSize: 25,
+    textAlign: 'justify',
     color: 'black',
+    display: 'flex',
   },
   ContentTinyText: {
     fontSize: 15,

@@ -260,7 +260,7 @@ const DropDownPopup = (props) => {
                         singleButtonWeight = '700';
                     }
                     if (buttonLayoutHorizontal === 1) {
-                        //singleButtonWrapperStyle.minWidth = '50%';
+                        singleButtonWrapperStyle.minWidth = '50%';
                         if (index === 0) {
                             //singleButtonWrapperStyle.borderStyle = 'solid';
                             //singleButtonWrapperStyle.borderRightWidth = 0.55;
