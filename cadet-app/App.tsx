@@ -148,7 +148,7 @@ export function DrawerApp({ navigation }) {
               Linking.openURL(
                 "https://forms.office.com/r/gBt26NVYXC?origin=lprLink"
               )
-            } // links to a Microsoft Form
+            } // links to a Microsoft Form - TODO: open in new tab
           />
           <DrawerItem
             label="Logout"

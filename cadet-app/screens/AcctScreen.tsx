@@ -58,18 +58,41 @@ function AcctScreen() {
     let { latitude, longitude, altitude } = location.coords;
     setDeviceLLA({ latitude, longitude, altitude });
     setMarkerLocation({ latitude, longitude, altitude });
-    mapRef.current.animateCamera(
-      {
-        center: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+    if (Platform.OS === "android") {
+      mapRef.current.animateCamera(
+        {
+          center: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+          heading: 270,
+          pitch: 60,
+          zoom: 18.5,
         },
-        heading: 270,
-        pitch: 60,
-        zoom: 18.5,
-      },
-      { duration: 2000 }
-    );
+        { duration: 2000 }
+      );
+    } else if (Platform.OS === "ios") {
+      mapRef.current.animateCamera(
+        {
+          center: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+          heading: 270,
+          pitch: 50,
+          altitude: 250,
+        },
+        { duration: 2000 }
+      );
+    }
+  };
+
+  const handlePressIFN = async () => {
+    // TODO: check if in bounds and if not offer override
+    await handleGetLocation();
+    await setCadetStatus("IFN");
+    setLoading(false);
+    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
   };
 
   const [loading, setLoading] = useState(false);
@@ -187,7 +210,7 @@ function AcctScreen() {
             </View>
 
             <View style={styles.rightButtonContainer}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
                   Alert.alert(
@@ -216,6 +239,12 @@ function AcctScreen() {
                       },
                     ]
                   );
+                }}
+              > */}
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  handlePressIFN();
                 }}
               >
                 <Text style={styles.largeText}>IFN</Text>
