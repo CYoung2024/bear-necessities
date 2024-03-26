@@ -93,7 +93,7 @@ const StartupScreen = ({ navigation }) => {
       scopes: scopes,
       usePKCE: true,
       clientId: ADConfig.applicationClientID,
-      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
       state: ADConfig.state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
@@ -110,7 +110,7 @@ const StartupScreen = ({ navigation }) => {
       {
         code: authorizeResult.params.code,
         clientId: ADConfig.applicationClientID,
-        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
 
         extraParams: {
           code_verifier: authRequest.codeVerifier,
