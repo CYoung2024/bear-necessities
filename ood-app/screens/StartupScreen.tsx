@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
 import MyStorage from "../storage";
 import { ADConfig } from "../secret-config";
 import * as MyAzureFunctions from "../azureFunctions";
@@ -15,7 +14,6 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import DropDownPicker from "react-native-dropdown-picker";
-import { auth } from "../firebase";
 
 WebBrowser.maybeCompleteAuthSession(); // I have no clue how this actually works
 let dim = Dimensions.get("window");
@@ -95,7 +93,7 @@ const StartupScreen = ({ navigation }) => {
       scopes: scopes,
       usePKCE: true,
       clientId: ADConfig.applicationClientID,
-      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
       state: ADConfig.state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
@@ -112,7 +110,7 @@ const StartupScreen = ({ navigation }) => {
       {
         code: authorizeResult.params.code,
         clientId: ADConfig.applicationClientID,
-        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
 
         extraParams: {
           code_verifier: authRequest.codeVerifier,

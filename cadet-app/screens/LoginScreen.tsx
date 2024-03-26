@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Animated,
   Dimensions,
   Image,
   SafeAreaView,
@@ -8,11 +7,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
-//import { ADConfig } from "../secret-config";
+import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
 import { MessageListContext } from "../contextMessageList";
 
@@ -52,10 +52,15 @@ function LoginScreen({ navigation }) {
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
   const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
-  const redirectUrl = AuthSession.makeRedirectUri({
-    scheme: "com.cyoung2024.cadetapp",
-    path: "auth",
-  });
+
+  if (Platform.OS !== "web") {
+    var redirectUrl = AuthSession.makeRedirectUri({
+      scheme: "com.cyoung2024.cadetapp",
+      path: "auth",
+    });
+  } else {
+    var redirectUrl = AuthSession.makeRedirectUri();
+  }
 
   const {
     cadetCode,
@@ -83,9 +88,9 @@ function LoginScreen({ navigation }) {
       responseType: AuthSession.ResponseType.Code,
       scopes: scopes,
       usePKCE: true,
-      clientId: process.env.EXPO_PUBLIC_applicationClientID,
-      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
-      state: process.env.EXPO_PUBLIC_state,
+      clientId: ADConfig.applicationClientID,
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
+      state: ADConfig.state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
@@ -100,8 +105,8 @@ function LoginScreen({ navigation }) {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {
         code: authorizeResult.params.code,
-        clientId: process.env.EXPO_PUBLIC_applicationClientID,
-        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+        clientId: ADConfig.applicationClientID,
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
 
         extraParams: {
           code_verifier: authRequest.codeVerifier,
@@ -197,9 +202,6 @@ function LoginScreen({ navigation }) {
   );
 }
 
-// Exports the Login Screen to App.ts
-export default LoginScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -239,3 +241,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default LoginScreen;
