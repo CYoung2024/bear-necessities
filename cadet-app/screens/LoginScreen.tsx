@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Animated,
   Dimensions,
   Image,
   SafeAreaView,
@@ -7,12 +8,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
+Platform,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
-import { ADConfig } from "../secret-config";
+//import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
 import { MessageListContext } from "../contextMessageList";
 
@@ -24,6 +25,7 @@ WebBrowser.maybeCompleteAuthSession();
 let dim = Dimensions.get("window");
 // Reads in Icon picture from Assests folder
 const USCGALogo = require("../assets/icon.png");
+const USCGALogoButSpinning = require("../assets/iconSpinning.gif");
 
 function base64URLEncode(str) {
   return str
@@ -44,6 +46,7 @@ function LoginScreen({ navigation }) {
   const [codeChallenge, $codeChallenge]: any = useState({});
   const [token, $token]: any = useState({});
   const [access, $access]: any = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const scopes = [
     "openid",
     "profile",
@@ -52,13 +55,13 @@ function LoginScreen({ navigation }) {
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
   const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
-
+  
   if (Platform.OS !== "web") {
     var redirectUrl = AuthSession.makeRedirectUri({
-      scheme: "com.cyoung2024.cadetapp",
-      path: "auth",
-    });
-  } else {
+    scheme: "com.cyoung2024.cadetapp",
+    path: "auth",
+  });
+} else {
     var redirectUrl = AuthSession.makeRedirectUri();
   }
 
@@ -88,9 +91,9 @@ function LoginScreen({ navigation }) {
       responseType: AuthSession.ResponseType.Code,
       scopes: scopes,
       usePKCE: true,
-      clientId: ADConfig.applicationClientID,
-      redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
-      state: ADConfig.state,
+      clientId: process.env.EXPO_PUBLIC_applicationClientID,
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      state: process.env.EXPO_PUBLIC_state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
@@ -105,8 +108,8 @@ function LoginScreen({ navigation }) {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {
         code: authorizeResult.params.code,
-        clientId: ADConfig.applicationClientID,
-        redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
+        clientId: process.env.EXPO_PUBLIC_applicationClientID,
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
 
         extraParams: {
           code_verifier: authRequest.codeVerifier,
@@ -134,6 +137,7 @@ function LoginScreen({ navigation }) {
     getSession();
     if (token.accessToken === undefined) {
       $access(false);
+      setShowLoading(false);
     } else {
       // When the access token is received, move on and let the user into the app
       if (
@@ -182,25 +186,38 @@ function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.bypassContainer}>
-        <Image style={styles.image} source={USCGALogo} />
-      </View>
+      {showLoading === false ? (
+        <View style={styles.container}>
+          <View style={styles.bypassContainer}>
+            <Image style={styles.image} source={USCGALogo} />
+          </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            navigation.navigate("Loading");
-            const authorizeResult = await authRequest.promptAsync(discovery);
-            await $authorizeResult(authorizeResult);
-          }}
-        >
-          <Text style={styles.buttonText}>Sign in with Microsoft</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                setShowLoading(true);
+                const authorizeResult = await authRequest.promptAsync(
+                  discovery
+                );
+                await $authorizeResult(authorizeResult);
+              }}
+            >
+              <Text style={styles.buttonText}>Sign in with Microsoft</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <SafeAreaView style={styles.imageBackground}>
+          <Image source={USCGALogoButSpinning} />
+        </SafeAreaView>
+      )}
     </SafeAreaView>
   );
 }
+
+// Exports the Login Screen to App.ts
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -216,6 +233,8 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     width: dim.height * 0.8,
@@ -241,5 +260,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default LoginScreen;
