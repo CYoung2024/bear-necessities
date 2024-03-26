@@ -2,7 +2,7 @@
   "expo": {
     "name": "cadet-app",
     "slug": "cadet-app",
-    "scheme": "myapp",
+    "scheme": "com.cyoung2024.cadetapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,25 +23,32 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.cyoung2024.cadetapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       [
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 31,
-            "targetSdkVersion": 31,
-            "buildToolsVersion": "31.0.0"
+            "compileSdkVersion": 33,
+            "targetSdkVersion": 33,
+            "buildToolsVersion": "33.0.0"
           },
           "ios": {
             "deploymentTarget": "16.0"
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5a26a991-de18-4e45-8a04-f3106e687040"
+      }
+    }
   }
 }

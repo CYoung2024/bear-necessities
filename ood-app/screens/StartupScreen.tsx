@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
 import MyStorage from "../storage";
 import { ADConfig } from "../secret-config";
 import * as MyAzureFunctions from "../azureFunctions";
@@ -15,7 +14,6 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import DropDownPicker from "react-native-dropdown-picker";
-import { auth } from "../firebase";
 
 WebBrowser.maybeCompleteAuthSession(); // I have no clue how this actually works
 let dim = Dimensions.get("window");

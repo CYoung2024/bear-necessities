@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Animated,
   Dimensions,
   Image,
   SafeAreaView,
@@ -8,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
@@ -51,8 +51,16 @@ function LoginScreen({ navigation }) {
     "offline_access",
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
-  const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
-  const redirectUrl = AuthSession.makeRedirectUri();
+  const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
+
+  if (Platform.OS !== "web") {
+    var redirectUrl = AuthSession.makeRedirectUri({
+      scheme: "com.cyoung2024.cadetapp",
+      path: "auth",
+    });
+  } else {
+    var redirectUrl = AuthSession.makeRedirectUri();
+  }
 
   const {
     cadetCode,
@@ -182,7 +190,7 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity
           style={styles.button}
           onPress={async () => {
-            navigation.navigate("Loading")
+            navigation.navigate("Loading");
             const authorizeResult = await authRequest.promptAsync(discovery);
             await $authorizeResult(authorizeResult);
           }}
@@ -193,9 +201,6 @@ function LoginScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
-// Exports the Login Screen to App.ts
-export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -236,3 +241,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default LoginScreen;

@@ -5,12 +5,23 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_applicationClientID" : "7b84fabe-fc31-4c02-a4f8-61e99031a8f9",
+        "EXPO_PUBLIC_directoryTenantID" : "b86aa925-d4c3-49b2-b278-249db09dc961",
+        "EXPO_PUBLIC_state" : "CheckToMakeSureThisIsTheState"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_applicationClientID" : "7b84fabe-fc31-4c02-a4f8-61e99031a8f9",
+        "EXPO_PUBLIC_directoryTenantID" : "b86aa925-d4c3-49b2-b278-249db09dc961",
+        "EXPO_PUBLIC_state" : "CheckToMakeSureThisIsTheState"
+      }
+    }
   },
   "submit": {
     "production": {}

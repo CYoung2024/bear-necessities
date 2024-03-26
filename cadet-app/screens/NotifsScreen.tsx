@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
-  Animated,
   Dimensions,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   RefreshControl,
 } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import moment from "moment-timezone";
 import { useRoute } from "@react-navigation/native";
 import { useContext } from "react";
