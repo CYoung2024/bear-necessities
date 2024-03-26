@@ -51,8 +51,7 @@ function LoginScreen({ navigation }) {
     "offline_access",
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
-  //const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
-  const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
+  const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
 
   if (Platform.OS !== "web") {
     var redirectUrl = AuthSession.makeRedirectUri({
@@ -76,30 +75,6 @@ function LoginScreen({ navigation }) {
   });
 
   // first half of auth
-  // const getSession = async () => {
-  //   const cv = await Crypto.digestStringAsync(
-  //     Crypto.CryptoDigestAlgorithm.SHA256,
-  //     Math.random().toString(36).substr(2) + Date.now().toString(36)
-  //   );
-  //   const d = await AuthSession.fetchDiscoveryAsync(domain);
-  //   const cc = await base64URLEncode(cv);
-
-  //   const authRequestOptions: AuthSession.AuthRequestConfig = {
-  //     prompt: AuthSession.Prompt.Login,
-  //     responseType: AuthSession.ResponseType.Code,
-  //     scopes: scopes,
-  //     usePKCE: true,
-  //     clientId: process.env.EXPO_PUBLIC_applicationClientID,
-  //     redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
-  //     state: process.env.EXPO_PUBLIC_state,
-  //     codeChallenge,
-  //     codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
-  //   };
-  //   const authRequest = new AuthSession.AuthRequest(authRequestOptions);
-  //   $authRequest(authRequest);
-  //   $discovery(d);
-  //   $codeChallenge(cc);
-  // };
   const getSession = async () => {
     const cv = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
@@ -126,23 +101,6 @@ function LoginScreen({ navigation }) {
   };
 
   // second half of auth
-  // const getCodeExchange = async () => {
-  //   const tokenResult = await AuthSession.exchangeCodeAsync(
-  //     {
-  //       code: authorizeResult.params.code,
-  //       clientId: process.env.EXPO_PUBLIC_applicationClientID,
-  //       redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
-
-  //       extraParams: {
-  //         code_verifier: authRequest.codeVerifier,
-  //         grant_type: "authorization_code",
-  //       },
-  //     },
-  //     discovery
-  //   );
-  //   const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
-  //   $token(tokenResult);
-  // };
   const getCodeExchange = async () => {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {

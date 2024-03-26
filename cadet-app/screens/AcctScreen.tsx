@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   Dimensions,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Alert,
+  Platform,
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
-//import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
 import * as MyAzureFunctions from "../azureFunctions";
@@ -25,8 +27,11 @@ import { StatusContext } from "../contextStatus";
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 
+const noMapOnWeb = require("../assets/noMap.png");
+
 function AcctScreen() {
   const token = useContext(TokenContext);
+  var useMap = Platform.OS !== "web";
 
   const { cadetCode, saveCadetCode } = MyStorage({
     initialCadetCode: "",
@@ -53,18 +58,18 @@ function AcctScreen() {
     let { latitude, longitude, altitude } = location.coords;
     setDeviceLLA({ latitude, longitude, altitude });
     setMarkerLocation({ latitude, longitude, altitude });
-    // mapRef.current.animateCamera(
-    //   {
-    //     center: {
-    //       latitude: location.coords.latitude,
-    //       longitude: location.coords.longitude,
-    //     },
-    //     heading: 270,
-    //     pitch: 60,
-    //     zoom: 18.5,
-    //   },
-    //   { duration: 2000 }
-    // );
+    mapRef.current.animateCamera(
+      {
+        center: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+        heading: 270,
+        pitch: 60,
+        zoom: 18.5,
+      },
+      { duration: 2000 }
+    );
   };
 
   const [loading, setLoading] = useState(false);
@@ -94,29 +99,34 @@ function AcctScreen() {
       </View>
 
       <View style={styles.belowHeader}>
-        {/* <MapArea /> */}
         <View style={styles.mapContainer}>
-          {/* <MapView
-            ref={mapRef}
-            pitchEnabled={true}
-            //mapType={"satellite"}
-            showsBuildings={true}
-            style={{
-              alignSelf: "stretch",
-              height: "100%",
-            }}
-            initialRegion={{
-              latitude: 41.37354686499106,
-              longitude: -72.10071999095653,
-              latitudeDelta: 0.007,
-              longitudeDelta: 0.01,
-            }}
-          >
-            <Marker title="My Location" coordinate={markerLocation} />
-          </MapView> */}
+          {useMap ? (
+            <MapView
+              ref={mapRef}
+              pitchEnabled={true}
+              //mapType={"satellite"}
+              showsBuildings={true}
+              style={{
+                alignSelf: "stretch",
+                height: "100%",
+              }}
+              initialRegion={{
+                latitude: 41.37354686499106,
+                longitude: -72.10071999095653,
+                latitudeDelta: 0.007,
+                longitudeDelta: 0.01,
+              }}
+            >
+              <Marker title="My Location" coordinate={markerLocation} />
+            </MapView>
+          ) : (
+            <Image
+              style={styles.noMapImage}
+              source={noMapOnWeb}
+              resizeMode="contain"
+            />
+          )}
         </View>
-
-        {/* <ButtonArea /> */}
         <View style={styles.belowMapContainer}>
           <View style={styles.currentStatusContainer}>
             <Text
@@ -309,10 +319,10 @@ const styles = StyleSheet.create({
   },
   belowHeader: {
     flex: 1,
+    flexDirection: "column",
   },
   mapContainer: {
-    backgroundColor: "darkgreen",
-    height: "75%",
+    flex: 12,
     width: dim.width * 1.0,
     borderRadius: 20,
   },
@@ -320,33 +330,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     flexWrap: "wrap",
-    height: "25%",
+    flex: 5,
     justifyContent: "center",
-    width: dim.width,
+    width: "100%",
   },
   currentStatusContainer: {
     alignItems: "center",
     backgroundColor: "#DDE4EA",
-    height: "25%",
+    flex: 1,
     justifyContent: "center",
-    width: dim.width * 1.0,
+    width: "100%",
   },
   buttonContainer: {
     alignItems: "center",
     flexDirection: "row",
     gap: 5,
-    height: "75%",
+    flex: 3,
     justifyContent: "center",
     padding: 5,
     backgroundColor: "white",
+    width: "100%",
   },
   leftButtonContainer: {
     flex: 1,
     gap: 5,
     justifyContent: "center",
+    height: "100%",
   },
   rightButtonContainer: {
     flex: 1,
+    height: "100%",
   },
   button: {
     alignItems: "center",
@@ -361,7 +374,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   largeText: {
-    fontSize: 40,
+    fontSize: 35,
     fontWeight: "bold",
+  },
+  noMapImage: {
+    height: "100%",
+    width: "100%",
   },
 });

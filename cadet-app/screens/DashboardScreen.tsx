@@ -35,6 +35,9 @@ const DashboardScreen = ({ navigation }) => {
   2000-2300: Academic Study Time 
   2130-2200: Restricted Cadet Check-in w/ OODs
   2300: Taps
+
+  This isn't a real POD, but this feature
+  could be added in the future!
   `;
 
   const trainingsAt1100 = `
