@@ -53,8 +53,9 @@ const MainScreen = ({ navigation }) => {
   };
 
   function convertTime(original: string): string {
-    const est = moment(original).tz("America/New_York"); //TODO: pull time zone from device
-    const newTime = est.format("Do HH:mm");
+    const dateInUTC = moment.utc(original);
+    const dateInEST = dateInUTC.tz("America/New_York"); //TODO: pull time zone from device
+    const newTime = dateInEST.format("Do HH:mm");
     return newTime;
   }
 
@@ -88,7 +89,7 @@ const MainScreen = ({ navigation }) => {
       company,
       input
     );
-    // set time of new message to zulu
+    setLoading(true);
     await saveMessageList([...messageList, message]);
     setInput("");
   };
