@@ -8,12 +8,14 @@ import {
   Dimensions,
 } from "react-native";
 import MyStorage from "../storage";
-import { ADConfig } from "../secret-config";
+//import { ADConfig } from "../secret-config";
 import * as MyAzureFunctions from "../azureFunctions";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
 import DropDownPicker from "react-native-dropdown-picker";
+
+// most of this file is the same as the cadet app's LoginScreen.tsx
 
 WebBrowser.maybeCompleteAuthSession(); // I have no clue how this actually works
 let dim = Dimensions.get("window");
@@ -41,7 +43,7 @@ const StartupScreen = ({ navigation }) => {
     "offline_access",
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
-  const domain = `https://login.microsoftonline.com/${ADConfig.directoryTenantID}/v2.0`;
+  const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
   const redirectUrl = AuthSession.makeRedirectUri();
   // for dropdown company picker
   const [open, setOpen] = useState(false);
@@ -92,9 +94,9 @@ const StartupScreen = ({ navigation }) => {
       responseType: AuthSession.ResponseType.Code,
       scopes: scopes,
       usePKCE: true,
-      clientId: ADConfig.applicationClientID,
+      clientId: process.env.EXPO_PUBLIC_applicationClientID,
       redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
-      state: ADConfig.state,
+      state: process.env.EXPO_PUBLIC_state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
@@ -109,7 +111,7 @@ const StartupScreen = ({ navigation }) => {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {
         code: authorizeResult.params.code,
-        clientId: ADConfig.applicationClientID,
+        clientId: process.env.EXPO_PUBLIC_applicationClientID,
         redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
 
         extraParams: {
