@@ -12,7 +12,7 @@ import {
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import * as Crypto from "expo-crypto";
-import { ADConfig } from "../secret-config";
+//import { ADConfig } from "../secret-config";
 import MyStorage from "../storage";
 import { MessageListContext } from "../contextMessageList";
 
@@ -88,9 +88,9 @@ function LoginScreen({ navigation }) {
       responseType: AuthSession.ResponseType.Code,
       scopes: scopes,
       usePKCE: true,
-      clientId: ADConfig.applicationClientID,
+      clientId: process.env.EXPO_PUBLIC_applicationClientID,
       redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
-      state: ADConfig.state,
+      state: process.env.EXPO_PUBLIC_state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
     };
@@ -105,7 +105,7 @@ function LoginScreen({ navigation }) {
     const tokenResult = await AuthSession.exchangeCodeAsync(
       {
         code: authorizeResult.params.code,
-        clientId: ADConfig.applicationClientID,
+        clientId: process.env.EXPO_PUBLIC_applicationClientID,
         redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
 
         extraParams: {
