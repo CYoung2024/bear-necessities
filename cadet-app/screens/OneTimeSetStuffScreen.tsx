@@ -5,12 +5,12 @@ import {
   KeyboardAvoidingView,
   View,
   TextInput,
-  TouchableOpacity,
   Button,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import MyStorage from "../storage";
 import { useRoute } from "@react-navigation/native";
+import * as MyAzureFunctions from "../azureFunctions";
 
 const OneTimeSetStuffScreen = ({ navigation }) => {
   const route = useRoute();
@@ -19,29 +19,38 @@ const OneTimeSetStuffScreen = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [number, onChangeNumber] = React.useState("");
 
-  const { cadetCode, saveCadetCode, cadetStatus } = MyStorage({
+  const { cadetCode, saveCadetCode, cadetStatus, expoPushToken } = MyStorage({
     initialCadetCode: "",
     initialCadetStatus: "",
+    initialExpoPushToken: "",
   });
 
-  useEffect(() => {
+  // this is just copy pasted from loginscreen for now
+  const handleMoveToTabApp = async (code) => {
+    const [initInfo] = await MyAzureFunctions.call_initCadetApp(token, code);
+    const messageList = await MyAzureFunctions.call_readCompanyMessages(
+      token,
+      "Alfa"
+    );
+    const status = initInfo.Status;
     if (
-      cadetCode === undefined ||
-      cadetCode === null ||
-      cadetCode === "" ||
-      cadetCode === "undefined"
+      (initInfo.NotifCode === undefined ||
+        initInfo.NotifCode === null ||
+        initInfo.NotifCode === "" ||
+        initInfo.NotifCode === "undefined") &&
+      initInfo.NotifCode !== expoPushToken // also need to check NotifCode does not contain expoPushToken
     ) {
-    } else {
-      navigation.navigate("TabApp", token);
+      MyAzureFunctions.call_updatePushToken(token, code, expoPushToken);
     }
-  }, [cadetCode]);
+    navigation.navigate("TabApp", {
+      screen: "Home",
+      params: { token, messageList, status },
+    });
+  };
 
   const handleCadetCodeInput = async () => {
     await saveCadetCode(number);
-  };
-
-  const handleContinue = () => {
-    navigation.navigate("TabApp", token);
+    handleMoveToTabApp(number);
   };
 
   return (
@@ -60,7 +69,6 @@ const OneTimeSetStuffScreen = ({ navigation }) => {
       <Button
         title="Continue"
         onPress={() => {
-          handleContinue();
           handleCadetCodeInput();
         }}
       />

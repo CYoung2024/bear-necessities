@@ -153,7 +153,6 @@ function LoginScreen({ navigation }) {
   }, [token]);
 
   const handleMoveToTabApp = async () => {
-    // TODO: show loading animation and don't let them spam the login button
     const [initInfo] = await MyAzureFunctions.call_initCadetApp(
       token,
       cadetCode

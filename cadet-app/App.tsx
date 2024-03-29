@@ -21,7 +21,6 @@ import OneTimeSetStuffScreen from "./screens/OneTimeSetStuffScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import AcctScreen from "./screens/AcctScreen";
 import NotifsScreen from "./screens/NotifsScreen";
-import RouteScreen from "./screens/RoutingScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
 // Libraries used to Navigate through the app
@@ -34,7 +33,6 @@ import {
   DrawerItemList,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
-import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
 
 import { LogBox } from "react-native";
 LogBox.ignoreAllLogs();
