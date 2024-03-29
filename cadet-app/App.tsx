@@ -21,7 +21,6 @@ import OneTimeSetStuffScreen from "./screens/OneTimeSetStuffScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import AcctScreen from "./screens/AcctScreen";
 import NotifsScreen from "./screens/NotifsScreen";
-import RouteScreen from "./screens/RoutingScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
 // Libraries used to Navigate through the app
@@ -34,7 +33,6 @@ import {
   DrawerItemList,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
-import CompanyOODScreen from "./screens/NotificationHistoryScreens/CompanyOODScreen";
 
 import { LogBox } from "react-native";
 LogBox.ignoreAllLogs();
@@ -128,6 +126,17 @@ export function DrawerApp({ navigation }) {
   const route = useRoute();
   const token = route.params;
 
+  const { saveCadetCode } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
+    initialExpoPushToken: "",
+  });
+
+  const handleLogout = async () => {
+    await saveCadetCode("logout");
+    navigation.navigate("Login");
+  };
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => (
@@ -152,7 +161,7 @@ export function DrawerApp({ navigation }) {
           />
           <DrawerItem
             label="Logout"
-            onPress={() => props.navigation.navigate("Login")}
+            onPress={() => handleLogout()} //props.navigation.navigate("Login")}
           />
         </DrawerContentScrollView>
       )}
