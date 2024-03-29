@@ -143,8 +143,10 @@ function LoginScreen({ navigation }) {
         cadetCode === undefined ||
         cadetCode === null ||
         cadetCode === "" ||
-        cadetCode === "undefined"
+        cadetCode === "undefined" ||
+        cadetCode === "logout"
       ) {
+        setInProgress(false);
         navigation.navigate("SetValues", token);
       } else {
         handleMoveToTabApp();
@@ -171,6 +173,7 @@ function LoginScreen({ navigation }) {
     ) {
       MyAzureFunctions.call_updatePushToken(token, cadetCode, expoPushToken);
     }
+    setInProgress(false);
     navigation.navigate("TabApp", {
       screen: "Home",
       params: { token, messageList, status },

@@ -126,6 +126,17 @@ export function DrawerApp({ navigation }) {
   const route = useRoute();
   const token = route.params;
 
+  const { saveCadetCode } = MyStorage({
+    initialCadetCode: "",
+    initialCadetStatus: "",
+    initialExpoPushToken: "",
+  });
+
+  const handleLogout = async () => {
+    await saveCadetCode("logout");
+    navigation.navigate("Login");
+  };
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => (
@@ -150,7 +161,7 @@ export function DrawerApp({ navigation }) {
           />
           <DrawerItem
             label="Logout"
-            onPress={() => props.navigation.navigate("Login")}
+            onPress={() => handleLogout()} //props.navigation.navigate("Login")}
           />
         </DrawerContentScrollView>
       )}
