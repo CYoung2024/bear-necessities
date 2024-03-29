@@ -18,12 +18,13 @@ import { MessageListContext } from "../contextMessageList";
 
 import * as MyAzureFunctions from "../azureFunctions";
 
-WebBrowser.maybeCompleteAuthSession();
+var test = WebBrowser.maybeCompleteAuthSession();
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 // Reads in Icon picture from Assests folder
 const USCGALogo = require("../assets/icon.png");
+const spinLogo = require("../assets/iconSpinning.gif");
 
 function base64URLEncode(str) {
   return str
@@ -37,6 +38,7 @@ function base64URLEncode(str) {
 // First part creates picture, can also bypass login screen
 // Second part creates login button
 function LoginScreen({ navigation }) {
+  const [inProgress, setInProgress] = useState(false);
   //for auth
   const [discovery, $discovery]: any = useState({});
   const [authRequest, $authRequest]: any = useState({});
@@ -117,6 +119,7 @@ function LoginScreen({ navigation }) {
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
     $token(tokenResult);
+    setInProgress(true);
   };
 
   useEffect(() => {
@@ -159,11 +162,6 @@ function LoginScreen({ navigation }) {
       token,
       "Alfa"
     );
-    // console.log(initInfo.FullName);
-    // console.log(initInfo.Year);
-    // console.log(initInfo.Company);
-    // console.log(initInfo.Status);
-    // console.log(initInfo.NotifCode);
     const status = initInfo.Status;
     if (
       (initInfo.NotifCode === undefined ||
@@ -182,22 +180,29 @@ function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.bypassContainer}>
-        <Image style={styles.image} source={USCGALogo} />
-      </View>
+      {!inProgress ? (
+        <View style={styles.container}>
+          <View style={styles.bypassContainer}>
+            <Image style={styles.image} source={USCGALogo} />
+          </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            navigation.navigate("Loading");
-            const authorizeResult = await authRequest.promptAsync(discovery);
-            await $authorizeResult(authorizeResult);
-          }}
-        >
-          <Text style={styles.buttonText}>Sign in with Microsoft</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                const authorizeResult = await authRequest.promptAsync(
+                  discovery
+                );
+                await $authorizeResult(authorizeResult);
+              }}
+            >
+              <Text style={styles.buttonText}>Sign in with Microsoft</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <Image source={spinLogo} />
+      )}
     </SafeAreaView>
   );
 }
