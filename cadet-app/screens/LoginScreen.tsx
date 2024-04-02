@@ -24,8 +24,8 @@ var test = WebBrowser.maybeCompleteAuthSession();
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 // Reads in Icon picture from Assests folder
-const USCGALogo = require("../assets/icon.png");
-const spinLogo = require("../assets/iconSpinning.gif");
+const swagBear = require("../assets/swagBear.png");
+const spinLogo = require("../assets/swagBearSpin.gif");
 
 function base64URLEncode(str) {
   return str
@@ -188,7 +188,7 @@ function LoginScreen({ navigation }) {
       {!inProgress ? (
         <View style={styles.container}>
           <View style={styles.bypassContainer}>
-            <Image style={styles.image} source={USCGALogo} />
+            <Image style={styles.image} source={swagBear} />
           </View>
 
           <View style={styles.buttonContainer}>
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   bypassContainer: {
-    height: "66%",
+    //height: "66%",
     //backgroundColor: "green",
     justifyContent: "center",
     alignItems: "center",
