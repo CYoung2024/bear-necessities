@@ -92,7 +92,7 @@ function LoginScreen({ navigation }) {
       scopes: scopes,
       usePKCE: true,
       clientId: process.env.EXPO_PUBLIC_applicationClientID,
-      redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+      redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
       state: process.env.EXPO_PUBLIC_state,
       codeChallenge,
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
@@ -109,7 +109,7 @@ function LoginScreen({ navigation }) {
       {
         code: authorizeResult.params.code,
         clientId: process.env.EXPO_PUBLIC_applicationClientID,
-        redirectUri: __DEV__ ? redirectUrl : redirectUrl + "example",
+        redirectUri: __DEV__ ? redirectUrl : redirectUrl, // + "example",
 
         extraParams: {
           code_verifier: authRequest.codeVerifier,
