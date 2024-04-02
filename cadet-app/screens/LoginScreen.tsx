@@ -222,8 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   bypassContainer: {
-    //height: "66%",
-    //backgroundColor: "green",
+    height: "66%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -238,10 +237,11 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   buttonContainer: {
-    height: "11%",
+    //height: "11%",
     width: "60%",
     alignItems: "center",
     justifyContent: "center",
+    //backgroundColor: "green",
   },
   button: {
     backgroundColor: "#015289",
