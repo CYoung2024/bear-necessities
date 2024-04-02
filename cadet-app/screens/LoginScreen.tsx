@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Animated,
   Dimensions,
   Image,
   SafeAreaView,
@@ -7,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
+Platform,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
@@ -46,6 +47,7 @@ function LoginScreen({ navigation }) {
   const [codeChallenge, $codeChallenge]: any = useState({});
   const [token, $token]: any = useState({});
   const [access, $access]: any = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const scopes = [
     "openid",
     "profile",
@@ -54,13 +56,13 @@ function LoginScreen({ navigation }) {
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
   const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
-
+  
   if (Platform.OS !== "web") {
     var redirectUrl = AuthSession.makeRedirectUri({
-      scheme: "com.cyoung2024.cadetapp",
-      path: "auth",
-    });
-  } else {
+    scheme: "com.cyoung2024.cadetapp",
+    path: "auth",
+  });
+} else {
     var redirectUrl = AuthSession.makeRedirectUri();
   }
 
@@ -137,6 +139,7 @@ function LoginScreen({ navigation }) {
     getSession();
     if (token.accessToken === undefined) {
       $access(false);
+      setShowLoading(false);
     } else {
       // When the access token is received, move on and let the user into the app
       if (
@@ -209,6 +212,9 @@ function LoginScreen({ navigation }) {
   );
 }
 
+// Exports the Login Screen to App.ts
+export default LoginScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -223,6 +229,8 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     width: dim.height * 0.8,
@@ -248,5 +256,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default LoginScreen;

@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
 import * as MyAzureFunctions from "../azureFunctions";
 import DropDownPopupAB from "../functions/NativePopupDropdownAB";
 import DropDownPopupOB from "../functions/NativePopupDropdownOB";
 import UserInputPopup from "../functions/NativePopupUserInputEx";
+import UserInputPopupVerifyLocation from "../functions/NativePopupUserInputVerLLA";
 import MyStorage from "../storage";
 import { TokenContext } from "../contextToken";
 import { StatusContext } from "../contextStatus";
@@ -40,7 +41,9 @@ function AcctScreen() {
   });
 
   const mapRef = useRef(null);
+  const ChaseHall = [41.37466, -73.100014, 41.372763, -72.101809]; //Verified
   const [deviceLLA, setDeviceLLA] = useState(null);
+  const [userInitials, setUserInitials] = useState(null);
   const [userLocation, setuserLocation] = useState(null);
   const [markerLocation, setMarkerLocation] = useState({
     latitude: 0,
@@ -90,9 +93,21 @@ function AcctScreen() {
   const handlePressIFN = async () => {
     // TODO: check if in bounds and if not offer override
     await handleGetLocation();
-    await setCadetStatus("IFN");
-    setLoading(false);
-    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
+    
+    if (
+      deviceLLA.latitude < ChaseHall[0] &&
+      deviceLLA.latitude > ChaseHall[2] &&
+      deviceLLA.longitude < ChaseHall[1] &&
+      deviceLLA.longitude > ChaseHall[3]
+    ) {
+      console.log("Location Verified w GPS");
+      await setCadetStatus("IFN");
+      setLoading(false);
+      MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
+    } else {
+      console.log("Request User Verification");
+      setVerifyLocationInputVisible(true);
+    }
   };
 
   const [loading, setLoading] = useState(false);
@@ -103,6 +118,8 @@ function AcctScreen() {
 
   const [cadetStatus, setCadetStatus] = useState("");
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
+  const [isVerifyLocationInputVisible, setVerifyLocationInputVisible] = 
+    useState(false);
   const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] =
     useState(false);
   const [isOffBaseSelectDialogVisible, setOffBaseSelectDialogVisible] =
@@ -125,6 +142,7 @@ function AcctScreen() {
         <View style={styles.mapContainer}>
           {useMap ? (
             <MapView
+              provider={PROVIDER_GOOGLE}
               ref={mapRef}
               pitchEnabled={true}
               //mapType={"satellite"}
@@ -272,6 +290,36 @@ function AcctScreen() {
                 },
               ]}
               saveCadetStatus={setCadetStatus}
+              tokenForFunc={token}
+              cadetCodeForFunc={cadetCode}
+            />
+          </View>
+
+          <View>
+            <UserInputPopupVerifyLocation
+              modalVisible={isVerifyLocationInputVisible}
+              setModalVisible={setVerifyLocationInputVisible}
+              title={"Something's not right!"}
+              message={
+                "Seems there is something wrong with your location, type your initials in the box below to confirm you are IFN, just like an IFN sheet"
+              }
+              buttons={[
+                {
+                  text: "Cancel",
+                  func: () => {
+                    setLoading(false);
+                  },
+                },
+                {
+                  text: "OK",
+                  func: async () => {
+                    await setCadetStatus("IFN - " + userInitials);
+                    setLoading(false);
+                    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, cadetStatus);
+                  },
+                },
+              ]}
+              saveCadetStatus={setUserInitials}
               tokenForFunc={token}
               cadetCodeForFunc={cadetCode}
             />
