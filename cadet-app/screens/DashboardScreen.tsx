@@ -41,9 +41,9 @@ const DashboardScreen = ({ navigation }) => {
   `;
 
   const trainingsAt1100 = `
-  1/c - Traits of an Honorable Officer (CO Rooms)
-  2/c - Class Meeting (Dimick)
-  3/c - Updated Conduct System Brief (Leamy)
+  1/c - Trainings could be listed here
+  2/c - With locations included (Dimick)
+  3/c - Or Pressable links to online Trainings (Click Me)
   4/c - Updated Conduct System Brief (Leamy)
   `;
 
@@ -104,8 +104,8 @@ const DashboardScreen = ({ navigation }) => {
               <View style={styles.SmallContentContainer}>
                 <Text style={styles.ContentLargeText}>Quick Contacts</Text>
                 <View style={styles.InteriorContainer}>
-                  <Text style={styles.ContentSmallText}>{commonPeople}</Text>
-                  <Text style={styles.ContentSmallText}>{commonNumbers}</Text>
+                  <Text style={styles.ContentSmallTextRight}>{commonPeople}</Text>
+                  <Text style={styles.ContentSmallTextLeft}>{commonNumbers}</Text>
                 </View>
               </View>
 
@@ -227,9 +227,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  ContentSmallText: {
+  ContentSmallTextRight: {
     fontSize: 25,
-    textAlign: "justify",
+    textAlign: "right",
+    color: "black",
+    display: "flex",
+  },
+  ContentSmallTextLeft: {
+    fontSize: 25,
+    textAlign: "left",
     color: "black",
     display: "flex",
   },
