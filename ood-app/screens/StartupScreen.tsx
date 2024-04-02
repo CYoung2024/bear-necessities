@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
+  Image,
   Text,
   KeyboardAvoidingView,
   View,
@@ -19,6 +20,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 WebBrowser.maybeCompleteAuthSession(); // I have no clue how this actually works
 let dim = Dimensions.get("window");
+
+const swagBear = require("../assets/swagBearOOD.svg");
 
 function base64URLEncode(str) {
   return str
@@ -148,6 +151,9 @@ const StartupScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.bypassContainer}>
+        <Image style={styles.image} source={swagBear} />
+      </View>
       <View style={styles.buttonContainer}>
         {!access ? ( //authRequest && discovery ? (
           <TouchableOpacity
@@ -215,6 +221,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  bypassContainer: {
+    //height: "66%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputContainer: {
     width: "80%",
