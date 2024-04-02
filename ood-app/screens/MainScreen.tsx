@@ -108,7 +108,7 @@ const MainScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.containerWebpage}>
       <View style={styles.headerBox}>
-        <Text style={styles.headerText}>Good Morning {company} OOD</Text>
+        <Text style={styles.headerText}>{company} OOD</Text>
       </View>
       <View style={styles.containerBoxes}>
         <View style={styles.accountabilityBox}>
