@@ -198,6 +198,32 @@ export const call_writeMessage = async (token, company, messageContent) => {
   }
 };
 
+export const call_deleteMessage = async (token, time) => {
+  const functionUrl =
+    "https://bearnecessititesfunctionapp.azurewebsites.net/api/deleteMessage?code=srJKd-oshbLmwcSIE_i2kuRJDQpfdphwy7pIqstcIH7pAzFu5URvKw==&id=" +
+    time;
+  try {
+    const response = await fetch(functionUrl, {
+      method: "GET", // Or 'GET', 'PUT', etc., depending on your Azure Function configuration
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Error calling Azure Function:", response.status);
+      // Handle error responses
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle any network errors or exceptions
+  }
+};
+
 export const call_readCompanyMessages = async (token, company) => {
   const functionUrl =
     "https://bearnecessititesfunctionapp.azurewebsites.net/api/readCompanyMessages?code=POOHTOzIwlSCvJVh66GpWWojzJWnKn_dO4HSv5AcP1-QAzFuToZzaw==&company=" +

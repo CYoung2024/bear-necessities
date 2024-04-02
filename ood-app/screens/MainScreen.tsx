@@ -8,11 +8,12 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useRoute } from "@react-navigation/native";
 import moment from "moment-timezone";
-
+import Ionicons from "@expo/vector-icons/Ionicons";
 import StartupScreen from "./StartupScreen";
 import MyStorage from "../storage";
 import * as MyAzureFunctions from "../azureFunctions";
@@ -52,8 +53,9 @@ const MainScreen = ({ navigation }) => {
   };
 
   function convertTime(original: string): string {
-    const est = moment(original).tz("America/New_York"); //TODO: pull time zone from device
-    const newTime = est.format("Do HH:mm");
+    const dateInUTC = moment.utc(original);
+    const dateInEST = dateInUTC.tz("America/New_York"); //TODO: pull time zone from device
+    const newTime = dateInEST.format("Do HH:mm");
     return newTime;
   }
 
@@ -87,9 +89,18 @@ const MainScreen = ({ navigation }) => {
       company,
       input
     );
+    setLoading(true);
     await saveMessageList([...messageList, message]);
-    console.log(messageList);
     setInput("");
+  };
+
+  const handleDeleteMessage = async (timeSent) => {
+    await MyAzureFunctions.call_deleteMessage(token, timeSent);
+    const newMessageList = await messageList.filter(
+      (message) => message.TimeSent !== timeSent
+    );
+    setLoading(true);
+    await saveMessageList(newMessageList);
   };
 
   //let count1c = cadetList1c.filter((cadet) => cadet.status === null).length;
@@ -136,9 +147,24 @@ const MainScreen = ({ navigation }) => {
                     <Text key={`content-${index}`} style={styles.messageText}>
                       {item.MessageContent}
                     </Text>
-                    <Text key={`time-${index}`} style={styles.messageTime}>
-                      {convertTime(item.TimeSent)}
-                    </Text>
+                    <View style={styles.rightSide}>
+                      <Text key={`time-${index}`} style={styles.messageTime}>
+                        {convertTime(item.TimeSent)}
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.closeIcon}
+                        onPress={() => {
+                          handleDeleteMessage(item.TimeSent);
+                        }}
+                      >
+                        <Ionicons
+                          name={"close-circle-outline"}
+                          size={15}
+                          color={"#000"}
+                          //style={styles.closeIcon}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 ))
               )}
@@ -151,6 +177,7 @@ const MainScreen = ({ navigation }) => {
               value={input}
               placeholder="Type a message to send the company"
               keyboardType="default"
+              onSubmitEditing={handleSendMessage}
             />
             <Button title={"Send Message"} onPress={handleSendMessage} />
           </View>
@@ -315,9 +342,18 @@ const styles = StyleSheet.create({
     fontSize: 17,
     alignContent: "flex-start",
   },
+  rightSide: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignContent: "flex-end",
+  },
   messageTime: {
     fontSize: 12,
     alignContent: "flex-end",
+  },
+  closeIcon: {
+    alignContent: "flex-end",
+    paddingLeft: 5,
   },
 });
 

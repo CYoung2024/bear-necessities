@@ -19,13 +19,13 @@ import { MessageListContext } from "../contextMessageList";
 
 import * as MyAzureFunctions from "../azureFunctions";
 
-WebBrowser.maybeCompleteAuthSession();
+var test = WebBrowser.maybeCompleteAuthSession();
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
 // Reads in Icon picture from Assests folder
 const USCGALogo = require("../assets/icon.png");
-const USCGALogoButSpinning = require("../assets/iconSpinning.gif");
+const spinLogo = require("../assets/iconSpinning.gif");
 
 function base64URLEncode(str) {
   return str
@@ -39,6 +39,7 @@ function base64URLEncode(str) {
 // First part creates picture, can also bypass login screen
 // Second part creates login button
 function LoginScreen({ navigation }) {
+  const [inProgress, setInProgress] = useState(false);
   //for auth
   const [discovery, $discovery]: any = useState({});
   const [authRequest, $authRequest]: any = useState({});
@@ -120,6 +121,7 @@ function LoginScreen({ navigation }) {
     );
     const { accessToken, refreshToken, issuedAt, expiresIn } = tokenResult;
     $token(tokenResult);
+    setInProgress(true);
   };
 
   useEffect(() => {
@@ -144,8 +146,10 @@ function LoginScreen({ navigation }) {
         cadetCode === undefined ||
         cadetCode === null ||
         cadetCode === "" ||
-        cadetCode === "undefined"
+        cadetCode === "undefined" ||
+        cadetCode === "logout"
       ) {
+        setInProgress(false);
         navigation.navigate("SetValues", token);
       } else {
         handleMoveToTabApp();
@@ -154,7 +158,6 @@ function LoginScreen({ navigation }) {
   }, [token]);
 
   const handleMoveToTabApp = async () => {
-    // TODO: show loading animation and don't let them spam the login button
     const [initInfo] = await MyAzureFunctions.call_initCadetApp(
       token,
       cadetCode
@@ -163,11 +166,6 @@ function LoginScreen({ navigation }) {
       token,
       "Alfa"
     );
-    // console.log(initInfo.FullName);
-    // console.log(initInfo.Year);
-    // console.log(initInfo.Company);
-    // console.log(initInfo.Status);
-    // console.log(initInfo.NotifCode);
     const status = initInfo.Status;
     if (
       (initInfo.NotifCode === undefined ||
@@ -178,6 +176,7 @@ function LoginScreen({ navigation }) {
     ) {
       MyAzureFunctions.call_updatePushToken(token, cadetCode, expoPushToken);
     }
+    setInProgress(false);
     navigation.navigate("TabApp", {
       screen: "Home",
       params: { token, messageList, status },
@@ -186,7 +185,7 @@ function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {showLoading === false ? (
+      {!inProgress ? (
         <View style={styles.container}>
           <View style={styles.bypassContainer}>
             <Image style={styles.image} source={USCGALogo} />
@@ -196,7 +195,6 @@ function LoginScreen({ navigation }) {
             <TouchableOpacity
               style={styles.button}
               onPress={async () => {
-                setShowLoading(true);
                 const authorizeResult = await authRequest.promptAsync(
                   discovery
                 );
@@ -208,9 +206,7 @@ function LoginScreen({ navigation }) {
           </View>
         </View>
       ) : (
-        <SafeAreaView style={styles.imageBackground}>
-          <Image source={USCGALogoButSpinning} />
-        </SafeAreaView>
+        <Image source={spinLogo} />
       )}
     </SafeAreaView>
   );
