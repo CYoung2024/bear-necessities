@@ -19,21 +19,21 @@ const CircleList = require("../assets/list-circle-sharp.svg");
 
 const DashboardScreen = ({ navigation }) => {
   const PlanOfTheDay = `
+  RESEARCH AND SYMPOSIUM DAY
+
   0600-0730: Buffet Breakfast
-  0700: Reveille/Guardmount
-  0740: Morning Formation   
-  0800 - 1050: Morning Classes
+  0740: Morning Formation
+  0750: Welcome and Intro
+  0800: ML/Deep Learning for Cyber Wargaming
+  0830: Embedded Systems Security
+  0900: Break
+  0915: Passive Accoustic Tracking and Classification
+  0945: Intelligent Hybrid Power Plant
+  1015: Break
+  1030: Cadet Accountability
   1205: Afternoon Formation   
   1210: Family Style Lunch   
   1250-1540: Afternoon Classes
-  1600-1815: Sports Period     
-  1700: Women's Lacrosse vs Endicott College (CMF - Optional)
-  1715-1915: Buffet Dinner
-  1900: Corpswide Mock Boards Evolution (Cadet Rooms)
-  1900-2000: Command Open Door
-  1955: Restricted Cadet Formation   
-  2000-2300: Academic Study Time 
-  2130-2200: Restricted Cadet Check-in w/ OODs
   2300: Taps
 
   This isn't a real POD, but this feature

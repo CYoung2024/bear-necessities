@@ -41,7 +41,7 @@ function AcctScreen() {
   });
 
   const mapRef = useRef(null);
-  const ChaseHall = [41.37466, -72.100014, 41.372763, -72.101809]; //Verified
+  const ChaseHall = [41.37466, -73.100014, 41.372763, -72.101809]; //Verified
   const [deviceLLA, setDeviceLLA] = useState(null);
   const [userInitials, setUserInitials] = useState(null);
   const [userLocation, setuserLocation] = useState(null);
@@ -313,9 +313,9 @@ function AcctScreen() {
                 {
                   text: "OK",
                   func: async () => {
-                    await setCadetStatus("IFN");
+                    await setCadetStatus("IFN - " + userInitials);
                     setLoading(false);
-                    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
+                    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, cadetStatus);
                   },
                 },
               ]}
