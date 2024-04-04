@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState  } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   ScrollView,
@@ -145,7 +145,11 @@ const DashboardScreen = ({ navigation }) => {
                       alert("Online Trainings");
                     }}
                     style={{ color: "#00F" }}
-                  > Online Trainings</Text> {"\n"}
+                  >
+                    {" "}
+                    Online Trainings
+                  </Text>{" "}
+                  {"\n"}
                   4/c - Updated Conduct System Brief (Leamy)
                 </Text>
               </Card>
@@ -207,8 +211,9 @@ const DashboardScreen = ({ navigation }) => {
                 <Card.Divider />
 
                 <Text style={{ marginBottom: 10 }}>
-                  This tile could be used to find the libo bus for underclass on
-                  the weekends using a little GPS module and a small arduino kit.
+                  With future development, this tile could be used to find the
+                  libo bus for underclass on the weekends using a little GPS
+                  module and microcontroller.
                 </Text>
                 <Button
                   icon={
@@ -318,6 +323,8 @@ const styles = StyleSheet.create({
   },
   ScrollViewContainer: {
     display: "flex",
+    width: "100%",
+    height: "100%",
   },
   ContentAreaContainer: {
     alignItems: "center",
