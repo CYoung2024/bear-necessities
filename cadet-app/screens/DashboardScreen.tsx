@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { DrawerActions } from "@react-navigation/native";
@@ -45,12 +46,10 @@ const DashboardScreen = ({ navigation }) => {
   2300: Taps
   `;
 
-  const trainingsAt1100 = `
-  1/c - Trainings could be listed here
+  const trainingsAt1100 = `  1/c - Trainings could be listed here
   2/c - With locations included (Dimick)
   3/c - Or Pressable links to online Trainings (Click Me)
-  4/c - Updated Conduct System Brief (Leamy)
-  `;
+  4/c - Updated Conduct System Brief (Leamy)`;
 
   const commonPeople = `  Command:
   Medical:
@@ -137,7 +136,18 @@ const DashboardScreen = ({ navigation }) => {
               <Card>
                 <Card.Title h3>1100 Trainings</Card.Title>
                 <Card.Divider />
-                <Text style={styles.ContentMicroText}>{trainingsAt1100}</Text>
+                <Text style={styles.ContentMicroText}>
+                  1/c - Trainings could be listed here {"\n"}
+                  2/c - With locations included (Dimick) {"\n"}
+                  3/c - Or Pressable links to
+                  <Text
+                    onPress={() => {
+                      alert("Online Trainings");
+                    }}
+                    style={{ color: "#00F" }}
+                  > Online Trainings</Text> {"\n"}
+                  4/c - Updated Conduct System Brief (Leamy)
+                </Text>
               </Card>
               <Card>
                 <Card.Title>Quick Contacts</Card.Title>
@@ -173,32 +183,32 @@ const DashboardScreen = ({ navigation }) => {
               <Card>
                 <Card.Title>Libo Bus Tracker</Card.Title>
                 <Card.Divider />
-                <View style={{height: 100,}}>
+                <View style={{ height: 150 }}>
                   <MapView
-                  provider={PROVIDER_GOOGLE}
-                  ref={mapRef}
-                  pitchEnabled={true}
-                  //mapType={"satellite"}
-                  showsBuildings={true}
-                  style={{
-                    alignSelf: "stretch",
-                    height: "100%",
-                  }}
-                  initialRegion={{
-                    latitude: 41.37354686499106,
-                    longitude: -72.10071999095653,
-                    latitudeDelta: 0.007,
-                    longitudeDelta: 0.01,
-                  }}
-                >
-                  <Marker title="My Location" coordinate={markerLocation} />
-                </MapView>
-
+                    provider={PROVIDER_GOOGLE}
+                    ref={mapRef}
+                    pitchEnabled={true}
+                    // mapType={"satellite"}
+                    showsBuildings={true}
+                    style={{
+                      alignSelf: "stretch",
+                      height: "100%",
+                    }}
+                    initialRegion={{
+                      latitude: 41.371309,
+                      longitude: -72.102227,
+                      latitudeDelta: 0.007,
+                      longitudeDelta: 0.01,
+                    }}
+                  >
+                    <Marker title="My Location" coordinate={markerLocation} />
+                  </MapView>
                 </View>
-                
+                <Card.Divider />
+
                 <Text style={{ marginBottom: 10 }}>
-                  The idea with React Native Elements is more about component
-                  structure than actual design.
+                  This tile could be used to find the libo bus for underclass on
+                  the weekends using a little GPS module and a small arduino kit.
                 </Text>
                 <Button
                   icon={
@@ -213,8 +223,43 @@ const DashboardScreen = ({ navigation }) => {
                     marginLeft: 0,
                     marginRight: 0,
                     marginBottom: 0,
+                    backgroundColor: "#051657",
                   }}
-                  title="VIEW NOW"
+                  title="Find Libo Bus"
+                  onPress={() => {
+                    setMarkerLocation({
+                      latitude: 41.377243,
+                      longitude: -72.15001,
+                      altitude: 0,
+                    });
+                    if (Platform.OS === "android") {
+                      mapRef.current.animateCamera(
+                        {
+                          center: {
+                            latitude: 41.377243,
+                            longitude: -72.15001,
+                          },
+                          heading: 210,
+                          pitch: 60,
+                          zoom: 18,
+                        },
+                        { duration: 2000 }
+                      );
+                    } else if (Platform.OS === "ios") {
+                      mapRef.current.animateCamera(
+                        {
+                          center: {
+                            latitude: 41.377243,
+                            longitude: -72.15001,
+                          },
+                          heading: 214,
+                          pitch: 50,
+                          altitude: 250,
+                        },
+                        { duration: 2000 }
+                      );
+                    }
+                  }}
                 />
               </Card>
             </View>

@@ -41,7 +41,7 @@ function AcctScreen() {
   });
 
   const mapRef = useRef(null);
-  const ChaseHall = [41.37466, -73.100014, 41.372763, -72.101809]; //Verified
+  const ChaseHall = [41.37466, -72.100014, 41.372763, -72.101809]; //Verified
   const [deviceLLA, setDeviceLLA] = useState(null);
   const [userInitials, setUserInitials] = useState(null);
   const [userLocation, setuserLocation] = useState(null);
@@ -242,37 +242,6 @@ function AcctScreen() {
             </View>
 
             <View style={styles.rightButtonContainer}>
-              {/* <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  Alert.alert(
-                    "Sign IFN",
-                    "You are about to sign IFN, and your current location will be stored in the app",
-                    [
-                      {
-                        text: "Cancel",
-                        onPress: () => console.log("IFN not passed"),
-                        style: "cancel",
-                      },
-                      {
-                        text: "OK",
-                        onPress: () => {
-                          setCadetStatus("IFN");
-                          setLoading(false);
-                          MyAzureFunctions.call_writeCadetStatus(
-                            token,
-                            cadetCode,
-                            cadetStatus
-                          );
-                          handleGetLocation();
-                          console.log("cadetStatus=IFN");
-                        },
-                        style: "default",
-                      },
-                    ]
-                  );
-                }}
-              > */}
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
@@ -326,16 +295,9 @@ function AcctScreen() {
                 },
                 {
                   text: "OK",
-                  func: async () => {
-                    console.log("Setting IFN with User Initials: " + userInitials);
-                    await setCadetStatus("IFN - " + userInitials);
-                    console.log("CadetStatus Set: " + cadetStatus);
-                    setLoading(false);
-                    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, cadetStatus);
-                  },
                 },
               ]}
-              saveCadetStatus={setUserInitials}
+              saveCadetStatus={setCadetStatus}
               tokenForFunc={token}
               cadetCodeForFunc={cadetCode}
             />
@@ -429,10 +391,12 @@ const styles = StyleSheet.create({
   },
   currentStatusContainer: {
     alignItems: "center",
-    backgroundColor: "#DDE4EA",
+    backgroundColor: "#F0F1F5",
     flex: 1,
     justifyContent: "center",
     width: "100%",
+    borderTopColor: "grey",
+    borderTopWidth: 2,
   },
   buttonContainer: {
     alignItems: "center",
@@ -441,7 +405,7 @@ const styles = StyleSheet.create({
     flex: 3,
     justifyContent: "center",
     padding: 5,
-    backgroundColor: "white",
+    backgroundColor: "#F0F1F5",
     width: "100%",
   },
   leftButtonContainer: {
@@ -456,7 +420,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: "lightblue",
+    backgroundColor: "#C1C5D5",
     borderColor: "darkblue",
     borderRadius: 10,
     borderWidth: 2,
