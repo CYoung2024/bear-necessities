@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "cadet-app",
-    "slug": "cadet-app",
+    "name": "Bear Necessities",
+    "slug": "Bear Necessities",
     "scheme": "com.cyoung2024.cadetapp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/SwagBearFaceBIG.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/swagBear.png",
@@ -21,13 +21,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/SwagBearFaceBIG.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.cyoung2024.cadetapp",
+      "versionCode": 2,
       "config": {
         "googleMaps": {
-          "apiKey": "process.env.EXPO_PUBLIC_applicationClientID"
+          "apiKey": "process.env.EXPO_PUBLIC_mapsAPIKey"
         }
       }
     },

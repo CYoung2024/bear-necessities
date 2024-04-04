@@ -20,6 +20,7 @@ const UserInputPopupVerifyLocation = (props) => {
   const token = useContext(TokenContext);
   const [text, onChangeText] = useState("");
   const [cadetStatus, saveCadetStatus] = useState("");
+  const [dispStatus, saveDispStatus] = useState("");
 
   // function UserInput() {
   //     return (
@@ -149,18 +150,19 @@ const UserInputPopupVerifyLocation = (props) => {
               ]}
             >
               <TouchableOpacity
-                onPress={() => {
+                onPress={async () => {
                   props.setModalVisible(false);
                   if (item.func && typeof item.func === "function") {
                     item.func();
                   }
                   if (item.text === "OK" || defaultButtonText === "OK") {
-                    props.saveCadetStatus(text),
-                      console.log("cadetStatus=" + text),
+                    saveDispStatus("IFN - " + text),
+                      props.saveCadetStatus(dispStatus),
+                      console.log("cadetStatus=" + dispStatus),
                       MyAzureFunctions.call_writeCadetStatus(
                         token,
                         props.cadetCodeForFunc,
-                        text
+                        dispStatus
                       );
                   }
                 }}

@@ -41,7 +41,7 @@ function AcctScreen() {
   });
 
   const mapRef = useRef(null);
-  const ChaseHall = [41.37466, -73.100014, 41.372763, -72.101809]; //Verified
+  const ChaseHall = [41.37466, -72.100014, 41.372763, -72.101809]; //Verified
   const [deviceLLA, setDeviceLLA] = useState(null);
   const [userInitials, setUserInitials] = useState(null);
   const [userLocation, setuserLocation] = useState(null);
@@ -57,10 +57,15 @@ function AcctScreen() {
       alert("I can't tell where you are...");
       return;
     }
+    console.log("Setting Current Position");
     let location = await Location.getCurrentPositionAsync({});
+    console.log("Current Position Set");
     let { latitude, longitude, altitude } = location.coords;
-    setDeviceLLA({ latitude, longitude, altitude });
-    setMarkerLocation({ latitude, longitude, altitude });
+    console.log("Setting DeviceLLA");
+    await setDeviceLLA({ latitude, longitude, altitude });
+    console.log("DeviceLLA set - setting marker location");
+    await setMarkerLocation({ latitude, longitude, altitude });
+    console.log("Marker location set");
     if (Platform.OS === "android") {
       mapRef.current.animateCamera(
         {
@@ -88,26 +93,35 @@ function AcctScreen() {
         { duration: 2000 }
       );
     }
+    return { latitude, longitude };
   };
 
   const handlePressIFN = async () => {
     // TODO: check if in bounds and if not offer override
-    await handleGetLocation();
+    console.log("Getting Location");
+    const { latitude , longitude } = await handleGetLocation();
+    console.log("Got Location");
+
     
     if (
-      deviceLLA.latitude < ChaseHall[0] &&
-      deviceLLA.latitude > ChaseHall[2] &&
-      deviceLLA.longitude < ChaseHall[1] &&
-      deviceLLA.longitude > ChaseHall[3]
+      latitude < ChaseHall[0] &&
+      latitude > ChaseHall[2] &&
+      longitude < ChaseHall[1] &&
+      longitude > ChaseHall[3]
     ) {
-      console.log("Location Verified w GPS");
+      
+      console.log("Location Verified w GPS - setting IFN");
       await setCadetStatus("IFN");
+      console.log("IFN Set");
       setLoading(false);
       MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
+
     } else {
       console.log("Request User Verification");
       setVerifyLocationInputVisible(true);
     }
+
+
   };
 
   const [loading, setLoading] = useState(false);
@@ -228,37 +242,6 @@ function AcctScreen() {
             </View>
 
             <View style={styles.rightButtonContainer}>
-              {/* <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  Alert.alert(
-                    "Sign IFN",
-                    "You are about to sign IFN, and your current location will be stored in the app",
-                    [
-                      {
-                        text: "Cancel",
-                        onPress: () => console.log("IFN not passed"),
-                        style: "cancel",
-                      },
-                      {
-                        text: "OK",
-                        onPress: () => {
-                          setCadetStatus("IFN");
-                          setLoading(false);
-                          MyAzureFunctions.call_writeCadetStatus(
-                            token,
-                            cadetCode,
-                            cadetStatus
-                          );
-                          handleGetLocation();
-                          console.log("cadetStatus=IFN");
-                        },
-                        style: "default",
-                      },
-                    ]
-                  );
-                }}
-              > */}
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
@@ -312,14 +295,9 @@ function AcctScreen() {
                 },
                 {
                   text: "OK",
-                  func: async () => {
-                    await setCadetStatus("IFN - " + userInitials);
-                    setLoading(false);
-                    MyAzureFunctions.call_writeCadetStatus(token, cadetCode, cadetStatus);
-                  },
                 },
               ]}
-              saveCadetStatus={setUserInitials}
+              saveCadetStatus={setCadetStatus}
               tokenForFunc={token}
               cadetCodeForFunc={cadetCode}
             />
@@ -413,10 +391,12 @@ const styles = StyleSheet.create({
   },
   currentStatusContainer: {
     alignItems: "center",
-    backgroundColor: "#DDE4EA",
+    backgroundColor: "#F0F1F5",
     flex: 1,
     justifyContent: "center",
     width: "100%",
+    borderTopColor: "grey",
+    borderTopWidth: 2,
   },
   buttonContainer: {
     alignItems: "center",
@@ -425,7 +405,7 @@ const styles = StyleSheet.create({
     flex: 3,
     justifyContent: "center",
     padding: 5,
-    backgroundColor: "white",
+    backgroundColor: "#F0F1F5",
     width: "100%",
   },
   leftButtonContainer: {
@@ -440,7 +420,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: "lightblue",
+    backgroundColor: "#C1C5D5",
     borderColor: "darkblue",
     borderRadius: 10,
     borderWidth: 2,

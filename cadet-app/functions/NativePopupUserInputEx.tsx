@@ -157,6 +157,7 @@ const UserInputPopup = (props) => {
                                 onPress={() => {props.setModalVisible(false)
                                     if (item.func && typeof item.func === 'function') {item.func();}
                                     if (item.text === 'OK' || defaultButtonText === 'OK' ) {
+
                                         props.saveCadetStatus(text), 
                                         console.log("cadetStatus=" + text), 
                                         MyAzureFunctions.call_writeCadetStatus(
