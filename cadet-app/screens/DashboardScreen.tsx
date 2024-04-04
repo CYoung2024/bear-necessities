@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState  } from "react";
 import {
   Dimensions,
   ScrollView,
   StyleSheet,
-  Text,
+  Image,
   TouchableOpacity,
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { DrawerActions } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Text, Card, Button, Icon } from "@rneui/themed";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 // Reads dimensions of screen for image/button scaling
 let dim = Dimensions.get("window");
@@ -18,6 +20,12 @@ const USCGALogo = require("../assets/icon.png");
 const CircleList = require("../assets/list-circle-sharp.svg");
 
 const DashboardScreen = ({ navigation }) => {
+  const mapRef = useRef(null);
+  const [markerLocation, setMarkerLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    altitude: 0,
+  });
   const PlanOfTheDay = `
   RESEARCH AND SYMPOSIUM DAY
 
@@ -35,9 +43,6 @@ const DashboardScreen = ({ navigation }) => {
   1210: Family Style Lunch   
   1250-1540: Afternoon Classes
   2300: Taps
-
-  This isn't a real POD, but this feature
-  could be added in the future!
   `;
 
   const trainingsAt1100 = `
@@ -47,23 +52,54 @@ const DashboardScreen = ({ navigation }) => {
   4/c - Updated Conduct System Brief (Leamy)
   `;
 
-  const commonPeople = `  CHDO:
-  SMPO:
-  Duty Engineer:
+  const commonPeople = `  Command:
+  Medical:
+  Facilities:
 
-  Watch Office:
-  CGPD:
-  IT Desk:
+  Front Office:
+  Base Police:
+  IT Help Desk:
   `;
 
-  const commonNumbers = `  (860) 625-2013
-  (860) 625-0530
-  (860) 625-1166
+  const commonNumbers = `  (734) 366-2633
+  (354) 633-4225
+  (763) 322-4548
 
-  (860) 444-8294
-  (860) 444-5555
-  (860) 444-8324
+  (432) 123-4567
+  (987) 314-1592
+  (656) 271-8281
   `;
+
+  const users = [
+    {
+      name: "brynn",
+      avatar: "https://uifaces.co/our-content/donated/1H_7AxP0.jpg",
+    },
+    {
+      name: "thot leader",
+      avatar:
+        "https://images.pexels.com/photos/598745/pexels-photo-598745.jpeg?crop=faces&fit=crop&h=200&w=200&auto=compress&cs=tinysrgb",
+    },
+    {
+      name: "jsa",
+      avatar: "https://uifaces.co/our-content/donated/bUkmHPKs.jpg",
+    },
+    {
+      name: "talhaconcepts",
+      avatar: "https://randomuser.me/api/portraits/men/4.jpg",
+    },
+    {
+      name: "andy vitale",
+      avatar: "https://uifaces.co/our-content/donated/NY9hnAbp.jpg",
+    },
+    {
+      name: "katy friedson",
+      avatar:
+        "https://images-na.ssl-images-amazon.com/images/M/MV5BMTgxMTc1MTYzM15BMl5BanBnXkFtZTgwNzI5NjMwOTE@._V1_UY256_CR16,0,172,256_AL_.jpg",
+    },
+  ];
+
+  type CardsComponentsProps = {};
 
   return (
     <View style={styles.Container}>
@@ -88,61 +124,99 @@ const DashboardScreen = ({ navigation }) => {
 
         <View style={styles.belowHeader}>
           <ScrollView style={styles.ScrollViewContainer}>
-            <View style={styles.ContentAreaContainer}>
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>POD - 22May2024</Text>
+            <View style={styles.container}>
+              <Card>
+                <Card.Title h2>POD - 22May2024</Card.Title>
+                <Card.Divider />
                 <Text style={styles.ContentMicroText}>{PlanOfTheDay}</Text>
-              </View>
-
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>1100 Trainings</Text>
+                <Text h4>
+                  This isn't a real POD, but this feature could be added in the
+                  future!
+                </Text>
+              </Card>
+              <Card>
+                <Card.Title h3>1100 Trainings</Card.Title>
+                <Card.Divider />
                 <Text style={styles.ContentMicroText}>{trainingsAt1100}</Text>
-              </View>
-
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Quick Contacts</Text>
+              </Card>
+              <Card>
+                <Card.Title>Quick Contacts</Card.Title>
+                <Card.Divider />
                 <View style={styles.InteriorContainer}>
-                  <Text style={styles.ContentSmallTextRight}>{commonPeople}</Text>
-                  <Text style={styles.ContentSmallTextLeft}>{commonNumbers}</Text>
+                  <Text style={styles.ContentSmallTextRight}>
+                    {commonPeople}
+                  </Text>
+                  <Text style={styles.ContentSmallTextLeft}>
+                    {commonNumbers}
+                  </Text>
                 </View>
-              </View>
+              </Card>
 
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
+              <Card containerStyle={{ marginTop: 15 }}>
+                <Card.Title>FONTS</Card.Title>
+                <Card.Divider />
+                <Text style={styles.fonts} h1>
+                  h1 Heading
+                </Text>
+                <Text style={styles.fonts} h2>
+                  h2 Heading
+                </Text>
+                <Text style={styles.fonts} h3>
+                  h3 Heading
+                </Text>
+                <Text style={styles.fonts} h4>
+                  h4 Heading
+                </Text>
+                <Text style={styles.fonts}>Normal Text</Text>
+              </Card>
 
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
+              <Card>
+                <Card.Title>Libo Bus Tracker</Card.Title>
+                <Card.Divider />
+                <View style={{height: 100,}}>
+                  <MapView
+                  provider={PROVIDER_GOOGLE}
+                  ref={mapRef}
+                  pitchEnabled={true}
+                  //mapType={"satellite"}
+                  showsBuildings={true}
+                  style={{
+                    alignSelf: "stretch",
+                    height: "100%",
+                  }}
+                  initialRegion={{
+                    latitude: 41.37354686499106,
+                    longitude: -72.10071999095653,
+                    latitudeDelta: 0.007,
+                    longitudeDelta: 0.01,
+                  }}
+                >
+                  <Marker title="My Location" coordinate={markerLocation} />
+                </MapView>
 
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
-
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
-
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
-
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
-
-              <View style={styles.GapBetweenContentContainers} />
-              <View style={styles.SmallContentContainer}>
-                <Text style={styles.ContentLargeText}>Info Card</Text>
-              </View>
+                </View>
+                
+                <Text style={{ marginBottom: 10 }}>
+                  The idea with React Native Elements is more about component
+                  structure than actual design.
+                </Text>
+                <Button
+                  icon={
+                    <Icon
+                      name="code"
+                      color="#ffffff"
+                      iconStyle={{ marginRight: 10 }}
+                    />
+                  }
+                  buttonStyle={{
+                    borderRadius: 0,
+                    marginLeft: 0,
+                    marginRight: 0,
+                    marginBottom: 0,
+                  }}
+                  title="VIEW NOW"
+                />
+              </Card>
             </View>
           </ScrollView>
         </View>
@@ -155,7 +229,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "lightblue",
+    backgroundColor: "#051657",
   },
   header: {
     height: 50,
@@ -246,6 +320,26 @@ const styles = StyleSheet.create({
   ContentMicroText: {
     fontSize: 15,
     color: "black",
+  },
+
+  container: {
+    flex: 1,
+  },
+  fonts: {
+    marginBottom: 8,
+  },
+  user: {
+    flexDirection: "row",
+    marginBottom: 6,
+  },
+  image: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  name: {
+    fontSize: 16,
+    marginTop: 5,
   },
 });
 

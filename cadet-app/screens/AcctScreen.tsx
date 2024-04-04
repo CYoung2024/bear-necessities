@@ -57,10 +57,15 @@ function AcctScreen() {
       alert("I can't tell where you are...");
       return;
     }
+    console.log("Setting Current Position");
     let location = await Location.getCurrentPositionAsync({});
+    console.log("Current Position Set");
     let { latitude, longitude, altitude } = location.coords;
-    setDeviceLLA({ latitude, longitude, altitude });
-    setMarkerLocation({ latitude, longitude, altitude });
+    console.log("Setting DeviceLLA");
+    await setDeviceLLA({ latitude, longitude, altitude });
+    console.log("DeviceLLA set - setting marker location");
+    await setMarkerLocation({ latitude, longitude, altitude });
+    console.log("Marker location set");
     if (Platform.OS === "android") {
       mapRef.current.animateCamera(
         {
@@ -88,26 +93,35 @@ function AcctScreen() {
         { duration: 2000 }
       );
     }
+    return { latitude, longitude };
   };
 
   const handlePressIFN = async () => {
     // TODO: check if in bounds and if not offer override
-    await handleGetLocation();
+    console.log("Getting Location");
+    const { latitude , longitude } = await handleGetLocation();
+    console.log("Got Location");
+
     
     if (
-      deviceLLA.latitude < ChaseHall[0] &&
-      deviceLLA.latitude > ChaseHall[2] &&
-      deviceLLA.longitude < ChaseHall[1] &&
-      deviceLLA.longitude > ChaseHall[3]
+      latitude < ChaseHall[0] &&
+      latitude > ChaseHall[2] &&
+      longitude < ChaseHall[1] &&
+      longitude > ChaseHall[3]
     ) {
-      console.log("Location Verified w GPS");
+      
+      console.log("Location Verified w GPS - setting IFN");
       await setCadetStatus("IFN");
+      console.log("IFN Set");
       setLoading(false);
       MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
+
     } else {
       console.log("Request User Verification");
       setVerifyLocationInputVisible(true);
     }
+
+
   };
 
   const [loading, setLoading] = useState(false);
@@ -313,7 +327,9 @@ function AcctScreen() {
                 {
                   text: "OK",
                   func: async () => {
+                    console.log("Setting IFN with User Initials: " + userInitials);
                     await setCadetStatus("IFN - " + userInitials);
+                    console.log("CadetStatus Set: " + cadetStatus);
                     setLoading(false);
                     MyAzureFunctions.call_writeCadetStatus(token, cadetCode, cadetStatus);
                   },
