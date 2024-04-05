@@ -166,7 +166,7 @@ const DashboardScreen = ({ navigation }) => {
                 </View>
               </Card>
 
-              <Card containerStyle={{ marginTop: 15 }}>
+              {/* <Card containerStyle={{ marginTop: 15 }}>
                 <Card.Title>FONTS</Card.Title>
                 <Card.Divider />
                 <Text style={styles.fonts} h1>
@@ -182,7 +182,7 @@ const DashboardScreen = ({ navigation }) => {
                   h4 Heading
                 </Text>
                 <Text style={styles.fonts}>Normal Text</Text>
-              </Card>
+              </Card> */}
 
               <Card>
                 <Card.Title>Libo Bus Tracker</Card.Title>
