@@ -8,6 +8,7 @@ import {
   View,
   Alert,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import DialogInput from "react-native-dialog-input";
 import { useRoute } from "@react-navigation/native";
@@ -99,7 +100,9 @@ function AcctScreen() {
   const handlePressIFN = async () => {
     console.log("Getting Location");
     // TODO: loading animation and don't let them spam click while awaiting
+    setIFNLoading(true);
     const { latitude, longitude } = await handleGetLocation();
+    setIFNLoading(false);
     console.log("Got Location");
     if (
       latitude < ChaseHall[0] &&
@@ -119,6 +122,7 @@ function AcctScreen() {
   };
 
   const [loading, setLoading] = useState(false);
+  const [IFNloading, setIFNLoading] = useState(false);
   const tempStatus = useContext(StatusContext);
   useEffect(() => {
     setCadetStatus(tempStatus);
@@ -242,7 +246,11 @@ function AcctScreen() {
                   handlePressIFN();
                 }}
               >
-                <Text style={styles.largeText}>IFN</Text>
+                {!IFNloading ? (
+                  <Text style={styles.largeText}>IFN</Text>
+                ) : (
+                  <ActivityIndicator size="large" color="#000000" />
+                )}
               </TouchableOpacity>
             </View>
           </View>
