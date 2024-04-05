@@ -97,31 +97,25 @@ function AcctScreen() {
   };
 
   const handlePressIFN = async () => {
-    // TODO: check if in bounds and if not offer override
     console.log("Getting Location");
-    const { latitude , longitude } = await handleGetLocation();
+    // TODO: loading animation and don't let them spam click while awaiting
+    const { latitude, longitude } = await handleGetLocation();
     console.log("Got Location");
-
-    
     if (
       latitude < ChaseHall[0] &&
       latitude > ChaseHall[2] &&
       longitude < ChaseHall[1] &&
       longitude > ChaseHall[3]
     ) {
-      
       console.log("Location Verified w GPS - setting IFN");
       await setCadetStatus("IFN");
       console.log("IFN Set");
       setLoading(false);
       MyAzureFunctions.call_writeCadetStatus(token, cadetCode, "IFN");
-
     } else {
       console.log("Request User Verification");
       setVerifyLocationInputVisible(true);
     }
-
-
   };
 
   const [loading, setLoading] = useState(false);
@@ -132,7 +126,7 @@ function AcctScreen() {
 
   const [cadetStatus, setCadetStatus] = useState("");
   const [isExcusalInputVisible, setExcusalInputVisible] = useState(false);
-  const [isVerifyLocationInputVisible, setVerifyLocationInputVisible] = 
+  const [isVerifyLocationInputVisible, setVerifyLocationInputVisible] =
     useState(false);
   const [isAcBuildSelectDialogVisible, setAcBuildSelectDialogVisible] =
     useState(false);
@@ -284,7 +278,7 @@ function AcctScreen() {
               setModalVisible={setVerifyLocationInputVisible}
               title={"Something's not right!"}
               message={
-                "Seems there is something wrong with your location, type your initials in the box below to confirm you are IFN, just like an IFN sheet"
+                "Your location is not within Chase Hall. Please type your initials in the box below to override and confirm you are IFN."
               }
               buttons={[
                 {
