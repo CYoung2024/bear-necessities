@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "Bear Necessities",
-    "slug": "Bear Necessities",
+    "slug": "cadet-app",
     "scheme": "com.cyoung2024.cadetapp",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/SwagBearFaceBIG.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.cyoung2024.cadetapp",
-      "versionCode": 2,
+      "versionCode": 3,
       "config": {
         "googleMaps": {
           "apiKey": "process.env.EXPO_PUBLIC_mapsAPIKey"
