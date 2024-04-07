@@ -156,13 +156,14 @@ const UserInputPopupVerifyLocation = (props) => {
                     item.func();
                   }
                   if (item.text === "OK" || defaultButtonText === "OK") {
-                    saveDispStatus("IFN - " + text),
-                      props.saveCadetStatus(dispStatus),
-                      console.log("cadetStatus=" + dispStatus),
+                    // TODO: add not verified to database write
+                    saveDispStatus("IFN"),
+                      props.saveCadetStatus("IFN"),
+                      console.log("cadetStatus=" + "IFN"),
                       MyAzureFunctions.call_writeCadetStatus(
                         token,
                         props.cadetCodeForFunc,
-                        dispStatus
+                        "IFN"
                       );
                   }
                 }}
@@ -256,12 +257,13 @@ const UserInputPopupVerifyLocation = (props) => {
                     item.func();
                   }
                   if (item.text === "OK" || defaultButtonText === "OK") {
-                    props.saveCadetStatus(text),
-                      console.log("cadetStatus=" + text),
+                    // TODO: add not verified to database write
+                    props.saveCadetStatus("IFN"),
+                      console.log("cadetStatus=" + "IFN"),
                       MyAzureFunctions.call_writeCadetStatus(
                         token,
                         props.cadetCodeForFunc,
-                        text
+                        "IFN"
                       );
                   }
                 }}

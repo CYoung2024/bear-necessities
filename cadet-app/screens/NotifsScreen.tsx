@@ -133,7 +133,9 @@ const styles = StyleSheet.create({
   },
   textbox: {
     flexDirection: "row",
-    backgroundColor: "#828BAB",
+    backgroundColor: "#d2d5e1",
+    borderColor: "black",
+    borderWidth: 1,
     borderRadius: 25,
     flexWrap: "wrap",
     padding: 11,

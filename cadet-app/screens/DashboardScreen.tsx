@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState  } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   ScrollView,
@@ -145,7 +145,11 @@ const DashboardScreen = ({ navigation }) => {
                       alert("Online Trainings");
                     }}
                     style={{ color: "#00F" }}
-                  > Online Trainings</Text> {"\n"}
+                  >
+                    {" "}
+                    Online Trainings
+                  </Text>{" "}
+                  {"\n"}
                   4/c - Updated Conduct System Brief (Leamy)
                 </Text>
               </Card>
@@ -162,7 +166,7 @@ const DashboardScreen = ({ navigation }) => {
                 </View>
               </Card>
 
-              <Card containerStyle={{ marginTop: 15 }}>
+              {/* <Card containerStyle={{ marginTop: 15 }}>
                 <Card.Title>FONTS</Card.Title>
                 <Card.Divider />
                 <Text style={styles.fonts} h1>
@@ -178,7 +182,7 @@ const DashboardScreen = ({ navigation }) => {
                   h4 Heading
                 </Text>
                 <Text style={styles.fonts}>Normal Text</Text>
-              </Card>
+              </Card> */}
 
               <Card>
                 <Card.Title>Libo Bus Tracker</Card.Title>
@@ -207,8 +211,9 @@ const DashboardScreen = ({ navigation }) => {
                 <Card.Divider />
 
                 <Text style={{ marginBottom: 10 }}>
-                  This tile could be used to find the libo bus for underclass on
-                  the weekends using a little GPS module and a small arduino kit.
+                  With future development, this tile could be used to find the
+                  libo bus for underclass on the weekends using a little GPS
+                  module and microcontroller.
                 </Text>
                 <Button
                   icon={
@@ -318,6 +323,8 @@ const styles = StyleSheet.create({
   },
   ScrollViewContainer: {
     display: "flex",
+    width: "100%",
+    height: "100%",
   },
   ContentAreaContainer: {
     alignItems: "center",
