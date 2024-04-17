@@ -157,7 +157,7 @@ function AcctScreen() {
               provider={PROVIDER_GOOGLE}
               ref={mapRef}
               pitchEnabled={true}
-              //mapType={"satellite"}
+              mapType={"standard"}
               showsBuildings={true}
               style={{
                 alignSelf: "stretch",
