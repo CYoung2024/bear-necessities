@@ -12,6 +12,7 @@ import moment from "moment-timezone";
 import { useRoute } from "@react-navigation/native";
 import { useContext } from "react";
 import { TokenContext } from "../contextToken";
+import { CompanyContext } from "../contextCompany";
 import { MessageListContext } from "../contextMessageList";
 import * as MyAzureFunctions from "../azureFunctions";
 
@@ -27,6 +28,7 @@ function convertTime(original: string): string {
 const NotifsScreen = (navigation) => {
   const messageList = useContext(MessageListContext);
   const token = useContext(TokenContext);
+  const company = useContext(CompanyContext);
 
   const scrollViewRef = useRef();
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ const NotifsScreen = (navigation) => {
     setRefreshing(true);
     const messageListUpdated = await MyAzureFunctions.call_readCompanyMessages(
       token,
-      "Alfa"
+      company
     );
 
     setNewMessages(messageListUpdated);

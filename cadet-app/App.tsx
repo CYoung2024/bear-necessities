@@ -11,6 +11,7 @@ import { useRoute } from "@react-navigation/native";
 import { TokenContext } from "./contextToken";
 import { StatusContext } from "./contextStatus";
 import { MessageListContext } from "./contextMessageList";
+import { CompanyContext } from "./contextCompany";
 import MyStorage from "./storage";
 import * as Linking from "expo-linking";
 
@@ -194,7 +195,7 @@ export function DrawerApp({ navigation }) {
 // Uses the functions defined in the ./screens folder
 const TabApp = ({ navigation }) => {
   const route = useRoute();
-  const { token, messageList, status } = route.params;
+  const { token, messageList, status, company } = route.params;
 
   useEffect(() => {
     const backAction = () => {
@@ -221,68 +222,69 @@ const TabApp = ({ navigation }) => {
     <TokenContext.Provider value={token}>
       <MessageListContext.Provider value={messageList}>
         <StatusContext.Provider value={status}>
-          <BottomTab.Navigator
-            tabBarPosition="bottom"
-            initialRouteName="Dashboard"
-            screenOptions={{
-              tabBarShowLabel: false,
-              tabBarStyle: {
-                borderTopWidth: 0,
-              },
-              //headerShown: true,
-            }}
-          >
-            <BottomTab.Screen
-              name="Dashboard"
-              component={DashboardScreen}
-              options={{
-                //headerShown: false,
-                //headerStyle: {
-                //  backgroundColor: '#f4511e',
-                //},
-                tabBarIcon: (tabInfo) => (
-                  <Ionicons
-                    name="md-home"
-                    size={tabInfo.focused ? 24 : 20}
-                    color={tabInfo.focused ? "#015289" : "#ccc"}
-                  />
-                ),
-              }}
-            />
-
-            <BottomTab.Screen
-              name="IFN"
-              component={AcctScreen}
-              options={{
+          <CompanyContext.Provider value={company}>
+            <BottomTab.Navigator
+              tabBarPosition="bottom"
+              initialRouteName="Dashboard"
+              screenOptions={{
+                tabBarShowLabel: false,
+                tabBarStyle: {
+                  borderTopWidth: 0,
+                },
                 //headerShown: true,
-                //showLabel: false,
-                tabBarIcon: (tabInfo) => (
-                  <Ionicons
-                    name="location-sharp"
-                    size={tabInfo.focused ? 24 : 20}
-                    color={tabInfo.focused ? "#015289" : "#ccc"}
-                  />
-                ),
               }}
-            />
+            >
+              <BottomTab.Screen
+                name="Dashboard"
+                component={DashboardScreen}
+                options={{
+                  //headerShown: false,
+                  //headerStyle: {
+                  //  backgroundColor: '#f4511e',
+                  //},
+                  tabBarIcon: (tabInfo) => (
+                    <Ionicons
+                      name="md-home"
+                      size={tabInfo.focused ? 24 : 20}
+                      color={tabInfo.focused ? "#015289" : "#ccc"}
+                    />
+                  ),
+                }}
+              />
 
-            <BottomTab.Screen
-              name="Messages"
-              component={NotifsScreen}
-              options={{
-                //headerShown: false,
-                //tabBarLabelPosition: "below-icon",
-                tabBarIcon: (tabInfo) => (
-                  <Ionicons
-                    name="mail"
-                    size={tabInfo.focused ? 24 : 20}
-                    color={tabInfo.focused ? "#015289" : "#ccc"}
-                  />
-                ),
-              }}
-            />
+              <BottomTab.Screen
+                name="IFN"
+                component={AcctScreen}
+                options={{
+                  //headerShown: true,
+                  //showLabel: false,
+                  tabBarIcon: (tabInfo) => (
+                    <Ionicons
+                      name="location-sharp"
+                      size={tabInfo.focused ? 24 : 20}
+                      color={tabInfo.focused ? "#015289" : "#ccc"}
+                    />
+                  ),
+                }}
+              />
 
-            {/* <BottomTab.Screen
+              <BottomTab.Screen
+                name="Messages"
+                component={NotifsScreen}
+                options={{
+                  //headerShown: false,
+                  //tabBarLabelPosition: "below-icon",
+                  tabBarIcon: (tabInfo) => (
+                    <Ionicons
+                      name="mail"
+                      size={tabInfo.focused ? 24 : 20}
+                      color={tabInfo.focused ? "#015289" : "#ccc"}
+                    />
+                  ),
+                }}
+              />
+
+              {/* <BottomTab.Screen
               name="Routing"
               component={RouteScreen}
               options={{
@@ -297,7 +299,8 @@ const TabApp = ({ navigation }) => {
                 ),
               }}
             /> */}
-          </BottomTab.Navigator>
+            </BottomTab.Navigator>
+          </CompanyContext.Provider>
         </StatusContext.Provider>
       </MessageListContext.Provider>
     </TokenContext.Provider>
