@@ -28,7 +28,7 @@
       "versionCode": 7,
       "config": {
         "googleMaps": {
-          "apiKey": ""
+          "apiKey": "AIzaSyASq-WkdIXJdeei6myDAPLWA4HA_ICKn-Q"
         }
       },
       "googleServicesFile": "./google-services.json"

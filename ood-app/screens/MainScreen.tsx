@@ -81,9 +81,13 @@ const MainScreen = ({ navigation }) => {
   }
 
   const handleSendMessage = async () => {
-    await sendMessage("ExponentPushToken[vtJsi0Cjo2hsMGwpVH4gTn]");
-    await sendMessage("ExponentPushToken[6AkjAWJXBLNRXYk2aThDg-]");
-    await sendMessage("ExponentPushToken[P38U0kAUqXJ9AVr3NHHoRv]");
+    const notifTokens = await MyAzureFunctions.call_readCompanyNotifTokens(
+      token,
+      company
+    );
+    for (let i = 0; i < notifTokens.length; i++) {
+      sendMessage(notifTokens[i]);
+    }
     const message = await MyAzureFunctions.call_writeMessage(
       token,
       company,
