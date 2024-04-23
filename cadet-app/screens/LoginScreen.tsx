@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-Platform,
+  Platform,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
@@ -56,13 +56,13 @@ function LoginScreen({ navigation }) {
     "api://35ccd7e7-b807-4ac3-93ed-a1f82e0b0ef5/user_impersonation",
   ];
   const domain = `https://login.microsoftonline.com/${process.env.EXPO_PUBLIC_directoryTenantID}/v2.0`;
-  
+
   if (Platform.OS !== "web") {
     var redirectUrl = AuthSession.makeRedirectUri({
-    scheme: "com.cyoung2024.cadetapp",
-    path: "auth",
-  });
-} else {
+      scheme: "com.cyoung2024.cadetapp",
+      path: "auth",
+    });
+  } else {
     var redirectUrl = AuthSession.makeRedirectUri();
   }
 
@@ -164,7 +164,7 @@ function LoginScreen({ navigation }) {
     );
     const messageList = await MyAzureFunctions.call_readCompanyMessages(
       token,
-      "Alfa"
+      initInfo.Company
     );
     const status = initInfo.Status;
     if (
@@ -177,9 +177,10 @@ function LoginScreen({ navigation }) {
       MyAzureFunctions.call_updatePushToken(token, cadetCode, expoPushToken);
     }
     setInProgress(false);
+    let company = initInfo.Company;
     navigation.navigate("TabApp", {
       screen: "Home",
-      params: { token, messageList, status },
+      params: { token, messageList, status, company },
     });
   };
 
