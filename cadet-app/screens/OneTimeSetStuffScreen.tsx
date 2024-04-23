@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -30,7 +30,7 @@ const OneTimeSetStuffScreen = ({ navigation }) => {
     const [initInfo] = await MyAzureFunctions.call_initCadetApp(token, code);
     const messageList = await MyAzureFunctions.call_readCompanyMessages(
       token,
-      "Alfa"
+      initInfo.Company
     );
     const status = initInfo.Status;
     if (
