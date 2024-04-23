@@ -3,7 +3,7 @@
     "name": "Bear Necessities",
     "slug": "cadet-app",
     "scheme": "com.cyoung2024.cadetapp",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/SwagBearFaceBIG.png",
     "userInterfaceStyle": "light",

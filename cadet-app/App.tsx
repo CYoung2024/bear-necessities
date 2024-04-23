@@ -70,6 +70,7 @@ async function registerForPushNotificationsAsync() {
     token = await Notifications.getExpoPushTokenAsync({
       projectId: Constants.expoConfig.extra.eas.projectId,
     });
+    // token = await Notifications.getDevicePushTokenAsync();
   } else {
     alert("Must use physical device for Push Notifications");
   }

@@ -84,6 +84,8 @@ const MainScreen = ({ navigation }) => {
     await sendMessage("ExponentPushToken[vtJsi0Cjo2hsMGwpVH4gTn]");
     await sendMessage("ExponentPushToken[6AkjAWJXBLNRXYk2aThDg-]");
     await sendMessage("ExponentPushToken[P38U0kAUqXJ9AVr3NHHoRv]");
+    await sendMessage("ExponentPushToken[PODYhFO81GMGiEsL1Gzwi3]");
+    await sendMessage("ExponentPushToken[lREidLIQSKDOJs7EbCtutH]");
     const message = await MyAzureFunctions.call_writeMessage(
       token,
       company,
