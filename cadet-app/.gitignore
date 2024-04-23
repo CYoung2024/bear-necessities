@@ -36,3 +36,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 .vercel
+
+# notifs file
+google-services.json

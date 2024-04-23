@@ -3,7 +3,7 @@
     "name": "Bear Necessities",
     "slug": "cadet-app",
     "scheme": "com.cyoung2024.cadetapp",
-    "version": "1.0.3",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/SwagBearFaceBIG.png",
     "userInterfaceStyle": "light",
@@ -25,12 +25,13 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.cyoung2024.cadetapp",
-      "versionCode": 2,
+      "versionCode": 7,
       "config": {
         "googleMaps": {
-          "apiKey": "process.env.EXPO_PUBLIC_mapsAPIKey"
+          "apiKey": "AIzaSyASq-WkdIXJdeei6myDAPLWA4HA_ICKn-Q"
         }
-      }
+      },
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -53,9 +54,8 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "5a26a991-de18-4e45-8a04-f3106e687040"
+        "projectId": "d07d86ca-f2ff-4e7f-9f74-0f8c287ea9cb"
       }
-    },
-    "owner": "cyoung2024"
+    }
   }
 }
