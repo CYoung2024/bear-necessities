@@ -141,6 +141,14 @@ const AcctScreen = ({ navigation }) => {
     setModalVisible1(false);
   };
 
+  function formatName(name) {
+    const words = name.split(" ");
+    for (let i = 0; i < words.length - 1; i++) {
+      words[i] = words[i].charAt(0);
+    }
+    return words.join(" ");
+  }
+
   const handleUpdateButton = async () => {
     const data = await MyAzureFunctions.call_writeCadetStatus(
       token,
@@ -324,14 +332,19 @@ const AcctScreen = ({ navigation }) => {
               cadetList1c.map((item, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.touchName}
+                  style={[
+                    styles.touchName,
+                    item.Status === "IFN" || item.Status === "Gangway"
+                      ? styles.ifnBackground
+                      : null,
+                  ]}
                   onPress={() => {
                     startCadetUpdate(item.FullName, item.Status, item.Code);
                     setWhichList(1);
                   }}
                 >
                   <Text key={index} style={styles.acctDispText}>
-                    {item.FullName}: {item.Status}
+                    {formatName(item.FullName)}: {item.Status}
                   </Text>
                 </TouchableOpacity>
               ))
@@ -349,14 +362,17 @@ const AcctScreen = ({ navigation }) => {
               cadetList2c.map((item, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.touchName}
+                  style={[
+                    styles.touchName,
+                    item.Status === "IFN" ? styles.ifnBackground : null,
+                  ]}
                   onPress={() => {
                     startCadetUpdate(item.FullName, item.Status, item.Code);
                     setWhichList(2);
                   }}
                 >
                   <Text key={index} style={styles.acctDispText}>
-                    {item.FullName}: {item.Status}
+                    {formatName(item.FullName)}: {item.Status}
                   </Text>
                 </TouchableOpacity>
               ))
@@ -374,14 +390,17 @@ const AcctScreen = ({ navigation }) => {
               cadetList3c.map((item, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.touchName}
+                  style={[
+                    styles.touchName,
+                    item.Status === "IFN" ? styles.ifnBackground : null,
+                  ]}
                   onPress={() => {
                     startCadetUpdate(item.FullName, item.Status, item.Code);
                     setWhichList(3);
                   }}
                 >
                   <Text key={index} style={styles.acctDispText}>
-                    {item.FullName}: {item.Status}
+                    {formatName(item.FullName)}: {item.Status}
                   </Text>
                 </TouchableOpacity>
               ))
@@ -399,14 +418,17 @@ const AcctScreen = ({ navigation }) => {
               cadetList4c.map((item, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={styles.touchName}
+                  style={[
+                    styles.touchName,
+                    item.Status === "IFN" ? styles.ifnBackground : null,
+                  ]}
                   onPress={() => {
                     startCadetUpdate(item.FullName, item.Status, item.Code);
                     setWhichList(4);
                   }}
                 >
                   <Text key={index} style={styles.acctDispText}>
-                    {item.FullName}: {item.Status}
+                    {formatName(item.FullName)}: {item.Status}
                   </Text>
                 </TouchableOpacity>
               ))
@@ -463,7 +485,8 @@ const styles = StyleSheet.create({
     width: "20%",
     height: "92%",
     borderColor: "blue",
-    backgroundColor: "#aab5c5",
+    //backgroundColor: "#aab5c5",
+    backgroundColor: "#eae9ea",
     borderWidth: 2,
     borderRadius: 10,
   },
@@ -479,7 +502,8 @@ const styles = StyleSheet.create({
     width: "20%",
     height: "92%",
     borderColor: "red",
-    backgroundColor: "#ffd4d4",
+    //backgroundColor: "#ffd4d4",
+    backgroundColor: "#eae9ea",
     borderWidth: 2,
     borderRadius: 10,
   },
@@ -487,7 +511,8 @@ const styles = StyleSheet.create({
     width: "20%",
     height: "92%",
     borderColor: "green",
-    backgroundColor: "#bbccb4",
+    //backgroundColor: "#bbccb4",
+    backgroundColor: "#eae9ea",
     borderWidth: 2,
     borderRadius: 10,
   },
@@ -567,6 +592,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 5,
     borderRadius: 8,
+  },
+  ifnBackground: {
+    backgroundColor: "#bbccb4",
   },
 });
 
