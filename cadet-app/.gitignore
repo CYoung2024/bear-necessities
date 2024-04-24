@@ -37,5 +37,9 @@ yarn-error.*
 *.tsbuildinfo
 .vercel
 
+<<<<<<< HEAD
+# google services
+=======
 # notifs file
+>>>>>>> main
 google-services.json
