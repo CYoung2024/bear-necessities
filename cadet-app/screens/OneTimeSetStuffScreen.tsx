@@ -42,9 +42,10 @@ const OneTimeSetStuffScreen = ({ navigation }) => {
     ) {
       MyAzureFunctions.call_updatePushToken(token, code, expoPushToken);
     }
+    let company = initInfo.Company;
     navigation.navigate("TabApp", {
       screen: "Home",
-      params: { token, messageList, status },
+      params: { token, messageList, status, company },
     });
   };
 

@@ -21,13 +21,14 @@ const USCGALogo = require("../assets/icon.png");
 const CircleList = require("../assets/list-circle-sharp.svg");
 
 const DashboardScreen = ({ navigation }) => {
+  var useMap = Platform.OS !== "web";
   const mapRef = useRef(null);
   const [markerLocation, setMarkerLocation] = useState({
     latitude: 0,
     longitude: 0,
     altitude: 0,
   });
-  
+
   const PlanOfTheDay = `
   RESEARCH AND SYMPOSIUM DAY
 
@@ -155,25 +156,29 @@ const DashboardScreen = ({ navigation }) => {
                 <Card.Title>Libo Bus Tracker</Card.Title>
                 <Card.Divider />
                 <View style={{ height: 150 }}>
-                  <MapView
-                    provider={PROVIDER_GOOGLE}
-                    ref={mapRef}
-                    pitchEnabled={true}
-                    mapType={"standard"}
-                    showsBuildings={true}
-                    style={{
-                      alignSelf: "stretch",
-                      height: "100%",
-                    }}
-                    initialRegion={{
-                      latitude: 41.371309,
-                      longitude: -72.102227,
-                      latitudeDelta: 0.007,
-                      longitudeDelta: 0.01,
-                    }}
-                  >
-                    <Marker title="My Location" coordinate={markerLocation} />
-                  </MapView>
+                  {useMap ? (
+                    <MapView
+                      provider={PROVIDER_GOOGLE}
+                      ref={mapRef}
+                      pitchEnabled={true}
+                      mapType={"standard"}
+                      showsBuildings={true}
+                      style={{
+                        alignSelf: "stretch",
+                        height: "100%",
+                      }}
+                      initialRegion={{
+                        latitude: 41.371309,
+                        longitude: -72.102227,
+                        latitudeDelta: 0.007,
+                        longitudeDelta: 0.01,
+                      }}
+                    >
+                      <Marker title="My Location" coordinate={markerLocation} />
+                    </MapView>
+                  ) : (
+                    <View></View>
+                  )}
                 </View>
                 <Card.Divider />
 
