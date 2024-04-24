@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -30,7 +30,7 @@ const OneTimeSetStuffScreen = ({ navigation }) => {
     const [initInfo] = await MyAzureFunctions.call_initCadetApp(token, code);
     const messageList = await MyAzureFunctions.call_readCompanyMessages(
       token,
-      "Alfa"
+      initInfo.Company
     );
     const status = initInfo.Status;
     if (
@@ -42,9 +42,10 @@ const OneTimeSetStuffScreen = ({ navigation }) => {
     ) {
       MyAzureFunctions.call_updatePushToken(token, code, expoPushToken);
     }
+    let company = initInfo.Company;
     navigation.navigate("TabApp", {
       screen: "Home",
-      params: { token, messageList, status },
+      params: { token, messageList, status, company },
     });
   };
 
