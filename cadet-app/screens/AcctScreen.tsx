@@ -154,7 +154,7 @@ function AcctScreen() {
         <View style={styles.mapContainer}>
           {useMap ? (
             <MapView
-              provider={PROVIDER_GOOGLE}
+              //provider={PROVIDER_GOOGLE}
               ref={mapRef}
               pitchEnabled={true}
               mapType={"standard"}

@@ -158,7 +158,7 @@ const DashboardScreen = ({ navigation }) => {
                 <View style={{ height: 150 }}>
                   {useMap ? (
                     <MapView
-                      provider={PROVIDER_GOOGLE}
+                      //provider={PROVIDER_GOOGLE}
                       ref={mapRef}
                       pitchEnabled={true}
                       mapType={"standard"}
