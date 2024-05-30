@@ -1,0 +1,45 @@
+CREATE TABLE Cadets (
+    CadetCode int NOT NULL PRIMARY KEY,
+    FullName VARCHAR(255) NOT NULL,
+    Year INT NOT NULL,
+    Company VARCHAR(255),
+    Status VARCHAR(255),
+    NotifCode VARCHAR(255)
+);
+
+INSERT INTO Cadets (CadetCode, FullName, Year, Company, Status, NotifCode)
+VALUES (24813, 'Charles Young', 2024, 'Alfa', 'IFN', '');
+
+INSERT INTO Cadets (CadetCode, FullName, Year, Company, Status, NotifCode)
+VALUES (24450, 'Noah McMahon', 2024, 'Echo', 'MAC', '');
+
+INSERT INTO Cadets (CadetCode, FullName, Year, Company, Status, NotifCode)
+VALUES (54321, 'Pierson Wade', 2024, 'Alfa', 'Unknown', '');
+
+
+
+CREATE TABLE Messages (
+    Id
+    TimeSent DATETIME NOT NULL PRIMARY KEY,
+    Company VARCHAR(255) NOT NULL,
+    MessageContent VARCHAR(255) NOT NULL,
+);
+
+INSERT INTO Messages (Company, MessageContent, TimeSent)
+VALUES ('A', 'first message', '2000-01-01 00:00:00');
+
+
+
+CREATE PROCEDURE [dbo].[DeleteMessage]
+    @TimeSent NVARCHAR(100)
+AS
+    DECLARE @UID DATETIME = TRY_CAST(@TIMESENT AS DATETIME)
+    IF @UId IS NOT NULL AND @TimeSent != ''
+    BEGIN
+        DELETE FROM dbo.Messages WHERE TimeSent = @UID
+		SELECT 'True'
+    END
+	ELSE 
+	BEGIN 
+		SELECT 'False'
+	END
